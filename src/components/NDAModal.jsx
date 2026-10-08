@@ -41,15 +41,19 @@ export default function NDAGate({ children }) {
           transition={{ duration: 0.5 }}
           style={{
             position: 'fixed', inset: 0, zIndex: 9999,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            display: 'flex',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehavior: 'contain',
             background: 'rgba(4, 6, 12, 0.97)',
             backdropFilter: 'blur(24px)',
-            padding: 'clamp(1rem, 4vw, 3rem)',
+            padding: 'clamp(0.75rem, 4vw, 3rem)',
+            paddingBottom: 'max(clamp(0.75rem, 4vw, 3rem), env(safe-area-inset-bottom, 0px))',
           }}
         >
           {/* Grid texture */}
           <div style={{
-            position: 'absolute', inset: 0, pointerEvents: 'none',
+            position: 'fixed', inset: 0, pointerEvents: 'none',
             backgroundImage: `
               repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(26,34,54,0.5) 80px),
               repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(26,34,54,0.5) 80px)
@@ -66,9 +70,10 @@ export default function NDAGate({ children }) {
               background: 'var(--surface)',
               border: '1px solid var(--gold-line)',
               borderRadius: '6px',
-              padding: 'clamp(2rem, 5vw, 3.5rem)',
+              padding: 'clamp(1.25rem, 5vw, 3.5rem)',
               maxWidth: '560px',
               width: '100%',
+              margin: 'auto',
               boxShadow: '0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,169,110,0.08)',
             }}
           >
@@ -81,7 +86,7 @@ export default function NDAGate({ children }) {
             }} />
 
             {/* Logo */}
-            <div style={{ marginBottom: '2rem' }}>
+            <div style={{ marginBottom: 'clamp(1.2rem, 4vw, 2rem)' }}>
               <Logo size={36} showTagline={false} />
             </div>
 
@@ -102,7 +107,7 @@ export default function NDAGate({ children }) {
             }}>
               Non-Use Agreement
             </h2>
-            <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.65, marginBottom: '2rem' }}>
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.65, marginBottom: 'clamp(1.2rem, 4vw, 2rem)' }}>
               This is a proprietary design concept and proposal prepared exclusively for
               <strong style={{ color: 'var(--text)' }}> Northwest Siding Contractors of Eugene</strong>.
               Please review the terms below before proceeding.
@@ -113,8 +118,8 @@ export default function NDAGate({ children }) {
               background: 'var(--surface-2)',
               border: '1px solid var(--border)',
               borderRadius: '4px',
-              padding: '1.4rem 1.6rem',
-              marginBottom: '1.8rem',
+              padding: 'clamp(1rem, 4vw, 1.4rem) clamp(1rem, 4vw, 1.6rem)',
+              marginBottom: '1.4rem',
               display: 'flex', flexDirection: 'column', gap: '1.1rem',
             }}>
               {TERMS.map((term, i) => (
@@ -136,12 +141,17 @@ export default function NDAGate({ children }) {
             </div>
 
             {/* Checkbox */}
-            <label style={{
-              display: 'flex', alignItems: 'flex-start', gap: '0.85rem',
-              cursor: 'pointer', marginBottom: '1.6rem',
-            }}>
+            <div
+              role="checkbox"
+              aria-checked={checked}
+              tabIndex={0}
+              onClick={() => setChecked(c => !c)}
+              onKeyDown={e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); setChecked(c => !c) } }}
+              style={{
+                display: 'flex', alignItems: 'flex-start', gap: '0.85rem',
+                cursor: 'pointer', marginBottom: '1.4rem', padding: '0.3rem 0',
+              }}>
               <div
-                onClick={() => setChecked(c => !c)}
                 style={{
                   width: '20px', height: '20px', borderRadius: '3px', flexShrink: 0,
                   border: `1.5px solid ${checked ? 'var(--gold)' : 'var(--border)'}`,
@@ -158,14 +168,12 @@ export default function NDAGate({ children }) {
                   </svg>
                 )}
               </div>
-              <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.55, userSelect: 'none' }}
-                onClick={() => setChecked(c => !c)}
-              >
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.55, userSelect: 'none' }}>
                 I have read and agree to the terms above. I understand that all designs,
                 content, and concepts shown remain the intellectual property of o87 Dev
                 until a services agreement is in effect.
               </span>
-            </label>
+            </div>
 
             {declined && (
               <div style={{
@@ -179,11 +187,11 @@ export default function NDAGate({ children }) {
             )}
 
             {/* Actions */}
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button
                 onClick={checked ? handleAgree : () => setDeclined(true)}
                 style={{
-                  flex: 1, padding: '0.9rem 1.5rem',
+                  flex: '1 1 14rem', padding: '0.9rem 1.5rem', minHeight: '48px',
                   background: checked ? 'var(--gold)' : 'var(--surface-2)',
                   border: `1px solid ${checked ? 'transparent' : 'var(--border)'}`,
                   borderRadius: '3px', cursor: 'pointer',
@@ -204,7 +212,7 @@ export default function NDAGate({ children }) {
               <button
                 onClick={() => setDeclined(true)}
                 style={{
-                  padding: '0.9rem 1.2rem',
+                  flex: '1 1 6rem', padding: '0.9rem 1.2rem', minHeight: '48px',
                   background: 'transparent',
                   border: '1px solid var(--border)',
                   borderRadius: '3px', cursor: 'pointer',
