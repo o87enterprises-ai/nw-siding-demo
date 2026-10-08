@@ -15,8 +15,8 @@ const INTERVAL = 7000
 const STATS = [
   { value: '25+',    label: 'Years in Business' },
   { value: '2,000+', label: 'Homes Completed' },
-  { value: 'A+',     label: 'BBB Rating' },
-  { value: '4.9★',   label: 'Customer Rating' },
+  { value: 'Master', label: 'GuildQuality Award' },
+  { value: 'Licensed', label: 'Oregon CCB #136733' },
 ]
 
 export default function Hero() {
@@ -131,9 +131,9 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 1, ease: [0.22, 1, 0.36, 1] }}
             className="hero-paragraph"
           >
-            The only James Hardie® Exclusive Preferred Remodeler serving
-            Eugene‑Springfield. Twenty‑five years. Over 2,000 homes. A BBB A+
-            record with zero complaints.
+            James Hardie®’s Exclusive Preferred Remodeler for
+            Eugene‑Springfield. More than twenty‑five years and over 2,000
+            homes, backed by strong customer reviews.
           </motion.p>
 
           {/* CTAs */}

@@ -9,12 +9,12 @@ const STRENGTHS = [
   {
     icon: '🏆',
     head: 'James Hardie® Exclusive Preferred Remodeler',
-    body: 'The only contractor in the Eugene-Springfield area to hold this exclusive designation — a credential that sets you apart from every competitor before a homeowner reads a single review.',
+    body: 'James Hardie lists you as its Exclusive Preferred Remodeler for the Eugene-Springfield area — a credential that sets you apart before a homeowner reads a single review.',
   },
   {
     icon: '⭐',
-    head: 'BBB A+ · Zero Complaints in 25 Years',
-    body: 'A spotless record spanning a quarter century. This kind of trust is rarely built and never faked — it\'s the strongest foundation any digital strategy can stand on.',
+    head: 'A Long, Well-Reviewed Track Record',
+    body: 'Trust built over more than two decades and reflected in third-party customer reviews. A reputation like that takes years to earn — it\'s the strongest foundation any digital strategy can stand on.',
   },
   {
     icon: '🏠',
@@ -24,7 +24,7 @@ const STRENGTHS = [
   {
     icon: '🎖️',
     head: 'Award-Winning Service',
-    body: 'Guildmaster Award. Angie\'s List Super Service Award. Industry recognition that validates what your customers already know — and that belongs front and center online.',
+    body: 'GuildQuality Master Award and consistently positive customer reviews. Recognition that validates what your customers already know — and that belongs front and center online.',
   },
   {
     icon: '📍',
@@ -65,12 +65,12 @@ const ADVANTAGES = [
   {
     num: '01',
     title: 'Exclusive James Hardie® Partnership',
-    body: 'The only Exclusive Preferred Remodeler of James Hardie® Siding Products in the entire Eugene-Springfield area. No competitor can claim this.',
+    body: 'James Hardie lists you as its Exclusive Preferred Remodeler of Siding Products for the Eugene-Springfield area — a credential few local competitors can point to.',
   },
   {
     num: '02',
-    title: 'Spotless 25-Year Track Record',
-    body: 'BBB A+ rating. Zero complaints in 25 years. Guildmaster Award. Angie\'s List Super Service Award. This story sells itself.',
+    title: 'A Strong Reputation Built Over Decades',
+    body: 'GuildQuality Master Award and consistently positive customer reviews across more than two decades of work. This story sells itself.',
   },
   {
     num: '03',
@@ -213,7 +213,7 @@ function SlideCover() {
         marginTop: '3.5rem', paddingTop: '2.5rem',
         borderTop: '1px solid var(--border)',
       }}>
-        {['25+ Years', 'BBB A+', '2,000+ Homes', '4.9★ Rating'].map(s => (
+        {['25+ Years', 'GuildQuality Master', '2,000+ Homes', 'Licensed · CCB #136733'].map(s => (
           <div key={s} style={{
             fontSize: '0.65rem', fontWeight: 500,
             letterSpacing: '0.16em', textTransform: 'uppercase',
@@ -370,10 +370,10 @@ function SlideAdvantages() {
         <span className="gold-line" />
         <span className="label">The Differentiators</span>
         <h2 className="section-title" style={{ marginTop: '0.8rem' }}>
-          Your Unfair <em>Advantages</em>
+          Your Real <em>Advantages</em>
         </h2>
         <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.75, maxWidth: '540px', marginTop: '0.8rem' }}>
-          No contractor in Eugene has this combination. These are the pillars of every strategy we build together.
+          Few contractors in Eugene can point to this combination. These are the pillars of every strategy we build together.
         </p>
       </motion.div>
       <div className="advantages-grid" style={{ display: 'grid', gap: '1px', background: 'var(--border)' }}>

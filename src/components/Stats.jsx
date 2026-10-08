@@ -10,12 +10,10 @@ const STATS_IMAGES = [
 
 const MARQUEE_ITEMS = [
   'James Hardie® Exclusive Preferred Remodeler',
-  'Guildmaster Award Winner',
-  'BBB Accredited A+',
+  'GuildQuality Master Award Winner',
   'Licensed · Bonded · Insured',
   'CCB #136733',
   'Certified Lead-Safe Renovators',
-  'Angie\'s List Super Service Award',
   'Serving Eugene · Springfield · Albany · Roseburg · Creswell',
   '3-Year Workmanship Warranty',
 ]
@@ -80,11 +78,11 @@ export default function Stats() {
         }}>
           <StatCard number="25+" label="Years of Excellence" delay={0} />
           <StatCard number="2,000+" label="Homes Completed" delay={0.1} />
-          <StatCard number="A+" label="BBB Rating" delay={0.2} />
-          <StatCard number="4.9★" label="Customer Rating" delay={0.3} />
+          <StatCard number="Master" label="GuildQuality Award" delay={0.2} />
+          <StatCard number="Licensed" label="Oregon CCB #136733" delay={0.3} />
           <StatCard
-            number="#1"
-            label="James Hardie® Preferred Remodeler in Eugene"
+            number="Exclusive"
+            label="James Hardie® Preferred Remodeler, Eugene-Springfield"
             delay={0.4}
           />
         </div>

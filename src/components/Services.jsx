@@ -14,7 +14,7 @@ const SERVICES = [
     num: '01',
     title: 'Fiber Cement Siding',
     sub: 'James Hardie® Exclusive',
-    desc: "Eugene-Springfield's only Exclusive Preferred Remodeler installs James Hardie® fiber cement siding to factory specification — with the manufacturer warranty to match.",
+    desc: "As James Hardie®'s Exclusive Preferred Remodeler for Eugene-Springfield, we install James Hardie® fiber cement siding to factory specification — with the manufacturer warranty to match.",
     tags: ['HardiePlank®', 'HardieShingle®', 'HardiePanel®'],
   },
   {

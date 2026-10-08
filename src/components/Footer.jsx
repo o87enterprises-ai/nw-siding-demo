@@ -30,8 +30,8 @@ export default function Footer() {
               maxWidth: '240px',
               marginBottom: '1.5rem',
             }}>
-              Eugene-Springfield's only Exclusive Preferred Remodeler of
-              James Hardie® Siding Products. 25 years. 2,000+ homes.
+              Exclusive Preferred Remodeler of James Hardie® Siding Products
+              for Eugene-Springfield. 25+ years. 2,000+ homes.
             </p>
             <div style={{
               fontSize: '0.65rem',
