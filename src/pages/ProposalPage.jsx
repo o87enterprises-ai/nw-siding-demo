@@ -127,6 +127,32 @@ const TIERS = [
   },
 ]
 
+/* Public-data audit of northwestsiding.com, 8 Oct 2026. Each category is a
+   checklist with a point value per check; items that could not be measured
+   (Google Business Profile, Google review counts, auto-response) are left
+   out of both the earned and possible totals. */
+const WEB_AUDIT = {
+  date: 'October 8, 2026',
+  categories: [
+    { label: 'Speed & mobile',            earned: 11, possible: 20 },
+    { label: 'Technical health',          earned: 8,  possible: 10 },
+    { label: 'On-page SEO',               earned: 15, possible: 20 },
+    { label: 'Local search visibility',   earned: 6,  possible: 14 },
+    { label: 'Lead capture',              earned: 7,  possible: 9  },
+    { label: 'Trust signals',             earned: 8,  possible: 10 },
+    { label: 'AI-search readiness',       earned: 5,  possible: 8  },
+  ],
+}
+const WEB_SCORE = Math.round(
+  100 * WEB_AUDIT.categories.reduce((a, c) => a + c.earned, 0) /
+        WEB_AUDIT.categories.reduce((a, c) => a + c.possible, 0)
+)
+const scoreBand = pct =>
+  pct >= 90 ? { name: 'Excellent', color: '#4A7C59' }
+  : pct >= 75 ? { name: 'Good', color: '#4A7C59' }
+  : pct >= 60 ? { name: 'Needs Improvement', color: '#C9A96E' }
+  : { name: 'Failing', color: '#D9534F' }
+
 /* ─────────────────────────────────────────────────────────────────
    Animation helpers
 ───────────────────────────────────────────────────────────────── */
@@ -183,7 +209,7 @@ function SlideCover() {
         <br />A strategy to amplify your existing strengths and grow leads, visibility, and revenue.
       </motion.p>
       <motion.div variants={fadeUp} className="cover-stats" style={{
-        display: 'flex', justifyContent: 'center', gap: '2rem',
+        display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '1rem 2rem',
         marginTop: '3.5rem', paddingTop: '2.5rem',
         borderTop: '1px solid var(--border)',
       }}>
@@ -195,6 +221,61 @@ function SlideCover() {
           }}>{s}</div>
         ))}
       </motion.div>
+    </motion.div>
+  )
+}
+
+function WebScoreCard() {
+  const band = scoreBand(WEB_SCORE)
+  return (
+    <motion.div variants={fadeUp} style={{
+      marginTop: '1.5rem',
+      background: 'var(--surface-2)', border: '1px solid var(--gold-line)',
+      borderRadius: '4px', padding: 'clamp(1.1rem, 4vw, 1.8rem)',
+    }}>
+      <div className="label" style={{ marginBottom: '1rem' }}>Your Current Website · Web Presence Score</div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(1.2rem, 4vw, 2.2rem)', alignItems: 'center' }}>
+        <div style={{ flex: '0 0 auto', textAlign: 'center', minWidth: '8.5rem' }}>
+          <div style={{
+            fontFamily: 'var(--font-serif)', fontSize: 'clamp(3rem, 12vw, 4.2rem)',
+            fontWeight: 700, color: band.color, lineHeight: 1,
+          }}>{WEB_SCORE}%</div>
+          <div style={{
+            marginTop: '0.5rem', fontSize: '0.62rem', fontWeight: 700,
+            letterSpacing: '0.14em', textTransform: 'uppercase', color: band.color,
+          }}>{band.name}</div>
+          <div style={{ marginTop: '0.4rem', fontSize: '0.64rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+            100% perfect · 59% failing · 0% invisible
+          </div>
+        </div>
+        <div style={{ flex: '1 1 14rem', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+          {WEB_AUDIT.categories.map(c => {
+            const pct = Math.round(100 * c.earned / c.possible)
+            const b = scoreBand(pct)
+            return (
+              <div key={c.label}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '3px' }}>
+                  <span>{c.label}</span>
+                  <span style={{ color: b.color, fontWeight: 600 }}>{pct}%</span>
+                </div>
+                <div style={{ height: '6px', background: 'var(--bg)', borderRadius: '3px', overflow: 'hidden' }}>
+                  <motion.div
+                    initial={{ width: 0 }} animate={{ width: `${pct}%` }}
+                    transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ height: '100%', background: b.color, borderRadius: '3px', opacity: 0.9 }}
+                  />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+      <p style={{ marginTop: '1.1rem', fontSize: '0.7rem', color: 'var(--text-muted)', lineHeight: 1.65 }}>
+        Audit of northwestsiding.com on {WEB_AUDIT.date}, using public data only: a phone test on a slow connection and on a normal one, page and search-engine setup, contact paths, and how the business shows up in search.
+        Not measured: your Google Business Profile and Google review counts.
+        Strongest areas: a clear call button, a page for every service and service area, and visible credentials.
+        Biggest gaps: page speed on phones, search results that favor directory listings over your own site, and missing business details for search engines and AI assistants.
+      </p>
     </motion.div>
   )
 }
@@ -216,12 +297,12 @@ function SlideStrengths() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--border)' }}>
         {STRENGTHS.map((s, i) => (
           <motion.div key={i} variants={fadeUp} style={{
-            display: 'flex', alignItems: 'flex-start', gap: '1.5rem',
-            padding: '1.4rem 1.8rem',
+            display: 'flex', alignItems: 'flex-start', gap: 'clamp(0.75rem, 3vw, 1.5rem)',
+            padding: 'clamp(1rem, 3.5vw, 1.4rem) clamp(1rem, 4vw, 1.8rem)',
             background: 'var(--surface-2)',
           }}>
             <span style={{ fontSize: '1.4rem', lineHeight: 1, flexShrink: 0, marginTop: '1px' }}>{s.icon}</span>
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: '0.95rem', marginBottom: '0.3rem' }}>{s.head}</div>
               <div style={{ fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>{s.body}</div>
             </div>
@@ -238,6 +319,7 @@ function SlideStrengths() {
           </motion.div>
         ))}
       </div>
+      <WebScoreCard />
     </motion.div>
   )
 }
@@ -259,12 +341,12 @@ function SlideOpportunities() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--border)' }}>
         {OPPORTUNITIES.map((o, i) => (
           <motion.div key={i} variants={fadeUp} style={{
-            display: 'flex', alignItems: 'flex-start', gap: '1.5rem',
-            padding: '1.4rem 1.8rem',
+            display: 'flex', alignItems: 'flex-start', gap: 'clamp(0.75rem, 3vw, 1.5rem)',
+            padding: 'clamp(1rem, 3.5vw, 1.4rem) clamp(1rem, 4vw, 1.8rem)',
             background: 'var(--surface-2)',
           }}>
             <span style={{ fontSize: '1.4rem', lineHeight: 1, flexShrink: 0, marginTop: '1px' }}>{o.icon}</span>
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: '0.95rem', marginBottom: '0.3rem' }}>{o.head}</div>
               <div style={{ fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>{o.body}</div>
             </div>
@@ -294,10 +376,10 @@ function SlideAdvantages() {
           No contractor in Eugene has this combination. These are the pillars of every strategy we build together.
         </p>
       </motion.div>
-      <div className="advantages-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: 'var(--border)' }}>
+      <div className="advantages-grid" style={{ display: 'grid', gap: '1px', background: 'var(--border)' }}>
         {ADVANTAGES.map((a) => (
           <motion.div key={a.num} variants={fadeUp} style={{
-            background: 'var(--surface-2)', padding: '2.5rem 2rem',
+            background: 'var(--surface-2)', padding: 'clamp(1.5rem, 5vw, 2.5rem) clamp(1.2rem, 4vw, 2rem)',
             display: 'flex', flexDirection: 'column', gap: '1rem',
           }}>
             <span style={{
@@ -342,11 +424,11 @@ function SlideTier({ tier }) {
         </p>
       </motion.div>
 
-      <div className="tier-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+      <div className="tier-grid" style={{ display: 'grid', gap: '1.5rem' }}>
         {/* Features */}
         <motion.div variants={fadeUp} style={{
           background: 'var(--surface-2)', border: '1px solid var(--border)',
-          borderRadius: '4px', padding: '2rem',
+          borderRadius: '4px', padding: 'clamp(1.2rem, 4vw, 2rem)',
         }}>
           <div className="label" style={{ marginBottom: '1.2rem' }}>What's Included</div>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -375,7 +457,7 @@ function SlideTier({ tier }) {
           <div style={{
             background: `${tier.color}0D`,
             border: `1px solid ${tier.color}44`,
-            borderRadius: '4px', padding: '1.4rem 1.8rem',
+            borderRadius: '4px', padding: 'clamp(1rem, 4vw, 1.4rem) clamp(1.1rem, 4vw, 1.8rem)',
             position: 'relative', overflow: 'hidden',
           }}>
             <div style={{
@@ -405,7 +487,7 @@ function SlideTier({ tier }) {
           <div style={{
             background: `${tier.color}0D`,
             border: `1px solid ${tier.color}55`,
-            borderRadius: '4px', padding: '1.4rem 1.8rem', flexGrow: 1,
+            borderRadius: '4px', padding: 'clamp(1rem, 4vw, 1.4rem) clamp(1.1rem, 4vw, 1.8rem)', flexGrow: 1,
           }}>
             <div className="label" style={{ marginBottom: '0.6rem', color: 'var(--text-muted)' }}>Monthly Retainer</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '0.8rem' }}>
@@ -495,7 +577,7 @@ function SlideProjections() {
 
       <motion.div variants={fadeUp} style={{
         background: 'var(--surface-2)', border: '1px solid var(--border)',
-        borderRadius: '4px', padding: '1.8rem 2rem',
+        borderRadius: '4px', padding: 'clamp(1.1rem, 4vw, 1.8rem) clamp(1rem, 4vw, 2rem)',
       }}>
         <MetricBar label="Google Search Visibility"   t1={65} t2={78} t3={92} inView={inView} />
         <MetricBar label="Review Presence & Volume"   t1={45} t2={85} t3={95} inView={inView} />
@@ -507,7 +589,7 @@ function SlideProjections() {
       <motion.div variants={fadeUp} style={{
         marginTop: '1.5rem',
         background: 'var(--surface-2)', border: '1px solid var(--gold-line)',
-        borderRadius: '4px', padding: '1.2rem 1.8rem',
+        borderRadius: '4px', padding: 'clamp(1rem, 4vw, 1.2rem) clamp(1rem, 4vw, 1.8rem)',
         display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap',
       }}>
         <div style={{ fontSize: '1.4rem' }}>💡</div>
@@ -543,14 +625,14 @@ function SlideSummary() {
 
       {/* 3 pricing cards */}
       <motion.div variants={fadeUp} className="summary-pricing-grid" style={{
-        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+        display: 'grid',
         gap: '1rem', marginBottom: '2rem',
       }}>
         {TIERS.map((t, i) => (
           <div key={t.num} style={{
             background: i === 2 ? `${t.color}10` : 'var(--surface-2)',
             border: `1px solid ${i === 2 ? t.color + '55' : 'var(--border)'}`,
-            borderRadius: '4px', padding: '1.8rem 1.5rem',
+            borderRadius: '4px', padding: 'clamp(1.2rem, 4vw, 1.8rem) clamp(1.1rem, 4vw, 1.5rem)',
             position: 'relative', overflow: 'hidden',
           }}>
             {i === 2 && (
@@ -581,12 +663,12 @@ function SlideSummary() {
       {/* Next steps */}
       <motion.div variants={fadeUp} style={{
         background: 'var(--surface-2)', border: '1px solid var(--border)',
-        borderRadius: '4px', padding: '1.6rem 2rem',
+        borderRadius: '4px', padding: 'clamp(1.1rem, 4vw, 1.6rem) clamp(1rem, 4vw, 2rem)',
       }}>
         <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--gold)', letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: '1.2rem' }}>
           What Happens Next
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }} className="next-steps-grid">
+        <div style={{ display: 'grid', gap: '1.5rem' }} className="next-steps-grid">
           {[
             ['01', 'Pick your tier', 'Choose the plan that fits your goals.'],
             ['02', 'Strategy call', 'A quick 30-min walkthrough of scope and timeline.'],
@@ -652,7 +734,7 @@ export default function ProposalPage() {
       flexDirection: 'column',
       paddingTop: 'var(--nav-h)',
       position: 'relative',
-      overflow: 'hidden',
+      overflowX: 'clip',
     }}>
       {/* Architectural grid background */}
       <div style={{
@@ -665,9 +747,9 @@ export default function ProposalPage() {
       }} />
 
       {/* Slide counter */}
-      <div style={{
+      <div className="proposal-counter-top" style={{
         position: 'fixed', top: 'calc(var(--nav-h) + 1rem)', right: '2rem',
-        zIndex: 20, display: 'flex', alignItems: 'center', gap: '0.5rem',
+        zIndex: 20, alignItems: 'center', gap: '0.5rem',
         fontSize: '0.65rem', fontWeight: 500, letterSpacing: '0.16em',
         textTransform: 'uppercase', color: 'var(--text-muted)',
       }}>
@@ -680,8 +762,9 @@ export default function ProposalPage() {
       {/* Main slide area */}
       <div style={{
         flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: 'clamp(2rem, 4vw, 4rem) clamp(1.5rem, 5vw, 5rem)',
-        position: 'relative', zIndex: 1, minHeight: 'calc(100vh - var(--nav-h))',
+        padding: 'clamp(1.25rem, 4vw, 4rem) clamp(1rem, 5vw, 5rem)',
+        paddingBottom: 'calc(5.5rem + env(safe-area-inset-bottom, 0px))',
+        position: 'relative', zIndex: 1, minHeight: 'calc(100vh - var(--nav-h))', minWidth: 0,
       }}>
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
@@ -691,7 +774,7 @@ export default function ProposalPage() {
             initial="enter"
             animate="center"
             exit="exit"
-            style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+            style={{ width: '100%', minWidth: 0, display: 'flex', justifyContent: 'center' }}
           >
             <SlideComponent />
           </motion.div>
@@ -703,25 +786,34 @@ export default function ProposalPage() {
         position: 'fixed', bottom: 0, left: 0, right: 0,
         background: 'rgba(8,12,20,0.95)', backdropFilter: 'blur(16px)',
         borderTop: '1px solid var(--border)',
-        padding: '1rem 2rem',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0.75rem clamp(1rem, 3vw, 2rem)',
+        paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem',
         zIndex: 20,
       }}>
         {/* Dot nav */}
-        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '0px', alignItems: 'center', minWidth: 0 }}>
           {SLIDES_CONFIG.map((s, i) => (
             <button key={i} onClick={() => setPage([i, i > page ? 1 : -1])}
-              title={s.label}
+              title={s.label} aria-label={`Go to slide ${i + 1}: ${s.label}`}
               style={{
-                width: i === page ? '28px' : '6px', height: '4px',
-                borderRadius: '2px', border: 'none', cursor: 'pointer',
+                height: '24px', padding: '0 3px', border: 'none', background: 'transparent',
+                cursor: 'pointer', display: 'flex', alignItems: 'center',
+              }}
+            >
+              <span style={{
+                display: 'block', height: '4px', borderRadius: '2px',
+                width: i === page ? '28px' : '6px',
                 background: i === page ? 'var(--gold)' : 'var(--border)',
                 transition: 'all 0.3s var(--ease-out)',
-                padding: 0,
-              }}
-            />
+              }} />
+            </button>
           ))}
         </div>
+
+        <span className="proposal-counter-bar" style={{ fontSize: '0.65rem', fontWeight: 500, letterSpacing: '0.14em', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+          <span style={{ color: 'var(--gold)' }}>{String(page + 1).padStart(2, '0')}</span> / {String(SLIDES_CONFIG.length).padStart(2, '0')}
+        </span>
 
         <span className="proposal-keyboard-hint" style={{ fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-subtle)' }}>
           ← → Arrow keys to navigate
@@ -731,7 +823,7 @@ export default function ProposalPage() {
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button onClick={() => go(-1)} disabled={page === 0}
             style={{
-              width: '40px', height: '36px',
+              width: '44px', height: '44px',
               background: 'var(--surface-2)', border: '1px solid var(--border)',
               borderRadius: '3px', cursor: page === 0 ? 'not-allowed' : 'pointer',
               opacity: page === 0 ? 0.3 : 1,
@@ -747,7 +839,7 @@ export default function ProposalPage() {
           </button>
           <button onClick={() => go(1)} disabled={page === SLIDES_CONFIG.length - 1}
             style={{
-              width: '40px', height: '36px',
+              width: '44px', height: '44px',
               background: page === SLIDES_CONFIG.length - 1 ? 'var(--surface-2)' : 'var(--gold)',
               border: '1px solid var(--border)',
               borderRadius: '3px', cursor: page === SLIDES_CONFIG.length - 1 ? 'not-allowed' : 'pointer',

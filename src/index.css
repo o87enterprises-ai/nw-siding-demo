@@ -366,3 +366,20 @@ button {
   .metric-legend  { flex-wrap: nowrap; }
   .cover-stats    { flex-wrap: nowrap; justify-content: flex-start; }
 }
+
+/* ─── Proposal deck: mobile-first columns, counter placement ──── */
+.tier-grid, .advantages-grid, .summary-pricing-grid, .next-steps-grid { grid-template-columns: minmax(0, 1fr); }
+.proposal-counter-top { display: none; }
+.proposal-counter-bar { display: inline; }
+@media (min-width: 561px) {
+  .next-steps-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 769px) {
+  .proposal-counter-top { display: flex; }
+  .proposal-counter-bar { display: none; }
+}
+@media (min-width: 900px) {
+  .tier-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .advantages-grid, .summary-pricing-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .next-steps-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
