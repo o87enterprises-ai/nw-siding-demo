@@ -1,7 +1,7 @@
 # Deploying nw-siding-demo
 
-The site is hosted on **Cloudflare Pages**, project **`nw-siding-demo`**
-(https://nw-siding-demo.pages.dev). The project is **Direct upload** (not
+The **preview** site (not a live production site) is hosted on **Cloudflare Pages**,
+project **`nw-siding-demo`** (https://nw-siding-demo.pages.dev). The project is **Direct upload** (not
 git-connected), and its production branch is **`main`**. Pushing to GitHub does
 not deploy anything; you deploy by uploading `dist/` with wrangler.
 
@@ -53,6 +53,7 @@ also visible through the API:
 `X-Auth-Key`).
 
 ## Notes
-- `node_modules/` is committed in this repo. Do not commit further changes to it
-  or to `package-lock.json`.
-- Last deployment: `7a1b4d82` (production, success), bundle `index-DjkIPEmM.js`.
+- `node_modules/` is not tracked (see `.gitignore`); run `npm install` before building.
+- `dist/` is committed so the preview can be uploaded without a build.
+- Pages calls the `main` branch "production", but this is still just the preview site.
+- Last deployment: `7a1b4d82`, bundle `index-DjkIPEmM.js`.
