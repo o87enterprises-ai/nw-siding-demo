@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Logo from './Logo'
+import { O87Logo, O87Credit } from './O87'
 
 const SESSION_KEY = 'nw-o87-nda-agreed'
 
 const TERMS = [
-  'This design concept, proposal, and all visual assets shown herein are the exclusive intellectual property of o87 Dev and are provided in confidence for evaluation purposes only.',
-  'The website design, layout, copy, and branding concepts remain the sole property of o87 Dev until a signed services agreement and deposit are received.',
-  'You agree not to reproduce, repurpose, share with third parties, or instruct any other party to replicate these designs or concepts without written authorization from o87 Dev.',
+  'This design concept, proposal, and all visual assets shown herein are the exclusive intellectual property of o87Enterprises and are provided in confidence for evaluation purposes only.',
+  'The website design, layout, copy, and branding concepts remain the sole property of o87Enterprises until a signed services agreement and deposit are received.',
+  'You agree not to reproduce, repurpose, share with third parties, or instruct any other party to replicate these designs or concepts without written authorization from o87Enterprises.',
 ]
 
 export default function NDAGate({ children }) {
@@ -85,9 +86,13 @@ export default function NDAGate({ children }) {
               borderRadius: '6px 6px 0 0',
             }} />
 
-            {/* Logo */}
-            <div style={{ marginBottom: 'clamp(1.2rem, 4vw, 2rem)' }}>
+            {/* Logos */}
+            <div style={{
+              marginBottom: 'clamp(1.2rem, 4vw, 2rem)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem',
+            }}>
               <Logo size={36} showTagline={false} />
+              <O87Logo height={44} />
             </div>
 
             {/* Label */}
@@ -170,7 +175,7 @@ export default function NDAGate({ children }) {
               </div>
               <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.55, userSelect: 'none' }}>
                 I have read and agree to the terms above. I understand that all designs,
-                content, and concepts shown remain the intellectual property of o87 Dev
+                content, and concepts shown remain the intellectual property of o87Enterprises
                 until a services agreement is in effect.
               </span>
             </div>
@@ -232,8 +237,9 @@ export default function NDAGate({ children }) {
               marginTop: '1.4rem', fontSize: '0.65rem',
               color: 'var(--text-subtle)', lineHeight: 1.5, textAlign: 'center',
             }}>
-              Prepared exclusively for Northwest Siding Contractors of Eugene · o87 Dev · 2026
+              Prepared exclusively for Northwest Siding Contractors of Eugene · o87Enterprises · 2026
             </p>
+            <O87Credit style={{ padding: '0.6rem 0 0' }} />
           </motion.div>
         </motion.div>
       </AnimatePresence>
