@@ -191,7 +191,7 @@ function SlideCover() {
       <motion.div variants={fadeUp}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
           <div style={{ height: '1px', width: '60px', background: 'var(--gold-line)' }} />
-          <span className="label">Prepared by o87 Dev · September 2026</span>
+          <span className="label">Prepared by o87Enterprises · September 2026</span>
           <div style={{ height: '1px', width: '60px', background: 'var(--gold-line)' }} />
         </div>
       </motion.div>
