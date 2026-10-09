@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { LogoMark } from '../components/Logo'
+import { O87Logo, O87Credit } from '../components/O87'
 
 /* ─────────────────────────────────────────────────────────────────
    Data
@@ -182,6 +183,9 @@ function SlideCover() {
       {/* Logo mark — centered, prominent on cover */}
       <motion.div variants={fadeUp} style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
         <LogoMark size={100} />
+      </motion.div>
+      <motion.div variants={fadeUp} style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.2rem' }}>
+        <O87Logo height={56} />
       </motion.div>
 
       <motion.div variants={fadeUp}>
@@ -763,7 +767,7 @@ export default function ProposalPage() {
       <div style={{
         flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: 'clamp(1.25rem, 4vw, 4rem) clamp(1rem, 5vw, 5rem)',
-        paddingBottom: 'calc(5.5rem + env(safe-area-inset-bottom, 0px))',
+        paddingBottom: 'calc(8rem + env(safe-area-inset-bottom, 0px))',
         position: 'relative', zIndex: 1, minHeight: 'calc(100vh - var(--nav-h))', minWidth: 0,
       }}>
         <AnimatePresence custom={direction} mode="wait">
@@ -779,6 +783,12 @@ export default function ProposalPage() {
             <SlideComponent />
           </motion.div>
         </AnimatePresence>
+
+        {/* Ownership line — just above the fixed nav bar */}
+        <O87Credit style={{
+          position: 'absolute', left: 0, right: 0,
+          bottom: 'calc(4.5rem + env(safe-area-inset-bottom, 0px))', padding: '0.3rem 1rem',
+        }} />
       </div>
 
       {/* Navigation bar */}

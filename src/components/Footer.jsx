@@ -1,4 +1,5 @@
 import Logo from './Logo'
+import { O87Logo, O87Credit } from './O87'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -94,6 +95,9 @@ export default function Footer() {
           }}>
             © {year} Northwest Siding Contractors of Eugene, Inc. All rights reserved.
           </div>
+          <a href="#" aria-label="o87 Enterprises" style={{ display: 'block' }}>
+            <O87Logo height={34} />
+          </a>
           <div style={{ display: 'flex', gap: '1.5rem' }}>
             {['Privacy Policy', 'Terms of Use'].map(link => (
               <a key={link} href="#" style={{
@@ -110,6 +114,7 @@ export default function Footer() {
         </div>
       </div>
 
+      <O87Credit style={{ marginTop: '1.5rem', paddingBottom: 0 }} />
     </footer>
   )
 }

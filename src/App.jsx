@@ -11,6 +11,7 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ProposalPage from './pages/ProposalPage'
 import NDAGate from './components/NDAModal'
+import { O87Watermark } from './components/O87'
 
 function ProposalCTA() {
   return (
@@ -109,7 +110,8 @@ function ProposalCTA() {
 
 function HomePage() {
   return (
-    <>
+    <div style={{ position: 'relative' }}>
+      <O87Watermark />
       <Hero />
       <ProposalCTA />
       <Stats />
@@ -118,7 +120,7 @@ function HomePage() {
       <Testimonials />
       <Contact />
       <Footer />
-    </>
+    </div>
   )
 }
 

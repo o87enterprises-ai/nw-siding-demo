@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Logo from './Logo'
+import { O87Logo, O87Credit } from './O87'
 
 const SESSION_KEY = 'nw-o87-nda-agreed'
 
@@ -85,9 +86,13 @@ export default function NDAGate({ children }) {
               borderRadius: '6px 6px 0 0',
             }} />
 
-            {/* Logo */}
-            <div style={{ marginBottom: 'clamp(1.2rem, 4vw, 2rem)' }}>
+            {/* Logos */}
+            <div style={{
+              marginBottom: 'clamp(1.2rem, 4vw, 2rem)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem',
+            }}>
               <Logo size={36} showTagline={false} />
+              <O87Logo height={44} />
             </div>
 
             {/* Label */}
@@ -234,6 +239,7 @@ export default function NDAGate({ children }) {
             }}>
               Prepared exclusively for Northwest Siding Contractors of Eugene · o87 Dev · 2026
             </p>
+            <O87Credit style={{ padding: '0.6rem 0 0' }} />
           </motion.div>
         </motion.div>
       </AnimatePresence>
