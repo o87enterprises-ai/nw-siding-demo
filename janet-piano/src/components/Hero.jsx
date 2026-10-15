@@ -85,20 +85,16 @@ export default function Hero() {
 
   return (
     <section className="hero" id="top">
-      <motion.div className="hero-top" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-        <motion.div animate={{ rotate: [0, 2, -2, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}>
-          <WaxSeal size={170} className="hero-seal" />
-        </motion.div>
-        <h1>Learn Piano <em>With Janet</em></h1>
-        <p className="lede">Interactive lessons, beginning with the piano below. Go on, play it.</p>
-      </motion.div>
+      <div className="piano-layer">
+        <Piano3D practice={practice} />
+      </div>
 
-      <motion.div className="piano-card" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.25 }}>
-        <div className="piano-toolbar">
-          <select value={songId} onChange={(e) => { stop(); setSongId(e.target.value) }} aria-label="Choose a song">
-            {SONGS.map((s) => <option key={s.id} value={s.id}>{s.title}</option>)}
-          </select>
-          <div className="seg">
+      <div className="hero-content">
+        <div className="tools">
+          <div className="controls">
+            <select value={songId} onChange={(e) => { stop(); setSongId(e.target.value) }} aria-label="Choose a song">
+              {SONGS.map((s) => <option key={s.id} value={s.id}>{s.title}</option>)}
+            </select>
             <button className={mode === 'learn' ? 'on' : ''} onClick={mode === 'learn' ? stop : startLearn}>
               {mode === 'learn' ? 'Stop' : 'Learn the song'}
             </button>
@@ -106,28 +102,33 @@ export default function Hero() {
               {mode === 'janet' ? 'Stop' : 'Play along with Janet'}
             </button>
           </div>
+          <div className="piano-status" aria-live="polite">
+            {target && <span className="chip">Next: <b>{pretty(target)}</b> · key {noteToKeyboard[target]}</span>}
+            <span>{hint}</span>
+            {mode !== 'free' && <span className="progress">{Math.min(step, song.notes.length)}/{song.notes.length}</span>}
+          </div>
+          <div className="piano-foot">
+            <span>Keys: <kbd>Z</kbd>–<kbd>M</kbd> low octave, <kbd>Q</kbd>–<kbd>I</kbd> high octave</span>
+            {'requestMIDIAccess' in navigator && (
+              <button className="link" onClick={connectMidi} disabled={midi === 'ready'}>
+                {midi === 'ready' ? 'MIDI keyboard connected' : midi === 'denied' ? 'MIDI unavailable' : 'Connect a MIDI keyboard'}
+              </button>
+            )}
+          </div>
         </div>
-        <div className="piano-stage">
-          <Piano3D practice={practice} />
-        </div>
-        <div className="piano-status" aria-live="polite">
-          {target && <span className="chip">Next: <b>{pretty(target)}</b> · key {noteToKeyboard[target]}</span>}
-          <span>{hint}</span>
-          {mode !== 'free' && <span className="progress">{Math.min(step, song.notes.length)}/{song.notes.length}</span>}
-        </div>
-        <div className="piano-foot">
-          <span>Keys: <kbd>Z</kbd>–<kbd>M</kbd> low octave, <kbd>Q</kbd>–<kbd>I</kbd> high octave</span>
-          {'requestMIDIAccess' in navigator && (
-            <button className="link" onClick={connectMidi} disabled={midi === 'ready'}>
-              {midi === 'ready' ? 'MIDI keyboard connected' : midi === 'denied' ? 'MIDI unavailable' : 'Connect a MIDI keyboard'}
-            </button>
-          )}
-        </div>
-      </motion.div>
 
-      <div className="cta-row">
-        <a className="btn primary" href="#book">Book a Lesson</a>
-        <a className="btn ghost" href="#about">Learn More</a>
+        <div className="hero-center">
+          <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1 }} className="hero-seal-wrap">
+            <WaxSeal size="100%" className="hero-seal" />
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}>
+            <h1>Learn Piano <em>With Janet</em></h1>
+            <div className="cta-row">
+              <a className="btn primary" href="#book">Book a Lesson</a>
+              <a className="btn ghost" href="#about">Learn More</a>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   )

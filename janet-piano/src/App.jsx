@@ -1,12 +1,10 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CartProvider, useCart } from './lib/cart'
 import Hero from './components/Hero'
 import About from './components/About'
 import Path from './components/Path'
 import Booking from './components/Booking'
 import CartDrawer from './components/CartDrawer'
-
-const Backdrop = lazy(() => import('./components/Backdrop'))
 
 // Shown after Stripe redirects back. The cart is cleared on success.
 function CheckoutBanner() {
@@ -31,8 +29,8 @@ function Nav() {
   const { items, setOpen } = useCart()
   return (
     <header className="nav">
-      <a href="#top" className="brand">Janet Holmes <span>Piano</span></a>
       <nav>
+        <a href="#top">Play</a>
         <a href="#about">About</a>
         <a href="#path">Path</a>
         <a href="#book">Book</a>
@@ -47,7 +45,6 @@ function Nav() {
 export default function App() {
   return (
     <CartProvider>
-      <Suspense fallback={null}><Backdrop /></Suspense>
       <Nav />
       <CheckoutBanner />
       <main>

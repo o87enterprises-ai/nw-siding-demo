@@ -1,120 +1,89 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { RoundedBox } from '@react-three/drei'
 import * as THREE from 'three'
 import { KEYS, KEYBOARD_MAP, noteToX } from '../lib/notes'
 import { engine } from '../lib/engine'
 import { unlockAudio } from '../lib/audio'
 
-const BACK_Z = -2.5
-const HIT_Z = BACK_Z - 0.5
-const LANE_GAP = 2.3
+// Top-down (90 degree) orthographic view: x runs across the screen, z runs down it.
+// Key backs sit at the top edge of the screen (z = 0); fronts point down the page.
+const KEY_LEN = 3.2
+const HIT_Z = KEY_LEN + 0.45
+const LANE_GAP = 2.2
+const SPAWN_Z = HIT_Z + 26
 const POOL = 6
+const WORLD_W = 16 // world units that span the full screen width
 
 function Key({ k }) {
-  const group = useRef()
   const mat = useRef()
-  const len = k.black ? 3.1 : 5
+  const len = k.black ? KEY_LEN * 0.62 : KEY_LEN
   const w = k.black ? 0.58 : 0.94
-  const h = k.black ? 0.55 : 0.5
-  const y = k.black ? 0.075 : -0.25
 
   useFrame((_, dt) => {
     const now = performance.now()
     const on = (engine.active.get(k.note) || 0) > 0
     const isGold = (engine.gold.get(k.note) || 0) > now
-    const rot = group.current.rotation
-    rot.x += ((on ? 0.07 : 0) - rot.x) * Math.min(1, dt * 30)
     const m = mat.current
-    const target = isGold ? 1.4 : on ? 0.75 : 0
-    m.emissiveIntensity += (target - m.emissiveIntensity) * Math.min(1, dt * 16)
+    const target = isGold ? 1 : on ? 0.8 : 0
+    m.emissiveIntensity += (target - m.emissiveIntensity) * Math.min(1, dt * 18)
     m.emissive.set(isGold ? '#ffc94d' : '#e0404f')
   })
 
   return (
-    <group ref={group} position={[k.x, 0, BACK_Z]}>
-      <RoundedBox args={[w, h, len]} radius={0.05} smoothness={3} position={[0, y, len / 2]} userData={{ note: k.note }}>
-        <meshStandardMaterial ref={mat} color={k.black ? '#161213' : '#f8f2ec'} roughness={k.black ? 0.35 : 0.5} metalness={k.black ? 0.2 : 0} emissive="#e0404f" emissiveIntensity={0} />
-      </RoundedBox>
-    </group>
-  )
-}
-
-function Body() {
-  return (
-    <group>
-      <mesh position={[0, -0.6, 0]}>
-        <boxGeometry args={[15.4, 0.6, 5.6]} />
-        <meshStandardMaterial color="#2a0a0e" roughness={0.4} metalness={0.3} />
-      </mesh>
-      {[-1, 1].map((s) => (
-        <mesh key={s} position={[s * 7.9, -0.1, 0]}>
-          <boxGeometry args={[0.7, 1.5, 5.8]} />
-          <meshStandardMaterial color="#5a0c14" roughness={0.3} metalness={0.4} />
+    <group position={[k.x, k.black ? 0.2 : 0, 0]}>
+      {k.black && (
+        // soft drop shadow so black keys read as raised
+        <mesh position={[0.07, -0.1, len / 2 + 0.12]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[w, len]} />
+          <meshBasicMaterial color="#000" transparent opacity={0.35} />
         </mesh>
-      ))}
-      <mesh position={[0, 0.2, BACK_Z - 0.35]}>
-        <boxGeometry args={[15.4, 0.9, 0.7]} />
-        <meshStandardMaterial color="#3b0a10" roughness={0.35} metalness={0.4} />
-      </mesh>
-      <mesh position={[0, 0.66, BACK_Z - 0.01]}>
-        <boxGeometry args={[15.1, 0.04, 0.06]} />
-        <meshStandardMaterial color="#caa76a" emissive="#caa76a" emissiveIntensity={0.5} metalness={0.9} roughness={0.25} />
+      )}
+      <mesh position={[0, 0, len / 2]} rotation={[-Math.PI / 2, 0, 0]} userData={{ note: k.note }}>
+        <planeGeometry args={[w, len]} />
+        <meshStandardMaterial ref={mat} color={k.black ? '#111' : '#f8f2ec'} emissive="#e0404f" emissiveIntensity={0} roughness={0.6} />
       </mesh>
     </group>
   )
 }
 
-// Synthesia-style lane: upcoming notes slide toward the keys.
-function FallingNotes({ practice }) {
+// Upcoming notes rise from the bottom of the screen toward their key.
+function RisingNotes({ practice }) {
   const refs = useRef([])
-  const meta = useRef(Array.from({ length: POOL }, () => ({ step: -1, z: -20 })))
+  const meta = useRef(Array.from({ length: POOL }, () => ({ step: -1, z: SPAWN_Z })))
 
   useFrame((_, dt) => {
     const { active, step, notes } = practice.current
-    for (let i = 0; i < POOL; i++) {
-      const mesh = refs.current[i]
-      if (!mesh) continue
-      mesh.visible = false
-    }
+    refs.current.forEach((m) => m && (m.visible = false))
     if (!active) return
-    for (let s = step; s < Math.min(notes.length, step + 5); s++) {
+    for (let s = step; s < Math.min(notes.length, step + 6); s++) {
       const slot = s % POOL
       const mesh = refs.current[slot]
       const m = meta.current[slot]
-      if (m.step !== s) { m.step = s; m.z = -20 }
-      const targetZ = HIT_Z - (s - step) * LANE_GAP
-      m.z += (targetZ - m.z) * Math.min(1, dt * 5)
-      const note = notes[s][0]
+      if (m.step !== s) { m.step = s; m.z = SPAWN_Z }
+      const targetZ = HIT_Z + (s - step) * LANE_GAP
+      m.z += (targetZ - m.z) * Math.min(1, dt * 4)
       mesh.visible = true
-      mesh.position.set(noteToX[note], 0.18, m.z)
+      mesh.position.set(noteToX[notes[s][0]], 0.5, m.z)
       const first = s === step
-      const pulse = first ? 1 + Math.sin(performance.now() / 160) * 0.08 : 1
-      mesh.scale.set(pulse, 1, 1)
+      mesh.scale.set(first ? 1 + Math.sin(performance.now() / 160) * 0.07 : 1, 1, 1)
       const mat = mesh.material
       mat.color.set(first ? '#ffc94d' : '#b3202c')
-      mat.emissive.set(first ? '#ffb300' : '#7d1019')
-      mat.emissiveIntensity = first ? 1.1 : 0.5
-      mat.opacity = first ? 0.95 : Math.max(0.15, 0.7 - (s - step) * 0.15)
+      mat.opacity = first ? 1 : Math.max(0.2, 0.75 - (s - step) * 0.12)
     }
   })
 
   return (
     <group>
-      <mesh position={[0, -0.02, -9]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[15.4, 14]} />
-        <meshBasicMaterial color="#0c0506" transparent opacity={0.55} />
-      </mesh>
       {KEYS.filter((k) => !k.black).map((k) => (
-        <mesh key={k.note} position={[k.x + 0.47, 0, -9]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[0.012, 14]} />
-          <meshBasicMaterial color="#caa76a" transparent opacity={0.12} />
+        <mesh key={k.note} position={[k.x + 0.47, 0.01, KEY_LEN + 20]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[0.012, 40]} />
+          <meshBasicMaterial color="#caa76a" transparent opacity={0.1} />
         </mesh>
       ))}
       {Array.from({ length: POOL }, (_, i) => (
-        <mesh key={i} ref={(el) => (refs.current[i] = el)} visible={false}>
-          <boxGeometry args={[0.8, 0.3, 1.5]} />
-          <meshStandardMaterial transparent toneMapped={false} />
+        <mesh key={i} ref={(el) => (refs.current[i] = el)} visible={false} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[0.8, 1.3]} />
+          <meshBasicMaterial transparent toneMapped={false} />
         </mesh>
       ))}
     </group>
@@ -138,21 +107,23 @@ function Bursts() {
       const x = noteToX[engine.pendingBursts.shift()]
       for (let n = 0; n < 34; n++) {
         const i = s.next++ % BURST_N
-        s.pos.set([x + (Math.random() - 0.5) * 0.6, 0.4, BACK_Z + 1 + Math.random() * 2], i * 3)
+        s.pos.set([x + (Math.random() - 0.5) * 0.5, 1, KEY_LEN * 0.6 + (Math.random() - 0.5) * 1.5], i * 3)
         const a = Math.random() * Math.PI * 2
-        const sp = 1 + Math.random() * 2.5
-        s.vel.set([Math.cos(a) * sp * 0.8, 2.5 + Math.random() * 3.5, Math.sin(a) * sp * 0.6], i * 3)
+        const sp = 1.5 + Math.random() * 3.5
+        s.vel.set([Math.cos(a) * sp, 0, Math.sin(a) * sp], i * 3)
         s.life[i] = 1
       }
     }
     for (let i = 0; i < BURST_N; i++) {
       const l = s.life[i]
       if (l <= 0) { s.col[i * 3] = s.col[i * 3 + 1] = s.col[i * 3 + 2] = 0; continue }
-      s.life[i] = l - dt * 1.4
-      s.vel[i * 3 + 1] -= 7 * dt
-      for (let a = 0; a < 3; a++) s.pos[i * 3 + a] += s.vel[i * 3 + a] * dt
+      s.life[i] = l - dt * 1.5
+      s.pos[i * 3] += s.vel[i * 3] * dt
+      s.pos[i * 3 + 2] += s.vel[i * 3 + 2] * dt
+      s.vel[i * 3] *= 1 - dt * 2
+      s.vel[i * 3 + 2] *= 1 - dt * 2
       const f = Math.max(0, s.life[i])
-      s.col[i * 3] = 1 * f; s.col[i * 3 + 1] = 0.78 * f; s.col[i * 3 + 2] = 0.3 * f
+      s.col[i * 3] = f; s.col[i * 3 + 1] = 0.78 * f; s.col[i * 3 + 2] = 0.3 * f
     }
     const g = pts.current.geometry
     g.attributes.position.needsUpdate = true
@@ -165,7 +136,7 @@ function Bursts() {
         <bufferAttribute attach="attributes-position" args={[state.pos, 3]} />
         <bufferAttribute attach="attributes-color" args={[state.col, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.16} vertexColors transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+      <pointsMaterial size={4} sizeAttenuation={false} vertexColors transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
     </points>
   )
 }
@@ -226,16 +197,18 @@ function PointerInput({ keysRef }) {
   return null
 }
 
+// Straight-down orthographic camera; the keys always span the full screen width
+// and the key backs are pinned to the top edge of the canvas.
 function CameraRig() {
   const { camera, size } = useThree()
-  useFrame(({ clock }) => {
-    const aspect = size.width / size.height
-    const halfFov = THREE.MathUtils.degToRad(camera.fov / 2)
-    const dist = Math.max(14, 9.2 / (Math.tan(halfFov) * aspect) + 3)
-    const t = clock.elapsedTime
-    camera.position.set(Math.sin(t * 0.25) * 0.5, dist * 0.72, dist * 0.62 + 2)
-    camera.lookAt(0, 0, -3.2)
-  })
+  useEffect(() => {
+    const zoom = size.width / WORLD_W
+    camera.zoom = zoom
+    camera.up.set(0, 0, -1)
+    camera.position.set(0, 10, -0.15 + size.height / (2 * zoom))
+    camera.lookAt(0, 0, camera.position.z)
+    camera.updateProjectionMatrix()
+  }, [camera, size])
   return null
 }
 
@@ -258,14 +231,13 @@ export default function Piano3D({ practice }) {
   }, [])
 
   return (
-    <Canvas camera={{ fov: 40, position: [0, 9, 11] }} dpr={[1, 2]} gl={{ alpha: true, antialias: true }} style={{ touchAction: 'none' }}>
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[4, 10, 6]} intensity={2.2} color="#fff1dc" />
-      <pointLight position={[0, 4, -6]} intensity={30} color="#b3202c" />
+    // pan-y keeps vertical page scrolling working on touch; horizontal drags play glissandos.
+    <Canvas orthographic camera={{ near: 0.1, far: 50 }} dpr={[1, 2]} gl={{ alpha: true, antialias: true }} style={{ touchAction: 'pan-y' }}>
+      <ambientLight intensity={1.6} />
+      <directionalLight position={[2, 10, 3]} intensity={1.2} />
       <CameraRig />
-      <Body />
       <group ref={keysRef}>{KEYS.map((k) => <Key key={k.note} k={k} />)}</group>
-      <FallingNotes practice={practice} />
+      <RisingNotes practice={practice} />
       <Bursts />
       <PointerInput keysRef={keysRef} />
     </Canvas>
