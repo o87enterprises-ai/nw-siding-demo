@@ -43,3 +43,17 @@ Replace `sampleOpen()` in `src/components/Booking.jsx` with a fetch of open rows
 - Prices are examples only: `src/lib/catalog.js`.
 - Piano samples load from `tonejs.github.io`; set `VITE_SAMPLE_BASE` to self-host the Salamander
   MP3s. If they fail to load, a built-in synth voice plays instead.
+
+## Deploying to Cloudflare Pages
+One-time setup, then deploy (run from `janet-piano/`):
+```sh
+npx wrangler@3 login                 # or set CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID
+npm install
+npm run pages:create                 # creates the "janet-piano" Pages project (Direct upload)
+npm run deploy                       # builds, then uploads dist/ and functions/
+npx wrangler@3 pages secret put STRIPE_SECRET_KEY --project-name janet-piano
+```
+The site is served at `https://janet-piano.pages.dev` (the name may get a suffix if taken). `--branch main`
+makes it the production deployment; any other branch name creates a preview. Use a **test** Stripe key
+until you are ready for real payments. A scoped API token with *Cloudflare Pages: Edit* is safer than
+the Global API Key.

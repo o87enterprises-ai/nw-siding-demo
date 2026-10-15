@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "pages:create": "npx --yes wrangler@3 pages project create janet-piano --production-branch main",
+    "deploy": "vite build && npx --yes wrangler@3 pages deploy dist --project-name janet-piano --branch main",
     "dev:pages": "vite build && npx --yes wrangler@3 pages dev dist"
   },
   "dependencies": {
