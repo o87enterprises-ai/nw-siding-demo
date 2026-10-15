@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { CartProvider, useCart } from './lib/cart'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -7,6 +7,25 @@ import Booking from './components/Booking'
 import CartDrawer from './components/CartDrawer'
 
 const Backdrop = lazy(() => import('./components/Backdrop'))
+
+// Shown after Stripe redirects back. The cart is cleared on success.
+function CheckoutBanner() {
+  const { clear } = useCart()
+  const [status, setStatus] = useState(() => new URLSearchParams(window.location.search).get('checkout'))
+  useEffect(() => {
+    if (!status) return
+    if (status === 'success') clear()
+    window.history.replaceState({}, '', window.location.pathname + window.location.hash)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  if (!status) return null
+  return (
+    <div className={`banner ${status}`} role="status">
+      {status === 'success' ? 'Thank you! Your payment went through. Janet will confirm your lesson details by email.' : 'Checkout cancelled. Your cart is still saved.'}
+      <button className="link" onClick={() => setStatus(null)}>Dismiss</button>
+    </div>
+  )
+}
 
 function Nav() {
   const { items, setOpen } = useCart()
@@ -30,6 +49,7 @@ export default function App() {
     <CartProvider>
       <Suspense fallback={null}><Backdrop /></Suspense>
       <Nav />
+      <CheckoutBanner />
       <main>
         <Hero />
         <About />

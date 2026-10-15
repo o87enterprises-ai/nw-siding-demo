@@ -39,7 +39,7 @@ export default function CartDrawer() {
               <div className="total"><span>Total</span><b>{money(total)}</b></div>
               <button className="btn primary block" disabled={!items.length || busy} onClick={checkout}>{busy ? 'Redirecting…' : 'Checkout'}</button>
               {msg === 'demo' && (
-                <p className="notice">Demo mode: payments are not connected, so nothing was charged. Set <code>VITE_CHECKOUT_URL</code> to your Stripe endpoint (see docs/BACKEND.md).
+                <p className="notice">Demo mode: payments are not connected, so nothing was charged. Add a <code>STRIPE_SECRET_KEY</code> to enable real checkout (see docs/BACKEND.md).
                   {' '}<button className="link" onClick={() => { clear(); setMsg(''); setOpen(false) }}>Clear cart</button></p>
               )}
               {msg && msg !== 'demo' && <p className="notice err">{msg}</p>}

@@ -163,3 +163,6 @@ kbd { background: rgba(255,255,255,.1); border: 1px solid var(--line); border-ra
   html { scroll-behavior: auto; }
   .note-orb { animation: none; }
 }
+
+.banner { position: relative; z-index: 15; display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap; padding: .7rem 16px; background: rgba(202,167,106,.2); border-bottom: 1px solid var(--gold); text-align: center; }
+.banner.success { background: rgba(202,167,106,.3); }

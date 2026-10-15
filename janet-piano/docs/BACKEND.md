@@ -9,14 +9,25 @@ sample slots. Nothing is charged.
 React app -> POST /checkout (server) -> Stripe Checkout -> webhook -> Supabase
 ```
 
-## 1. Checkout endpoint
-Set `VITE_CHECKOUT_URL` to a server endpoint (Next.js route, Cloudflare Pages Function, etc.).
-The app POSTs `{ items: [{ id, slot? }] }`. The server must:
-1. Look up each `id` in its **own** catalog (never trust prices from the browser).
-2. Create a Stripe Checkout Session: `mode: 'subscription'` for `plan-*` items,
-   `mode: 'payment'` for single lessons. (Stripe does not allow mixing in one session;
-   split the cart or reject mixed carts.)
-3. Return `{ url: session.url }`. Apple Pay / Google Pay appear automatically in Checkout.
+## 1. Checkout endpoint (built)
+`functions/api/checkout.js` is a Cloudflare Pages Function served at `POST /api/checkout`.
+It takes `{ items: [{ id, slot? }] }`, looks each `id` up in `src/lib/catalog.js` (client prices are
+ignored), creates a Stripe Checkout Session, and returns `{ url }`. Apple Pay / Google Pay show up
+in Checkout automatically when enabled in your Stripe dashboard.
+
+- Single lessons use `mode: payment` and need a `slot` like `2026-10-20T09:00`.
+- Monthly programs use `mode: subscription` (recurring monthly).
+- Stripe can't mix the two in one session, so a mixed cart gets a clear 400 error.
+- Without `STRIPE_SECRET_KEY` the endpoint returns 503 and the site stays in demo mode.
+
+**Try it locally (Stripe test mode):**
+1. Create a free Stripe account and copy the **test** secret key (`sk_test_...`) from the dashboard.
+2. Create `janet-piano/.dev.vars` (git-ignored) containing `STRIPE_SECRET_KEY=sk_test_...`
+3. `npm run dev:pages`, open the printed URL, add a lesson, click Checkout, and pay with card `4242 4242 4242 4242`.
+
+**Deploy:** create a Cloudflare Pages project for `janet-piano`, then add `STRIPE_SECRET_KEY` as a
+secret (Settings -> Variables and Secrets). Optionally set `SITE_URL` to your public URL.
+Use the live key only when you're ready to take real payments.
 
 ## 2. Webhook
 Handle `checkout.session.completed`, `invoice.paid` and `customer.subscription.updated/deleted`.

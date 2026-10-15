@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:pages": "vite build && npx --yes wrangler@3 pages dev dist"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
