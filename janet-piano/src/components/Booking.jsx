@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
-import { motion } from 'framer-motion'
 import { SINGLE, PLANS, money } from '../lib/catalog'
 import { useCart } from '../lib/cart'
 
 const HOURS = [9, 10, 11, 12, 13, 14, 15, 16]
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 const hourLabel = (h) => `${h % 12 || 12}${h < 12 ? 'am' : 'pm'}`
+const hourPlain = (h) => String(h % 12 || 12)
 
 function mondayOf(d) {
   const x = new Date(d)
@@ -48,56 +48,39 @@ export default function Booking() {
 
   return (
     <section className="section" id="book">
-      <p className="eyebrow center">Book a Lesson</p>
-      <h2 className="center">Pick a lesson, then a time</h2>
-
-      <h3 className="step">1 · Choose your lesson</h3>
-      <div className="grid3">
+      <div className="lessons" role="group" aria-label="Lesson length">
         {SINGLE.map((s) => (
-          <motion.button key={s.id} whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }} className={`pack ${lesson.id === s.id ? 'sel' : ''}`} onClick={() => setLesson(s)} aria-pressed={lesson.id === s.id}>
-            {s.popular && <span className="badge">Most popular</span>}
-            <b>{s.title}</b>
-            <span className="mins">{s.minutes} Minutes</span>
-            <span className="price">{money(s.price)}</span>
-            <small>{s.blurb}</small>
-          </motion.button>
+          <button key={s.id} className={`pill ${lesson.id === s.id ? 'sel' : ''}`} onClick={() => setLesson(s)} aria-pressed={lesson.id === s.id}>
+            {s.minutes} min {money(s.price)}
+          </button>
         ))}
       </div>
 
-      <h3 className="step">2 · Pick a time</h3>
       <div className="cal">
         <div className="cal-nav">
-          <button className="link" onClick={() => setWeekOffset((w) => w - 1)} disabled={weekOffset === 0} aria-label="Previous week">‹ Prev</button>
-          <b>Week of {fmt(monday)}</b>
-          <button className="link" onClick={() => setWeekOffset((w) => w + 1)} aria-label="Next week">Next ›</button>
+          <button className="link" onClick={() => setWeekOffset((w) => w - 1)} disabled={weekOffset === 0} aria-label="Previous week">‹</button>
+          <span>{fmt(monday)}</span>
+          <button className="link" onClick={() => setWeekOffset((w) => w + 1)} aria-label="Next week">›</button>
         </div>
         <div className="cal-scroll">
           <div className="cal-grid" role="grid">
             <span />
-            {days.map((d) => <span key={d.label} className="cal-head"><b>{d.label}</b><small>{fmt(d.date)}</small></span>)}
+            {days.map((d) => <span key={d.label} className="cal-head">{d.label}</span>)}
             {HOURS.map((h) => (
               <Row key={h} h={h} days={days} now={now} slot={slot} setSlot={setSlot} slotId={slotId} />
             ))}
           </div>
         </div>
-        <p className="legend"><i className="dot gold" /> Available <i className="dot" /> Unavailable · Sample availability for this demo</p>
       </div>
 
-      <motion.div className="summary" animate={{ opacity: slot ? 1 : 0.6 }}>
-        <span>{slot ? <><b>{lesson.minutes}-minute lesson</b> · {slotText}</> : 'Select an available time above'}</span>
-        <button className="btn primary" disabled={!slot} onClick={addLesson}>Add to cart · {money(lesson.price)}</button>
-      </motion.div>
+      <button className="btn primary" disabled={!slot} onClick={addLesson}>Add to cart</button>
 
-      <h3 className="step">Or save with a monthly program</h3>
-      <div className="grid3">
+      <div className="lessons plans" role="group" aria-label="Monthly programs">
+        <span>Monthly</span>
         {PLANS.map((p) => (
-          <div key={p.id} className="pack plan">
-            {p.popular && <span className="badge">Best value</span>}
-            <b>{p.title}</b>
-            <span className="mins">{p.detail}</span>
-            <span className="price">{money(p.price)}<small>/month</small></span>
-            <button className="btn ghost sm" onClick={() => add({ uid: p.id, id: p.id, title: p.title, detail: `${p.detail} · billed monthly`, price: p.price })}>Add program</button>
-          </div>
+          <button key={p.id} className="pill" onClick={() => add({ uid: p.id, id: p.id, title: p.title, detail: `${p.detail} · billed monthly`, price: p.price })}>
+            {p.short} {money(p.price)}
+          </button>
         ))}
       </div>
     </section>
@@ -107,7 +90,7 @@ export default function Booking() {
 function Row({ h, days, now, slot, setSlot, slotId }) {
   return (
     <>
-      <span className="cal-time">{hourLabel(h)}</span>
+      <span className="cal-time">{hourPlain(h)}</span>
       {days.map(({ date }) => {
         const id = slotId(date, h)
         const when = new Date(date); when.setHours(h)
@@ -115,7 +98,7 @@ function Row({ h, days, now, slot, setSlot, slotId }) {
         const sel = slot === id
         return (
           <button key={id} role="gridcell" disabled={!open} className={`cell ${open ? 'open' : ''} ${sel ? 'sel' : ''}`} onClick={() => setSlot(sel ? null : id)} aria-label={`${hourLabel(h)} ${date.toDateString()} ${open ? 'available' : 'unavailable'}`}>
-            {open ? (sel ? '●' : '✓') : ''}
+            
           </button>
         )
       })}

@@ -19,33 +19,25 @@ function CheckoutBanner() {
   if (!status) return null
   return (
     <div className={`banner ${status}`} role="status">
-      {status === 'success' ? 'Thank you! Your payment went through. Janet will confirm your lesson details by email.' : 'Checkout cancelled. Your cart is still saved.'}
-      <button className="link" onClick={() => setStatus(null)}>Dismiss</button>
+      {status === 'success' ? 'Thank you.' : 'Cancelled.'}
+      <button className="link" onClick={() => setStatus(null)} aria-label="Dismiss">✕</button>
     </div>
   )
 }
 
-function Nav() {
+function CartButton() {
   const { items, setOpen } = useCart()
   return (
-    <header className="nav">
-      <nav>
-        <a href="#top">Play</a>
-        <a href="#about">About</a>
-        <a href="#path">Path</a>
-        <a href="#book">Book</a>
-        <button className="cart-btn" onClick={() => setOpen(true)} aria-label={`Open cart, ${items.length} items`}>
-          🛒{items.length > 0 && <i>{items.length}</i>}
-        </button>
-      </nav>
-    </header>
+    <button className="cart-btn" onClick={() => setOpen(true)} aria-label={`Open cart, ${items.length} items`}>
+      🛒{items.length > 0 && <i>{items.length}</i>}
+    </button>
   )
 }
 
 export default function App() {
   return (
     <CartProvider>
-      <Nav />
+      <CartButton />
       <CheckoutBanner />
       <main>
         <Hero />
@@ -53,11 +45,7 @@ export default function App() {
         <Path />
         <Booking />
       </main>
-      <footer className="footer">
-        <p className="brand">Janet Holmes <span>Piano</span></p>
-        <p>Beginner · Intermediate · Adult learners · Recital preparation · Music theory</p>
-        <small>© {new Date().getFullYear()} Janet Holmes. All rights reserved.</small>
-      </footer>
+      <footer className="footer">© Janet Holmes</footer>
       <CartDrawer />
     </CartProvider>
   )

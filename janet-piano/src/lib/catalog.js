@@ -5,8 +5,8 @@ export const SINGLE = [
   { id: 'single-90', title: 'Premium', minutes: 90, price: 85, blurb: 'Deep-dive and repertoire' },
 ]
 export const PLANS = [
-  { id: 'plan-beginner', title: 'Beginner Program', detail: '4 lessons / month', price: 220 },
-  { id: 'plan-growth', title: 'Growth Program', detail: '8 lessons / month', price: 400, popular: true },
-  { id: 'plan-conservatory', title: 'Conservatory Track', detail: 'Weekly extended lessons', price: 650 },
+  { id: 'plan-beginner', title: 'Beginner Program', detail: '4 lessons / month', price: 220, short: '4/mo' },
+  { id: 'plan-growth', title: 'Growth Program', detail: '8 lessons / month', price: 400, short: '8/mo' },
+  { id: 'plan-conservatory', title: 'Conservatory Track', detail: 'Weekly extended lessons', price: 650, short: 'Weekly' },
 ]
 export const money = (n) => `$${n.toLocaleString()}`

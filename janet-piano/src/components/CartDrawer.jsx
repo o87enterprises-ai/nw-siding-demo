@@ -25,22 +25,21 @@ export default function CartDrawer() {
         <>
           <motion.div className="scrim" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)} />
           <motion.aside className="drawer" role="dialog" aria-label="Shopping cart" initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 30, stiffness: 300 }}>
-            <header><h3>My Lessons</h3><button className="link" onClick={() => setOpen(false)} aria-label="Close cart">✕</button></header>
+            <header><h3>Cart</h3><button className="link" onClick={() => setOpen(false)} aria-label="Close cart">✕</button></header>
             <div className="drawer-body">
-              {items.length === 0 && <p className="muted">Your cart is empty. Pick a lesson or program to get started.</p>}
+              {items.length === 0 && <p className="muted">Empty.</p>}
               {items.map((i) => (
                 <div key={i.uid} className="line">
                   <div><b>{i.title}</b><small>{i.detail}</small></div>
-                  <div className="right"><span>{money(i.price)}</span><button className="link" onClick={() => remove(i.uid)}>Remove</button></div>
+                  <div className="right"><span>{money(i.price)}</span><button className="link" onClick={() => remove(i.uid)} aria-label="Remove">✕</button></div>
                 </div>
               ))}
             </div>
             <footer>
-              <div className="total"><span>Total</span><b>{money(total)}</b></div>
-              <button className="btn primary block" disabled={!items.length || busy} onClick={checkout}>{busy ? 'Redirecting…' : 'Checkout'}</button>
+              <div className="total"><span /><b>{money(total)}</b></div>
+              <button className="btn primary block" disabled={!items.length || busy} onClick={checkout}>{busy ? '…' : 'Checkout'}</button>
               {msg === 'demo' && (
-                <p className="notice">Demo mode: payments are not connected, so nothing was charged. Add a <code>STRIPE_SECRET_KEY</code> to enable real checkout (see docs/BACKEND.md).
-                  {' '}<button className="link" onClick={() => { clear(); setMsg(''); setOpen(false) }}>Clear cart</button></p>
+                <p className="notice">Demo mode: nothing charged. <button className="link" onClick={() => { clear(); setMsg(''); setOpen(false) }}>Clear</button></p>
               )}
               {msg && msg !== 'demo' && <p className="notice err">{msg}</p>}
             </footer>

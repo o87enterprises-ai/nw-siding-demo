@@ -14,35 +14,31 @@ const SPAWN_Z = HIT_Z + 26
 const POOL = 6
 const WORLD_W = 16 // world units that span the full screen width
 
+const WHITE = new THREE.Color('#ffffff')
+const INK = new THREE.Color('#1c1c1c')
+const ACCENT = new THREE.Color('#b3202c')
+const tmp = new THREE.Color()
+
 function Key({ k }) {
   const mat = useRef()
+  const amt = useRef(0)
   const len = k.black ? KEY_LEN * 0.62 : KEY_LEN
   const w = k.black ? 0.58 : 0.94
 
   useFrame((_, dt) => {
     const now = performance.now()
     const on = (engine.active.get(k.note) || 0) > 0
-    const isGold = (engine.gold.get(k.note) || 0) > now
-    const m = mat.current
-    const target = isGold ? 1 : on ? 0.8 : 0
-    m.emissiveIntensity += (target - m.emissiveIntensity) * Math.min(1, dt * 18)
-    m.emissive.set(isGold ? '#ffc94d' : '#e0404f')
+    const lit = (engine.gold.get(k.note) || 0) > now
+    const target = lit ? 1 : on ? 0.7 : 0
+    amt.current += (target - amt.current) * Math.min(1, dt * 18)
+    mat.current.color.lerpColors(k.black ? INK : WHITE, ACCENT, amt.current)
   })
 
   return (
-    <group position={[k.x, k.black ? 0.2 : 0, 0]}>
-      {k.black && (
-        // soft drop shadow so black keys read as raised
-        <mesh position={[0.07, -0.1, len / 2 + 0.12]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[w, len]} />
-          <meshBasicMaterial color="#000" transparent opacity={0.35} />
-        </mesh>
-      )}
-      <mesh position={[0, 0, len / 2]} rotation={[-Math.PI / 2, 0, 0]} userData={{ note: k.note }}>
-        <planeGeometry args={[w, len]} />
-        <meshStandardMaterial ref={mat} color={k.black ? '#111' : '#f8f2ec'} emissive="#e0404f" emissiveIntensity={0} roughness={0.6} />
-      </mesh>
-    </group>
+    <mesh position={[k.x, k.black ? 0.2 : 0, len / 2]} rotation={[-Math.PI / 2, 0, 0]} userData={{ note: k.note }}>
+      <planeGeometry args={[w, len]} />
+      <meshBasicMaterial ref={mat} color={k.black ? '#1c1c1c' : '#ffffff'} toneMapped={false} />
+    </mesh>
   )
 }
 
@@ -67,8 +63,8 @@ function RisingNotes({ practice }) {
       const first = s === step
       mesh.scale.set(first ? 1 + Math.sin(performance.now() / 160) * 0.07 : 1, 1, 1)
       const mat = mesh.material
-      mat.color.set(first ? '#ffc94d' : '#b3202c')
-      mat.opacity = first ? 1 : Math.max(0.2, 0.75 - (s - step) * 0.12)
+      mat.color.set('#b3202c')
+      mat.opacity = first ? 1 : Math.max(0.12, 0.45 - (s - step) * 0.07)
     }
   })
 
@@ -77,7 +73,7 @@ function RisingNotes({ practice }) {
       {KEYS.filter((k) => !k.black).map((k) => (
         <mesh key={k.note} position={[k.x + 0.47, 0.01, KEY_LEN + 20]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.012, 40]} />
-          <meshBasicMaterial color="#caa76a" transparent opacity={0.1} />
+          <meshBasicMaterial color="#b3202c" transparent opacity={0.08} />
         </mesh>
       ))}
       {Array.from({ length: POOL }, (_, i) => (
@@ -95,7 +91,7 @@ function Bursts() {
   const pts = useRef()
   const state = useMemo(() => ({
     pos: new Float32Array(BURST_N * 3),
-    col: new Float32Array(BURST_N * 3),
+    col: new Float32Array(BURST_N * 3).fill(1),
     vel: new Float32Array(BURST_N * 3),
     life: new Float32Array(BURST_N),
     next: 0,
@@ -116,14 +112,14 @@ function Bursts() {
     }
     for (let i = 0; i < BURST_N; i++) {
       const l = s.life[i]
-      if (l <= 0) { s.col[i * 3] = s.col[i * 3 + 1] = s.col[i * 3 + 2] = 0; continue }
+      if (l <= 0) { s.col[i * 3] = s.col[i * 3 + 1] = s.col[i * 3 + 2] = 1; continue }
       s.life[i] = l - dt * 1.5
       s.pos[i * 3] += s.vel[i * 3] * dt
       s.pos[i * 3 + 2] += s.vel[i * 3 + 2] * dt
       s.vel[i * 3] *= 1 - dt * 2
       s.vel[i * 3 + 2] *= 1 - dt * 2
       const f = Math.max(0, s.life[i])
-      s.col[i * 3] = f; s.col[i * 3 + 1] = 0.78 * f; s.col[i * 3 + 2] = 0.3 * f
+      s.col[i * 3] = 1 - 0.3 * f; s.col[i * 3 + 1] = 1 - 0.88 * f; s.col[i * 3 + 2] = 1 - 0.85 * f
     }
     const g = pts.current.geometry
     g.attributes.position.needsUpdate = true
@@ -136,7 +132,7 @@ function Bursts() {
         <bufferAttribute attach="attributes-position" args={[state.pos, 3]} />
         <bufferAttribute attach="attributes-color" args={[state.col, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={4} sizeAttenuation={false} vertexColors transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+      <pointsMaterial size={4} sizeAttenuation={false} vertexColors depthWrite={false} toneMapped={false} />
     </points>
   )
 }
@@ -233,9 +229,11 @@ export default function Piano3D({ practice }) {
   return (
     // pan-y keeps vertical page scrolling working on touch; horizontal drags play glissandos.
     <Canvas orthographic camera={{ near: 0.1, far: 50 }} dpr={[1, 2]} gl={{ alpha: true, antialias: true }} style={{ touchAction: 'pan-y' }}>
-      <ambientLight intensity={1.6} />
-      <directionalLight position={[2, 10, 3]} intensity={1.2} />
       <CameraRig />
+      <mesh position={[0, -0.05, KEY_LEN / 2]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[15.1, KEY_LEN + 0.08]} />
+        <meshBasicMaterial color="#d9d2cc" toneMapped={false} />
+      </mesh>
       <group ref={keysRef}>{KEYS.map((k) => <Key key={k.note} k={k} />)}</group>
       <RisingNotes practice={practice} />
       <Bursts />
