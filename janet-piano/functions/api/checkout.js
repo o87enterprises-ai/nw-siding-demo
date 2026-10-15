@@ -57,7 +57,7 @@ export function buildSession(items, origin) {
     })),
     metadata: { items: lines.map((l) => (l.slot ? `${l.p.id}@${l.slot}` : l.p.id)).join(',').slice(0, 500) },
     success_url: `${origin}/?checkout=success`,
-    cancel_url: `${origin}/?checkout=cancelled#book`,
+    cancel_url: `${origin}/book?checkout=cancelled`,
   }
 }
 

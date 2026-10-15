@@ -1,7 +1,7 @@
 # Janet Holmes Piano
 
 Interactive landing page: a flat, top-down playable piano across the top of the screen above a huge wax-seal logo, on white, a falling-note tutorial,
-an about section, a learning path, and a lesson booking flow with cart.
+a one-line about, and a separate `/book` page with a month calendar, time slots and cart.
 
 **Live:** https://janet-piano.pages.dev (deployed 2026-10-15, Cloudflare Pages). Checkout is in demo mode until a Stripe test key is set.
 

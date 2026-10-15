@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { CartProvider, useCart } from './lib/cart'
 import Hero from './components/Hero'
 import About from './components/About'
-import Path from './components/Path'
-import Booking from './components/Booking'
+import BookingPage from './components/BookingPage'
+import { usePath } from './lib/router'
 import CartDrawer from './components/CartDrawer'
 
 // Shown after Stripe redirects back. The cart is cleared on success.
@@ -35,17 +35,22 @@ function CartButton() {
 }
 
 export default function App() {
+  const path = usePath()
   return (
     <CartProvider>
       <CartButton />
       <CheckoutBanner />
-      <main>
-        <Hero />
-        <About />
-        <Path />
-        <Booking />
-      </main>
-      <footer className="footer">© Janet Holmes</footer>
+      {path === '/book' ? (
+        <BookingPage />
+      ) : (
+        <>
+          <main>
+            <Hero />
+            <About />
+          </main>
+          <footer className="footer">© Janet Holmes</footer>
+        </>
+      )}
       <CartDrawer />
     </CartProvider>
   )

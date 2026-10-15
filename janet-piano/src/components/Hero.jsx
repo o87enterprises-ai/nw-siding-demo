@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import Piano3D from './Piano3D'
 import WaxSeal from './WaxSeal'
+import { Link } from '../lib/router'
 import { SONGS, noteToKeyboard, pretty } from '../lib/notes'
 import { engine } from '../lib/engine'
 
@@ -99,7 +100,7 @@ export default function Hero() {
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}>
             <h1>Learn piano with Janet</h1>
-            <a className="btn primary" href="#book">Book a lesson</a>
+            <Link className="btn primary" to="/book">Book a lesson</Link>
           </motion.div>
         </div>
       </div>
