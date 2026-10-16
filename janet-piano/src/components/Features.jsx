@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { Link } from '../lib/router'
 
 const ITEMS = [
+  ['/sing', 'Vocal tuner', 'Sing into your mic and watch your pitch go from red to green.'],
   ['/lessons', 'Light-up lessons', 'Follow the glowing keys on a full-screen piano.'],
   ['/live', 'Live 1:1', 'Video with Janet, right above the keys.'],
   ['/live', 'Key match', 'Every key Janet plays lights up on yours.'],

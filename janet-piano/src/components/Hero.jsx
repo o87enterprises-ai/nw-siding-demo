@@ -39,7 +39,7 @@ export default function Hero() {
             <Logo size="100%" className="hero-seal" />
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}>
-            <h1>Learn piano with Janet</h1>
+            <h1>Vocal and piano lessons with Janet</h1>
             <p className="lede">No piano needed.</p>
             <div className="cta-row">
               <Link className="btn primary" to="/plans">See plans</Link>

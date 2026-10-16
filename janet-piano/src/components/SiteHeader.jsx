@@ -3,7 +3,8 @@ import { Link, usePath } from '../lib/router'
 import { usePlan } from '../lib/plan'
 
 const LINKS = [
-  ['/lessons', 'Lessons'],
+  ['/lessons', 'Piano'],
+  ['/sing', 'Vocal'],
   ['/live', 'Live'],
   ['/book', 'Book'],
   ['/plans', 'Plans'],
