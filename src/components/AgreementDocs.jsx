@@ -137,8 +137,10 @@ const DOCS = [
       {
         heading: 'Influencer ideas and inspiration clips',
         items: [
-          { text: 'DxmnItBobby on YouTube', href: 'https://www.youtube.com/@DxmnItBobby' },
-          { text: 'Daddicated on YouTube (Shorts)', href: 'https://www.youtube.com/@Daddicated/shorts' },
+          { text: 'DxmnItBobby on YouTube', href: 'https://www.youtube.com/@DxmnItBobby',
+            note: 'Shows that you can be good at what you do and have a good time, all while building a brand that makes money regardless of whether you are working on houses.' },
+          { text: 'Daddicated on YouTube (Shorts)', href: 'https://www.youtube.com/@Daddicated/shorts',
+            note: 'Shows that when you have a good work ethic and have mastered your craft, doing what you love goes from being a job to a passion that pays you for how passionate you can be about your craft.' },
           'More clips and creators to be added, with how each could apply to Northwest Siding.',
         ],
       },
@@ -174,7 +176,10 @@ export default function AgreementDocs() {
                     {g.items.map((it, ii) => (
                       <li key={ii}>
                         {typeof it === 'string' ? it : (
-                          <a href={it.href} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>{it.text}</a>
+                          <>
+                            <a href={it.href} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>{it.text}</a>
+                            {it.note && <span style={{ display: 'block', marginTop: '0.2rem' }}>Why it inspires us: {it.note}</span>}
+                          </>
                         )}
                       </li>
                     ))}
