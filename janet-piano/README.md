@@ -27,7 +27,7 @@ Piano input: mouse, **multi-touch**, drag glissando, and the computer keyboard (
 `src/assets/logo.webp` is the official JH wax seal (background cut out). Replace with any `logo.*`.
 
 ## Design
-White background, one red accent (`--accent` in `src/index.css`).
+White soundstage backdrop (soft grey ceiling and corners, a faint magenta wash on the walls and floor curve; `body::before` in `src/index.css`) with one red accent (`--accent`).
 
 ## Not included yet
 Real payments, real access control (the plan unlock is a local mock), real video calls, and live availability. See `docs/BACKEND.md`.

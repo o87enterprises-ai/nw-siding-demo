@@ -180,3 +180,23 @@ kbd { border: 1px solid currentColor; border-radius: 4px; padding: 0 5px; font-s
 .room { background: transparent; }
 .pill.locked { display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; color: var(--muted); }
 .pill.locked:hover { color: var(--accent); }
+
+/* Soundstage "cyclorama": bright white backdrop that falls to soft grey at the ceiling, corners and floor curve,
+   with a hint of magenta on the walls and where the floor meets them. Fixed, so the room stays put. */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background:
+    /* ceiling: soft grey falloff from the top edge */
+    linear-gradient(180deg, rgba(96, 86, 92, .13) 0%, rgba(96, 86, 92, .05) 14%, rgba(96, 86, 92, 0) 30%),
+    /* floor curve: grey rolling up into the back wall, with a magenta bounce along the join */
+    radial-gradient(ellipse 130% 34% at 50% 104%, rgba(190, 40, 90, .11) 0%, rgba(190, 40, 90, .04) 45%, rgba(190, 40, 90, 0) 75%),
+    linear-gradient(0deg, rgba(110, 100, 106, .16) 0%, rgba(110, 100, 106, .06) 18%, rgba(110, 100, 106, 0) 40%),
+    /* side walls: faint magenta wash, strongest mid-height */
+    radial-gradient(ellipse 38% 70% at -4% 58%, rgba(190, 40, 90, .085), rgba(190, 40, 90, 0) 70%),
+    radial-gradient(ellipse 38% 70% at 104% 58%, rgba(190, 40, 90, .085), rgba(190, 40, 90, 0) 70%),
+    /* corner vignette so the white reads as a lit backdrop */
+    radial-gradient(ellipse 85% 75% at 50% 42%, rgba(255, 255, 255, 0) 55%, rgba(98, 88, 94, .09) 100%),
+    #fff;
+}
+.room-bar, .paywall-bar { background: rgba(255, 255, 255, .86); }
+.plan-card { background: rgba(255, 255, 255, .72); }
