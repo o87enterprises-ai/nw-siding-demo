@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Logo from './Logo'
 
 const links = ['Services', 'Portfolio', 'About', 'Contact']
@@ -8,16 +8,12 @@ const links = ['Services', 'Portfolio', 'About', 'Contact']
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const location = useLocation()
-  const isProposal = location.pathname === '/proposal'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  const alwaysDark = isProposal
 
   return (
     <>
@@ -30,9 +26,9 @@ export default function Navbar() {
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 clamp(1.5rem, 5vw, 4rem)',
           height: 'var(--nav-h)',
-          background: scrolled || alwaysDark ? 'rgba(8,12,20,0.95)' : 'transparent',
-          backdropFilter: scrolled || alwaysDark ? 'blur(20px)' : 'none',
-          borderBottom: scrolled || alwaysDark ? '1px solid var(--border)' : '1px solid transparent',
+          background: scrolled ? 'rgba(8,12,20,0.95)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
           transition: 'background 0.4s, border-color 0.4s, backdrop-filter 0.4s',
         }}
       >
@@ -43,7 +39,7 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <div style={{ alignItems: 'center', gap: '2.5rem' }} className="desktop-nav">
-          {!isProposal && links.map(link => (
+          {links.map(link => (
             <a key={link} href={`#${link.toLowerCase()}`} style={{
               fontSize: '0.72rem', fontWeight: 500,
               letterSpacing: '0.14em', textTransform: 'uppercase',
@@ -54,28 +50,9 @@ export default function Navbar() {
             >{link}</a>
           ))}
 
-          {isProposal ? (
-            <Link to="/" style={{
-              fontSize: '0.72rem', fontWeight: 500,
-              letterSpacing: '0.14em', textTransform: 'uppercase',
-              color: 'var(--text-muted)', transition: 'color 0.2s',
-            }}
-              onMouseEnter={e => e.target.style.color = 'var(--text)'}
-              onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
-            >← Back to Site</Link>
-          ) : (
-            <Link to="/proposal" style={{
-              fontSize: '0.72rem', fontWeight: 500,
-              letterSpacing: '0.14em', textTransform: 'uppercase',
-              color: 'var(--gold)', transition: 'color 0.2s',
-            }}>View Proposal</Link>
-          )}
-
-          {!isProposal && (
-            <a href="#contact" className="btn-primary" style={{ padding: '0.65rem 1.4rem', fontSize: '0.68rem' }}>
-              Free Estimate
-            </a>
-          )}
+          <a href="#contact" className="btn-primary" style={{ padding: '0.65rem 1.4rem', fontSize: '0.68rem' }}>
+            Book a Free Estimate
+          </a>
         </div>
 
         {/* Mobile hamburger */}
@@ -122,11 +99,8 @@ export default function Navbar() {
                 style={{ fontSize: '1.1rem', color: 'var(--text-muted)', fontFamily: 'var(--font-serif)' }}
               >{link}</motion.a>
             ))}
-            <Link to="/proposal" onClick={() => setMenuOpen(false)}
-              style={{ fontSize: '1.1rem', color: 'var(--gold)', fontFamily: 'var(--font-serif)' }}
-            >View Proposal</Link>
             <a href="#contact" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: '0.5rem' }}>
-              Free Estimate
+              Book a Free Estimate
             </a>
           </motion.div>
         )}

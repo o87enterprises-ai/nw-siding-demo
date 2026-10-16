@@ -237,7 +237,7 @@ export default function Contact() {
             fontWeight: 700,
             color: 'var(--text)',
             marginBottom: '0.4rem',
-          }}>Request a Free Estimate</div>
+          }}>Book a Free Estimate</div>
           <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6 }}>
             We respond within one business day. Usually faster.
           </p>
@@ -280,6 +280,7 @@ export default function Contact() {
                 Service Needed
               </label>
               <select name="service" value={form.service} onChange={set('service')} style={{
+                width: '100%', minWidth: 0, boxSizing: 'border-box',
                 background: 'var(--surface)',
                 border: '1px solid var(--border)',
                 color: 'var(--text-muted)',
@@ -308,7 +309,7 @@ export default function Contact() {
               disabled={state.phase === 'sending'}
               style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem', padding: '1rem', opacity: state.phase === 'sending' ? 0.6 : 1 }}
             >
-              {state.phase === 'sending' ? 'Sending...' : 'Submit Estimate Request'}
+              {state.phase === 'sending' ? 'Sending...' : 'Book My Free Estimate'}
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -343,6 +344,7 @@ function FormField({ label, placeholder, type = 'text', name, value, onChange, e
         aria-invalid={error ? 'true' : undefined}
         placeholder={placeholder}
         style={{
+          width: '100%', minWidth: 0, boxSizing: 'border-box',
           background: 'var(--surface)',
           border: `1px solid ${error ? '#e08a7a' : 'var(--border)'}`,
           color: 'var(--text)',

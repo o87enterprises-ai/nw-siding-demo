@@ -144,7 +144,7 @@ export default function Hero() {
             className="hero-buttons"
           >
             <a href="#contact" className="btn-primary">
-              Get Free Estimate
+              Book a Free Estimate
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>

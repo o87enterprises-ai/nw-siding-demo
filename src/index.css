@@ -326,6 +326,7 @@ button {
 .portfolio-grid > div { grid-column: span 1 !important; aspect-ratio: 4/3 !important; }
 .form-name-grid    { grid-template-columns: 1fr; }
 .contact-grid      { grid-template-columns: 1fr; }
+.contact-grid > * { min-width: 0; }
 .footer-grid       { grid-template-columns: 1fr; }
 .tier-grid         { grid-template-columns: 1fr; }
 .advantages-grid   { grid-template-columns: 1fr; }
