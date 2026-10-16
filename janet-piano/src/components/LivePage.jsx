@@ -1,19 +1,15 @@
 import { useEffect, useState } from 'react'
-import Piano3D from './Piano3D'
 import Paywall from './Paywall'
-import RoomBar from './RoomBar'
+import Studio from './Studio'
 import VideoPanel from './VideoPanel'
-import { SONGS } from '../lib/notes'
-import { usePractice } from '../lib/practice'
 import { usePlan } from '../lib/plan'
 
-const song = SONGS[0]
-
-// Premium: video of Janet directly above the piano. Keys Janet plays light up on the student's keys (key match).
+// Premium: the same lesson flow as the other rooms (piano and vocal), with Janet's video directly above the piano.
+// Keys Janet plays light up on the student's keys (key match).
 function Room() {
-  const { mode, hint, practice, startLearn, startJanet, stop } = usePractice(song)
   const [live, setLive] = useState(false)
   const [seconds, setSeconds] = useState(0)
+  const [caption, setCaption] = useState('')
 
   useEffect(() => {
     if (!live) return
@@ -21,19 +17,10 @@ function Room() {
     return () => clearInterval(id)
   }, [live])
 
-  const start = () => { setSeconds(0); setLive(true); setTimeout(startJanet, 600) }
-  const end = () => { setLive(false); stop() }
-
   return (
     <div className="room live-room">
-      <VideoPanel live={live} seconds={seconds} caption={hint} onStart={start} onEnd={end} />
-      <div className="room-canvas"><Piano3D practice={practice} /></div>
-      <RoomBar status={live ? 'Key match on' : ''}>
-        <div className="controls">
-          <button disabled={!live} className={mode === 'janet' ? 'on' : ''} onClick={mode === 'janet' ? stop : startJanet}>{mode === 'janet' ? 'Stop' : 'Janet plays'}</button>
-          <button disabled={!live} className={mode === 'learn' ? 'on' : ''} onClick={mode === 'learn' ? stop : startLearn}>{mode === 'learn' ? 'Stop' : 'Your turn'}</button>
-        </div>
-      </RoomBar>
+      <VideoPanel live={live} seconds={seconds} caption={caption} onStart={() => { setSeconds(0); setLive(true) }} onEnd={() => setLive(false)} />
+      <Studio mode0="vocal" live={live} onCaption={setCaption} />
     </div>
   )
 }

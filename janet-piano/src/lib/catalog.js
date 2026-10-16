@@ -12,14 +12,14 @@ export const PLANS = [
     title: 'Lessons',
     detail: 'Interactive lessons · billed monthly',
     price: 19,
-    perks: ['Full-screen piano', 'Light-up lessons', 'Every song'],
+    perks: ['Piano and vocal lessons', 'Vocal tuner and singalongs', 'Every song, add your own'],
   },
   {
     id: 'plan-premium',
     title: 'Premium',
     detail: 'Live 1:1 with key match · billed monthly',
     price: 79,
-    perks: ['Everything in Lessons', 'Live video above the piano', 'Key match'],
+    perks: ['Everything in Lessons', 'Live video above the piano', 'Key match', 'Live singalongs'],
   },
 ]
 export const money = (n) => `$${n.toLocaleString()}`

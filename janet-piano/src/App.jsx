@@ -5,6 +5,7 @@ import Features from './components/Features'
 import Ambient from './components/Ambient'
 import PlansPage from './components/PlansPage'
 import LessonsPage from './components/LessonsPage'
+import SingPage from './components/SingPage'
 import LivePage from './components/LivePage'
 import { PlanProvider } from './lib/plan'
 import BookingPage from './components/BookingPage'
@@ -44,14 +45,15 @@ export default function App() {
   return (
     <PlanProvider>
       <CartProvider>
-        <Ambient dim={path === '/lessons' || path === '/live'} />
+        <Ambient dim={['/lessons', '/sing', '/live'].includes(path)} />
         <CartButton />
         <CheckoutBanner />
         {path === '/book' && <BookingPage />}
         {path === '/plans' && <PlansPage />}
         {path === '/lessons' && <LessonsPage />}
+        {path === '/sing' && <SingPage />}
         {path === '/live' && <LivePage />}
-        {!['/book', '/plans', '/lessons', '/live'].includes(path) && (
+        {!['/book', '/plans', '/lessons', '/sing', '/live'].includes(path) && (
           <>
             <main>
               <Hero />

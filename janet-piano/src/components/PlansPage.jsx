@@ -16,8 +16,8 @@ export default function PlansPage() {
           <div className="plan-card">
             <h2>Free</h2>
             <p className="price">$0</p>
-            <ul><li>Full-screen piano</li><li>1 free song</li></ul>
-            <Link className="btn" to="/lessons">Try it</Link>
+            <ul><li>Piano and vocal tuner</li><li>1 free song</li></ul>
+            <Link className="btn" to="/sing">Try it</Link>
           </div>
           {PLANS.map((p) => (
             <div key={p.id} className={`plan-card ${p.id === 'plan-premium' ? 'feature' : ''}`}>
