@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Logo from './Logo'
 import { O87Logo, O87Credit } from './O87'
+import AgreementDocs from './AgreementDocs'
 
 const SEEN_KEY = 'nw-o87-sa-seen'
 const AGREE_KEY = 'nw-o87-sa-agreed'
@@ -145,6 +146,8 @@ export default function ServiceAgreementGate({ children }) {
             </div>
           ))}
         </div>
+
+        <AgreementDocs />
 
         <p style={{ fontSize: '0.7rem', color: 'var(--text-subtle)', lineHeight: 1.6, marginBottom: '1.4rem' }}>
           This is a placeholder draft. The final agreement, including liability and governing-law terms,

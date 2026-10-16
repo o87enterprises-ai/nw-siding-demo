@@ -384,3 +384,28 @@ button {
   .advantages-grid, .summary-pricing-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .next-steps-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* ─── Service agreement: included documents ─────────────────────── */
+.agreement-doc { background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px; }
+.agreement-doc > summary {
+  cursor: pointer; list-style: none; padding: 0.85rem 1.1rem; min-height: 44px;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  font-size: 0.8rem; font-weight: 600; color: var(--text);
+}
+.agreement-doc > summary::-webkit-details-marker { display: none; }
+.agreement-doc > summary::after { content: '+'; color: var(--gold); font-size: 1.1rem; line-height: 1; flex-shrink: 0; }
+.agreement-doc[open] > summary::after { content: '\2212'; }
+.agreement-doc[open] > summary { border-bottom: 1px solid var(--border); }
+.agreement-doc > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+.agreement-doc-body { padding: 1rem 1.1rem 0.4rem; }
+.agreement-doc-body ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; }
+.agreement-doc-body li {
+  position: relative; padding-left: 0.9rem;
+  font-size: 0.76rem; color: var(--text-muted); line-height: 1.6;
+}
+.agreement-doc-body li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 4px; height: 4px; border-radius: 50%; background: var(--gold-line); }
+.agreement-pdf-link {
+  display: block; margin-top: 0.9rem; text-align: center;
+  font-size: 0.74rem; font-weight: 500; color: var(--gold); text-decoration: underline; text-underline-offset: 3px;
+  padding: 0.5rem 0;
+}
