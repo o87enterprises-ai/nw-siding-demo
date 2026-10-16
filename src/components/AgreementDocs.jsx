@@ -136,7 +136,10 @@ const DOCS = [
       },
       {
         heading: 'Influencer ideas and inspiration clips',
-        items: ['To be added by o87Enterprises.'],
+        items: [
+          { text: 'DxmnItBobby on YouTube', href: 'https://www.youtube.com/@DxmnItBobby' },
+          'More clips and creators to be added, with how each could apply to Northwest Siding.',
+        ],
       },
     ],
   },
@@ -167,7 +170,13 @@ export default function AgreementDocs() {
                     <div style={{ fontSize: '0.74rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.35rem' }}>{g.heading}</div>
                   )}
                   <ul>
-                    {g.items.map((it, ii) => (<li key={ii}>{it}</li>))}
+                    {g.items.map((it, ii) => (
+                      <li key={ii}>
+                        {typeof it === 'string' ? it : (
+                          <a href={it.href} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>{it.text}</a>
+                        )}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               ))}
