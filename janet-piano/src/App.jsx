@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 import { CartProvider, useCart } from './lib/cart'
 import Hero from './components/Hero'
-import About from './components/About'
+import Features from './components/Features'
+import PlansPage from './components/PlansPage'
+import LessonsPage from './components/LessonsPage'
+import LivePage from './components/LivePage'
+import { PlanProvider } from './lib/plan'
 import BookingPage from './components/BookingPage'
 import { usePath } from './lib/router'
 import CartDrawer from './components/CartDrawer'
@@ -37,21 +41,25 @@ function CartButton() {
 export default function App() {
   const path = usePath()
   return (
-    <CartProvider>
-      <CartButton />
-      <CheckoutBanner />
-      {path === '/book' ? (
-        <BookingPage />
-      ) : (
-        <>
-          <main>
-            <Hero />
-            <About />
-          </main>
-          <footer className="footer">© Janet Holmes</footer>
-        </>
-      )}
-      <CartDrawer />
-    </CartProvider>
+    <PlanProvider>
+      <CartProvider>
+        <CartButton />
+        <CheckoutBanner />
+        {path === '/book' && <BookingPage />}
+        {path === '/plans' && <PlansPage />}
+        {path === '/lessons' && <LessonsPage />}
+        {path === '/live' && <LivePage />}
+        {!['/book', '/plans', '/lessons', '/live'].includes(path) && (
+          <>
+            <main>
+              <Hero />
+              <Features />
+            </main>
+            <footer className="footer">© Janet Holmes</footer>
+          </>
+        )}
+        <CartDrawer />
+      </CartProvider>
+    </PlanProvider>
   )
 }

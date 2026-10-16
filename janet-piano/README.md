@@ -14,13 +14,20 @@ npm run dev      # http://localhost:5173
 npm run build
 ```
 
-## Piano
-- Mouse, **multi-touch** and glissando (drag across keys), plus the computer keyboard (`Z`–`M`, `Q`–`I`).
-- **Learn:** the next note rises from below toward its key; the right key turns red with a particle burst.
-- **Play along:** Janet plays Mary Had a Little Lamb and the keys light up while you join in.
+## Pages (all mock for the preview)
+- `/` hero with the free demo piano, the official logo, and three feature links.
+- `/plans` Free, **Lessons $19/mo** and **Premium $79/mo** (mock pricing). Demo checkout "unlocks" the plan in this browser only.
+- `/lessons` (Lessons+): full-screen piano, four songs, light-up lessons (rising notes; the right key turns red with a burst).
+- `/live` (Premium): mock video call of Janet directly above the piano, with **key match**: keys Janet plays light up on the student's keys. No camera, microphone or network is used.
+- `/book` live sessions: month calendar and time slots. Pay per session, or included with Premium.
+
+Piano input: mouse, **multi-touch**, drag glissando, and the computer keyboard (`Z`–`M`, `Q`–`I`). That is how lessons work without owning a piano.
+
+## Logo
+`src/assets/logo.webp` is the official JH wax seal (background cut out). Replace with any `logo.*`.
 
 ## Design
-White background, one red accent (`--accent` in `src/index.css`), about 50 words on the whole page.
+White background, one red accent (`--accent` in `src/index.css`).
 
 ## Not included yet
-Real payments and live availability (see `docs/BACKEND.md`), and Janet's photo.
+Real payments, real access control (the plan unlock is a local mock), real video calls, and live availability. See `docs/BACKEND.md`.

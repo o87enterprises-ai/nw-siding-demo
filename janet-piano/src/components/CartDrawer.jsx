@@ -3,9 +3,12 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useCart } from '../lib/cart'
 import { money } from '../lib/catalog'
 import { startCheckout } from '../lib/checkout'
+import { usePlan, planFromItems } from '../lib/plan'
+import { Link } from '../lib/router'
 
 export default function CartDrawer() {
   const { items, open, setOpen, total, remove, clear } = useCart()
+  const { setPlan } = usePlan()
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
 
@@ -13,7 +16,13 @@ export default function CartDrawer() {
     setBusy(true); setMsg('')
     try {
       const r = await startCheckout(items)
-      if (r.demo) setMsg('demo')
+      if (r.demo) {
+        // Preview only: unlock the purchased plan locally. Nothing is charged.
+        const granted = planFromItems(items)
+        if (granted) setPlan(granted)
+        setMsg(granted ? `demo:${granted}` : 'demo')
+        if (granted) clear()
+      }
     } catch (e) {
       setMsg(e.message)
     } finally { setBusy(false) }
@@ -38,10 +47,15 @@ export default function CartDrawer() {
             <footer>
               <div className="total"><span /><b>{money(total)}</b></div>
               <button className="btn primary block" disabled={!items.length || busy} onClick={checkout}>{busy ? '…' : 'Checkout'}</button>
-              {msg === 'demo' && (
-                <p className="notice">Demo mode: nothing charged. <button className="link" onClick={() => { clear(); setMsg(''); setOpen(false) }}>Clear</button></p>
+              {msg.startsWith('demo') && (
+                <p className="notice">
+                  Preview: nothing charged.{' '}
+                  {msg === 'demo:premium' && <Link className="link" to="/live" onClick={() => setOpen(false)}>Open live room</Link>}
+                  {msg === 'demo:lessons' && <Link className="link" to="/lessons" onClick={() => setOpen(false)}>Open lessons</Link>}
+                  {msg === 'demo' && <button className="link" onClick={() => { clear(); setMsg(''); setOpen(false) }}>Clear</button>}
+                </p>
               )}
-              {msg && msg !== 'demo' && <p className="notice err">{msg}</p>}
+              {msg && !msg.startsWith('demo') && <p className="notice err">{msg}</p>}
             </footer>
           </motion.aside>
         </>

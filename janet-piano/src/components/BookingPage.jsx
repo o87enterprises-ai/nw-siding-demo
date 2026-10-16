@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
-import { SINGLE, PLANS, money } from '../lib/catalog'
+import { SINGLE, money } from '../lib/catalog'
 import { useCart } from '../lib/cart'
-import { Link } from '../lib/router'
-import WaxSeal from './WaxSeal'
+import { usePlan } from '../lib/plan'
+import SiteHeader from './SiteHeader'
 
 const HOURS = [9, 10, 11, 12, 13, 14, 15, 16]
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
@@ -25,6 +25,8 @@ function openHours(date, now) {
 
 export default function BookingPage() {
   const { add } = useCart()
+  const { isPremium } = usePlan()
+  const [booked, setBooked] = useState('')
   const now = useMemo(() => new Date(), [])
   const [lesson, setLesson] = useState(SINGLE[1])
   const [month, setMonth] = useState(() => new Date(now.getFullYear(), now.getMonth(), 1))
@@ -44,18 +46,23 @@ export default function BookingPage() {
   const addLesson = () => {
     const slot = `${dayKey(day)}T${String(hour).padStart(2, '0')}:00`
     const when = `${day.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })} at ${hourLabel(hour)}`
-    add({ uid: `${lesson.id}@${slot}`, id: lesson.id, slot, title: `${lesson.minutes} Min Lesson`, detail: when, price: lesson.price })
+    if (isPremium) {
+      setBooked(`Booked: ${when}.`)
+    } else {
+      add({ uid: `${lesson.id}@${slot}`, id: lesson.id, slot, title: `${lesson.minutes} Min Live Session`, detail: when, price: lesson.price })
+    }
     setHour(null)
   }
 
   return (
+    <>
+    <SiteHeader />
     <main className="book-page">
-      <Link to="/" className="book-home" aria-label="Home"><WaxSeal size={64} /></Link>
 
       <div className="lessons" role="group" aria-label="Lesson length">
         {SINGLE.map((s) => (
           <button key={s.id} className={`pill ${lesson.id === s.id ? 'sel' : ''}`} onClick={() => setLesson(s)} aria-pressed={lesson.id === s.id}>
-            {s.minutes} min {money(s.price)}
+            {s.minutes} min{isPremium ? '' : ` ${money(s.price)}`}
           </button>
         ))}
       </div>
@@ -92,16 +99,10 @@ export default function BookingPage() {
         </div>
       )}
 
-      <button className="btn primary" disabled={!day || hour == null} onClick={addLesson}>Add to cart</button>
+      <button className="btn primary" disabled={!day || hour == null} onClick={addLesson}>{isPremium ? 'Book' : 'Add to cart'}</button>
+      {booked && <p className="muted" role="status">{booked}</p>}
 
-      <div className="lessons plans" role="group" aria-label="Monthly programs">
-        <span>Monthly</span>
-        {PLANS.map((p) => (
-          <button key={p.id} className="pill" onClick={() => add({ uid: p.id, id: p.id, title: p.title, detail: `${p.detail} · billed monthly`, price: p.price })}>
-            {p.short} {money(p.price)}
-          </button>
-        ))}
-      </div>
     </main>
+    </>
   )
 }
