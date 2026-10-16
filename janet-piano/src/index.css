@@ -100,8 +100,9 @@ kbd { border: 1px solid currentColor; border-radius: 4px; padding: 0 5px; font-s
 .plan-card li { padding: .25rem 0; border-bottom: 1px solid var(--line); }
 .plan-card .btn { text-align: center; }
 .fine { margin-top: 2rem; font-size: .85rem; color: var(--muted); }
-.paywall { min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .8rem; text-align: center; padding: 16px; }
-.paywall h2 { font-size: 2rem; }
+.paywall-bar { display: flex; flex-direction: column; align-items: center; gap: .6rem; text-align: center; padding: .8rem 16px 1.2rem; border-top: 1px solid var(--line); background: #fff; }
+.paywall-bar h2 { font-size: clamp(1.4rem, 4vw, 2rem); }
+.paywall-bar .cta-row { margin-top: .2rem; }
 
 /* Full-screen rooms: piano on the top edge, controls in a bar at the bottom */
 .room { position: fixed; inset: 0; z-index: 5; background: #fff; display: flex; flex-direction: column; }
@@ -161,3 +162,14 @@ kbd { border: 1px solid currentColor; border-radius: 4px; padding: 0 5px; font-s
   .path li { flex: 0 0 30%; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Rotate guide: portrait phones only */
+.rotate-hint { display: none; align-items: center; gap: .6rem; background: var(--tint); color: var(--accent-deep); border-radius: 999px; padding: .35rem .5rem .35rem .9rem; font-size: .85rem; line-height: 1.2; pointer-events: auto; }
+.rotate-hint button { background: none; border: 0; color: inherit; padding: 0 .4rem; font-size: .9rem; }
+.rotate-icon { flex: none; animation: turn 2.4s ease-in-out infinite; }
+@keyframes turn { 0%, 25% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
+@media (max-width: 760px) and (orientation: portrait) {
+  .rotate-hint { display: inline-flex; }
+  .hero { --piano-h: calc(100vw * 0.37); }
+}
+@media (prefers-reduced-motion: reduce) { .rotate-icon { animation: none; } }
