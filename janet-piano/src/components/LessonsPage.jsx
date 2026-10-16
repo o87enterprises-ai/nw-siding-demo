@@ -1,6 +1,6 @@
 import Studio from './Studio'
 
-// Full-screen piano with light-up lessons. Free plan: first song; members: every song (mock gate).
+// Practice room. /lessons opens in "Play piano" mode, /sing in "Sing along".
 export default function LessonsPage() {
-  return <div className="room"><Studio mode0="piano" /></div>
+  return <div className="room"><Studio mode0="play" room /></div>
 }

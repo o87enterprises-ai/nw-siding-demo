@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { RoundedBox, Edges } from '@react-three/drei'
 import * as THREE from 'three'
 import { KEYS, KEYBOARD_MAP, noteToX } from '../lib/notes'
 import { engine } from '../lib/engine'
@@ -15,30 +16,38 @@ const POOL = 6
 const WORLD_W = 16 // world units that span the full screen width
 
 const WHITE = new THREE.Color('#ffffff')
-const INK = new THREE.Color('#1c1c1c')
+const INK = new THREE.Color('#16100f')
 const ACCENT = new THREE.Color('#b3202c')
-const tmp = new THREE.Color()
 
 function Key({ k }) {
+  const group = useRef()
   const mat = useRef()
   const amt = useRef(0)
   const len = k.black ? L.keyLen * 0.62 : L.keyLen
   const w = k.black ? 0.58 : 0.94
+  const h = k.black ? 0.62 : 0.5
 
   useFrame((_, dt) => {
     const now = performance.now()
     const on = (engine.active.get(k.note) || 0) > 0
     const lit = (engine.gold.get(k.note) || 0) > now
-    const target = lit ? 1 : on ? 0.7 : 0
+    const target = lit ? 1 : on ? 0.75 : 0
     amt.current += (target - amt.current) * Math.min(1, dt * 18)
-    mat.current.color.lerpColors(k.black ? INK : WHITE, ACCENT, amt.current)
+    const m = mat.current
+    m.color.lerpColors(k.black ? INK : WHITE, ACCENT, amt.current)
+    m.emissive.copy(ACCENT)
+    m.emissiveIntensity = amt.current * 0.55
+    const rot = group.current.rotation
+    rot.x += ((on || lit ? 0.05 : 0) - rot.x) * Math.min(1, dt * 24)
   })
 
   return (
-    <mesh position={[k.x, k.black ? 0.2 : 0, len / 2]} rotation={[-Math.PI / 2, 0, 0]} userData={{ note: k.note }}>
-      <planeGeometry args={[w, len]} />
-      <meshBasicMaterial ref={mat} color={k.black ? '#1c1c1c' : '#ffffff'} toneMapped={false} />
-    </mesh>
+    <group ref={group} position={[k.x, 0, 0]}>
+      <RoundedBox args={[w, h, len]} radius={k.black ? 0.07 : 0.05} smoothness={3} position={[0, k.black ? 0.05 : -0.25, len / 2]} userData={{ note: k.note }}>
+        <meshStandardMaterial ref={mat} color={k.black ? '#16100f' : '#ffffff'} roughness={k.black ? 0.28 : 0.45} metalness={k.black ? 0.25 : 0} toneMapped={false} />
+        <Edges threshold={30} color="#b3202c" />
+      </RoundedBox>
+    </group>
   )
 }
 
@@ -59,12 +68,13 @@ function RisingNotes({ practice }) {
       const targetZ = hitZ() + (s - step) * LANE_GAP
       m.z += (targetZ - m.z) * Math.min(1, dt * 4)
       mesh.visible = true
-      mesh.position.set(noteToX[notes[s][0]], 0.5, m.z)
+      mesh.position.set(noteToX[notes[s][0]], 0.25, m.z)
       const first = s === step
       mesh.scale.set(first ? 1 + Math.sin(performance.now() / 160) * 0.07 : 1, 1, 1)
       const mat = mesh.material
       mat.color.set('#b3202c')
-      mat.opacity = first ? 1 : Math.max(0.12, 0.45 - (s - step) * 0.07)
+      mat.emissiveIntensity = first ? 0.8 : 0.4
+      mat.opacity = first ? 1 : Math.max(0.18, 0.62 - (s - step) * 0.09)
     }
   })
 
@@ -77,9 +87,9 @@ function RisingNotes({ practice }) {
         </mesh>
       ))}
       {Array.from({ length: POOL }, (_, i) => (
-        <mesh key={i} ref={(el) => (refs.current[i] = el)} visible={false} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[0.8, 1.3]} />
-          <meshBasicMaterial transparent toneMapped={false} />
+        <mesh key={i} ref={(el) => (refs.current[i] = el)} visible={false}>
+          <boxGeometry args={[0.8, 0.22, 1.25]} />
+          <meshStandardMaterial transparent emissive="#b3202c" emissiveIntensity={0.5} color="#9c1625" roughness={0.4} />
         </mesh>
       ))}
     </group>
@@ -193,17 +203,24 @@ function PointerInput({ keysRef }) {
   return null
 }
 
-// Straight-down orthographic camera; the keys always span the full screen width
-// and the key backs are pinned to the top edge of the canvas.
+// Orthographic camera tilted a few degrees toward the player so key fronts and bevels show.
+// Keys always span the full width and their backs are pinned just below the top edge of the canvas.
+const TILT = THREE.MathUtils.degToRad(17)
+const probe = new THREE.Vector3()
 function CameraRig() {
   const { camera, size } = useThree()
   useEffect(() => {
     const zoom = size.width / WORLD_W
+    const tz = size.height / (2 * zoom)
     camera.zoom = zoom
     camera.up.set(0, 0, -1)
-    camera.position.set(0, 10, -0.15 + size.height / (2 * zoom))
-    camera.lookAt(0, 0, camera.position.z)
+    camera.position.set(0, Math.cos(TILT) * 20, tz + Math.sin(TILT) * 20)
+    camera.lookAt(0, 0, tz)
     camera.updateProjectionMatrix()
+    camera.updateMatrixWorld()
+    const p = probe.set(0, 0.4, -0.1).project(camera)
+    camera.translateY((p.y - (1 - 24 / size.height)) * (size.height / (2 * zoom)))
+    camera.updateMatrixWorld()
   }, [camera, size])
   return null
 }
@@ -240,9 +257,13 @@ export default function Piano3D({ practice }) {
     // pan-y keeps vertical page scrolling working on touch; horizontal drags play glissandos.
     <Canvas orthographic camera={{ near: 0.1, far: 50 }} dpr={[1, 2]} gl={{ alpha: true, antialias: true }} style={{ touchAction: 'pan-y' }}>
       <CameraRig />
-      <mesh position={[0, -0.05, L.keyLen / 2]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[15.1, L.keyLen + 0.08]} />
-        <meshBasicMaterial color="#d9d2cc" toneMapped={false} />
+      <ambientLight intensity={1.15} />
+      <directionalLight position={[3, 12, 9]} intensity={2.1} color="#fff6ee" />
+      <directionalLight position={[-6, 6, -4]} intensity={0.7} color="#ffb3bd" />
+      <pointLight position={[0, 4, 2]} intensity={14} color="#b3202c" distance={14} />
+      <mesh position={[0, -0.12, L.keyLen / 2]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[15.3, L.keyLen + 0.3]} />
+        <meshStandardMaterial color="#8c1623" transparent opacity={0.22} roughness={0.6} />
       </mesh>
       <group ref={keysRef}>{KEYS.map((k) => <Key key={`${k.note}${L.keyLen}`} k={k} />)}</group>
       <RisingNotes practice={practice} />

@@ -20,7 +20,7 @@ function Room() {
   return (
     <div className="room live-room">
       <VideoPanel live={live} seconds={seconds} caption={caption} onStart={() => { setSeconds(0); setLive(true) }} onEnd={() => setLive(false)} />
-      <Studio mode0="vocal" live={live} onCaption={setCaption} />
+      <Studio mode0="sing" room live={live} onCaption={setCaption} />
     </div>
   )
 }

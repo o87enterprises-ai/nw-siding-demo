@@ -1,53 +1,30 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import Piano3D from './Piano3D'
+import Studio from './Studio'
 import Logo from './Logo'
-import RotateHint from './RotateHint'
-import { SONGS, noteToKeyboard, pretty } from '../lib/notes'
-import { usePractice } from '../lib/practice'
+import NavMenu from './NavMenu'
 import { Link } from '../lib/router'
 
-const song = SONGS[0]
-
+// The singing demo is the first thing on the page. The piano drops down from its tab; while it is open
+// everything else steps aside so only the piano, the upcoming notes, the lyrics and the tuner remain.
 export default function Hero() {
-  const { mode, hint, target, practice, startLearn, startJanet, stop } = usePractice(song)
-
+  const [open, setOpen] = useState(false)
   return (
     <section className="hero" id="top">
-      <div className="piano-layer">
-        <Piano3D practice={practice} />
-      </div>
-
-      <div className="hero-content">
-        <div className="tools">
-          <RotateHint />
-          <div className="controls">
-            <button className={mode === 'learn' ? 'on' : ''} onClick={mode === 'learn' ? stop : startLearn}>
-              {mode === 'learn' ? 'Stop' : 'Learn'}
-            </button>
-            <button className={mode === 'janet' ? 'on' : ''} onClick={mode === 'janet' ? stop : startJanet}>
-              {mode === 'janet' ? 'Stop' : 'Play along'}
-            </button>
-          </div>
-          <p className="piano-status" aria-live="polite">
-            {target && <span className="chip">{pretty(target)} <kbd>{noteToKeyboard[target]}</kbd></span>}
-            {hint}
-          </p>
-        </div>
-
-        <div className="hero-center">
-          <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1 }} className="hero-seal-wrap">
-            <Logo size="100%" className="hero-seal" />
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}>
-            <h1>Vocal and piano lessons with Janet</h1>
-            <p className="lede">No piano needed.</p>
-            <div className="cta-row">
-              <Link className="btn primary" to="/plans">See plans</Link>
-              <Link className="btn" to="/book">Book a session</Link>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+      <NavMenu className="fixed" />
+      <Studio collapsible open={open} onOpenChange={setOpen} demo />
+      <motion.div
+        className="hero-center"
+        initial={false}
+        animate={{ opacity: open ? 0 : 1, height: open ? 0 : 'auto', paddingTop: open ? 0 : 32, paddingBottom: open ? 0 : 64 }}
+        transition={{ duration: 0.45 }}
+        style={{ overflow: 'hidden' }}
+        aria-hidden={open}
+      >
+        <div className="hero-seal-wrap"><Logo size="100%" className="hero-seal" /></div>
+        <h1>Vocal and piano lessons with Janet</h1>
+        <Link className="btn primary" to="/plans" tabIndex={open ? -1 : 0}>See plans</Link>
+      </motion.div>
     </section>
   )
 }
