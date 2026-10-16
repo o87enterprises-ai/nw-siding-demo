@@ -33,7 +33,7 @@ export default function TunerMeter({ freq, target, listening, level, error, onEn
     return (
       <button className="tuner idle" onClick={onEnable} aria-label="Turn on microphone">
         {body}
-        <span className="tuner-tap">{error || 'Tap to tune'}</span>
+        {error && <span className="tuner-tap">{error}</span>}
       </button>
     )
   }

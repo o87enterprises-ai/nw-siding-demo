@@ -15,7 +15,7 @@ npm run build
 ```
 
 ## Pages (all mock for the preview)
-- `/` **the full singing demo, no sign-up or plan needed.** A holographic console sits at the top of the page: lyrics, the pitch tuner, and three drop-downs (song, mode) plus one button. The **Piano** tab drops the piano down with the upcoming notes below it, and the rest of the page steps aside while it is open.
+- `/` **the full singing demo, no sign-up or plan needed.** A flashing "Sing along" cue sits at the very top. Below it, a holographic console: lyrics, one big centered **Play** button (one tap asks for the microphone and starts the song by itself), the pitch tuner, and two small drop-downs (song, mode). The **Piano** tab drops the piano down with the upcoming notes below it, and the rest of the page steps aside while it is open.
 - Modes: **Sing along** (piano guide plays), **Sing solo**, **Hear it**, **Play piano** (press the glowing key), **Tuner** (free pitch tuner).
 - Tuner: real microphone pitch detection (local only). Red (off) to yellow to green (in tune); the only green on the site.
 - `/sing` and `/lessons`: the same console full screen. Members can add songs from a YouTube link (mock analysis, see `docs/VOCAL.md`).

@@ -13,6 +13,7 @@ import { usePractice } from '../lib/practice'
 import { useSing } from '../lib/sing'
 import { useMic } from '../lib/mic'
 import { useCustomSongs } from '../lib/customSongs'
+import { unlockAudio } from '../lib/audio'
 import { usePlan } from '../lib/plan'
 import { Link } from '../lib/router'
 
@@ -26,14 +27,13 @@ const MODES = [
   { value: 'play', label: 'Play piano' },
   { value: 'tune', label: 'Tuner' },
 ]
-const ACTION = { sing: 'Sing', solo: 'Sing', hear: 'Hear', play: 'Play', tune: 'Tune' }
 const verdict = (a) => (a >= 0.8 ? 'Great pitch!' : a >= 0.55 ? 'Getting there' : 'Keep going')
 
 // The whole singing flow in one holographic console: [piano + upcoming notes] / lyrics + tuner / three dropdowns and one button.
 //  - collapsible: the piano drops down from a tab (landing page). Otherwise it is always shown (practice and live rooms).
 //  - demo: everything is open to everyone and "add a song" is hidden (landing page).
 //  - live: boolean from the live-session page; the action button stays disabled until the session starts.
-export default function Studio({ mode0 = 'sing', collapsible = false, open = true, onOpenChange, demo = false, live, onCaption, room = false }) {
+export default function Studio({ mode0 = 'sing', collapsible = false, open = true, onOpenChange, demo = false, live, onCaption, onRunningChange, room = false }) {
   const { hasLessons } = usePlan()
   const custom = useCustomSongs()
   const songs = [...SONGS, ...custom.songs]
@@ -80,6 +80,7 @@ export default function Studio({ mode0 = 'sing', collapsible = false, open = tru
 
   const running = mode === 'hear' ? piano.mode === 'janet' : mode === 'play' ? piano.mode === 'learn' : mode === 'tune' ? mic.listening : sing.running
   const act = () => {
+    unlockAudio() // must happen inside the tap so the song can start right after the mic is allowed
     if (running) { stopAll(); if (mode === 'tune') mic.stop(); return }
     stopAll()
     if (mode === 'hear') piano.startJanet()
@@ -87,6 +88,8 @@ export default function Studio({ mode0 = 'sing', collapsible = false, open = tru
     else if (mode === 'tune') mic.start()
     else sing.start()
   }
+
+  useEffect(() => { onRunningChange?.(running) }, [running]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const lyricIndex = sing.running ? sing.index : piano.mode === 'janet' ? piano.step : -1
   const tunerTarget = sing.running && sing.index >= 0 ? song.notes[sing.index][0] : null
@@ -123,6 +126,11 @@ export default function Studio({ mode0 = 'sing', collapsible = false, open = tru
         ) : (
           <Lyrics notes={song.notes} index={lyricIndex} />
         )}
+        <button className={`play ${running ? 'on' : ''}`} disabled={disabled} onClick={act} aria-label={running ? 'Stop' : 'Play'}>
+          {running
+            ? <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" /></svg>
+            : <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" fill="currentColor" /></svg>}
+        </button>
         <TunerMeter freq={mic.freq} target={tunerTarget} listening={mic.listening} level={mic.level} error={mic.error} onEnable={mic.start} />
         <p className="holo-hint" aria-live="polite">{hint}</p>
       </div>
@@ -131,7 +139,6 @@ export default function Studio({ mode0 = 'sing', collapsible = false, open = tru
         {room && <Link to="/" className="holo-logo" aria-label="Home"><Logo size={38} /></Link>}
         <Dropdown label="Song" value={song.id} onChange={changeSong} options={songOptions} className="dd-song" />
         <Dropdown label="Mode" value={mode} onChange={changeMode} options={MODES} />
-        <button className={`go ${running ? 'on' : ''}`} disabled={disabled} onClick={act}>{running ? 'Stop' : ACTION[mode]}</button>
         {room && <NavMenu className="inline" />}
       </div>
       {shown && <RotateHint />}

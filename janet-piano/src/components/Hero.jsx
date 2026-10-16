@@ -9,10 +9,12 @@ import { Link } from '../lib/router'
 // everything else steps aside so only the piano, the upcoming notes, the lyrics and the tuner remain.
 export default function Hero() {
   const [open, setOpen] = useState(false)
+  const [ran, setRan] = useState(false) // the flashing cue goes away once someone presses play
   return (
     <section className="hero" id="top">
       <NavMenu className="fixed" />
-      <Studio collapsible open={open} onOpenChange={setOpen} demo />
+      {!ran && <p className="flash-cue" aria-hidden="true">Sing along</p>}
+      <Studio collapsible open={open} onOpenChange={setOpen} onRunningChange={(r) => r && setRan(true)} demo />
       <motion.div
         className="hero-center"
         initial={false}
