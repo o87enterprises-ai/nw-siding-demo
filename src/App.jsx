@@ -10,7 +10,7 @@ import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ProposalPage from './pages/ProposalPage'
-import NDAGate from './components/NDAModal'
+import ServiceAgreementGate from './components/ServiceAgreementGate'
 import { O87Watermark } from './components/O87'
 
 function ProposalCTA() {
@@ -127,13 +127,13 @@ function HomePage() {
 export default function App() {
   return (
     <BrowserRouter>
-      <NDAGate>
+      <ServiceAgreementGate>
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/proposal" element={<ProposalPage />} />
         </Routes>
-      </NDAGate>
+      </ServiceAgreementGate>
     </BrowserRouter>
   )
 }
