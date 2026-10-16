@@ -10,6 +10,7 @@ export function useSing(song, mic, { guide = true } = {}) {
   const [index, setIndex] = useState(-1)
   const [result, setResult] = useState(null)
   const [hint, setHint] = useState('')
+  const [starting, setStarting] = useState(false) // waiting on the microphone permission prompt
   const timers = useRef([])
   const cur = useRef(null) // { note, start, end }
   const stats = useRef({ frames: 0, good: 0 })
@@ -31,6 +32,7 @@ export function useSing(song, mic, { guide = true } = {}) {
     setState('idle')
     setIndex(-1)
     setHint('')
+    setStarting(false)
   }, [clear])
   useEffect(() => { stop(); setResult(null) }, [song.id, stop])
 
@@ -47,35 +49,39 @@ export function useSing(song, mic, { guide = true } = {}) {
   const start = useCallback(async () => {
     clear()
     setResult(null)
-    if (!(await mic.start())) return
+    setStarting(true)
+    setHint('Allow the microphone…')
+    const micOk = await mic.start()
+    setStarting(false)
+    // No microphone (blocked, missing, unsupported)? The song still plays so the demo works; it just is not scored.
     stats.current = { frames: 0, good: 0 }
     setState('running')
     setIndex(-1)
-    setHint('Get ready…')
+    setHint(micOk ? 'Get ready…' : 'Mic is off, so the song plays unscored')
     const beat = 60000 / song.bpm
     let t = 1800
     song.notes.forEach(([note, beats], i) => {
       const dur = beats * beat
       timers.current.push(setTimeout(() => {
         setIndex(i)
-        setHint('Sing!')
+        setHint(micOk ? 'Sing!' : 'Mic is off')
         cur.current = { note, start: performance.now(), end: performance.now() + dur * 0.95 }
         if (guide) engine.noteOn(note, { source: 'janet', gold: true })
         else engine.celebrate(note)
       }, t))
-      if (guide) timers.current.push(setTimeout(() => engine.noteOff(note), t + dur * 0.9))
+      // Guide notes are short so they do not drown out (or leak into the mic over) the singer.
+      if (guide) timers.current.push(setTimeout(() => engine.noteOff(note), t + Math.min(dur * 0.9, 450)))
       t += dur
     })
     timers.current.push(setTimeout(() => {
       cur.current = null
       const { frames, good } = stats.current
-      const accuracy = frames ? good / frames : 0
-      setResult({ accuracy, frames })
+      setResult(micOk ? { accuracy: frames ? good / frames : 0, frames } : null)
       setState('done')
       setIndex(-1)
       setHint('')
     }, t + 300))
   }, [clear, mic.start, song, guide])
 
-  return { state, running: state === 'running', index, result, hint, practice, start, stop, currentNote: cur }
+  return { state, running: state === 'running', starting, index, result, hint, practice, start, stop, currentNote: cur }
 }
