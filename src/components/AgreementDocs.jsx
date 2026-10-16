@@ -138,6 +138,7 @@ const DOCS = [
         heading: 'Influencer ideas and inspiration clips',
         items: [
           { text: 'DxmnItBobby on YouTube', href: 'https://www.youtube.com/@DxmnItBobby' },
+          { text: 'Daddicated on YouTube (Shorts)', href: 'https://www.youtube.com/@Daddicated/shorts' },
           'More clips and creators to be added, with how each could apply to Northwest Siding.',
         ],
       },
