@@ -1,0 +1,27 @@
+{
+  "name": "janet-piano",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "pages:create": "npx --yes wrangler@3 pages project create janet-piano --production-branch main",
+    "deploy": "vite build && npx --yes wrangler@3 pages deploy dist --project-name janet-piano --branch main",
+    "dev:pages": "vite build && npx --yes wrangler@3 pages dev dist"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
+    "framer-motion": "^12.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "three": "^0.180.0",
+    "tone": "^15.1.22"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.0",
+    "vite": "^7.0.0"
+  }
+}
