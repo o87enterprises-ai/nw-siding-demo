@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { CartProvider, useCart } from './lib/cart'
 import Hero from './components/Hero'
 import Features from './components/Features'
+import Ambient from './components/Ambient'
 import PlansPage from './components/PlansPage'
 import LessonsPage from './components/LessonsPage'
 import LivePage from './components/LivePage'
@@ -43,6 +44,7 @@ export default function App() {
   return (
     <PlanProvider>
       <CartProvider>
+        <Ambient dim={path === '/lessons' || path === '/live'} />
         <CartButton />
         <CheckoutBanner />
         {path === '/book' && <BookingPage />}

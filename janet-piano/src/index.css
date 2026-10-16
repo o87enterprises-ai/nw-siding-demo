@@ -11,7 +11,7 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; }
+body { margin: 0; background: var(--bg); position: relative; color: var(--ink); font-family: var(--sans); line-height: 1.5; }
 h1, h2, h3 { font-family: var(--serif); margin: 0; line-height: 1.1; }
 button, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
@@ -173,3 +173,10 @@ kbd { border: 1px solid currentColor; border-radius: 4px; padding: 0 5px; font-s
   .hero { --piano-h: calc(100vw * 0.37); }
 }
 @media (prefers-reduced-motion: reduce) { .rotate-icon { animation: none; } }
+
+/* Ambient 3D notes sit behind everything (z-index -1 paints above the page background only) */
+.ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.ambient.dim { opacity: .55; }
+.room { background: transparent; }
+.pill.locked { display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; color: var(--muted); }
+.pill.locked:hover { color: var(--accent); }

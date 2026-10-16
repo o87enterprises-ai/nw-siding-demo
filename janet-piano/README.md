@@ -17,7 +17,7 @@ npm run build
 ## Pages (all mock for the preview)
 - `/` hero with the free demo piano, the official logo, and three feature links.
 - `/plans` Free, **Lessons $19/mo** and **Premium $79/mo** (mock pricing). Demo checkout "unlocks" the plan in this browser only.
-- `/lessons` (Lessons+): full-screen piano, four songs, light-up lessons (rising notes; the right key turns red with a burst).
+- `/lessons`: full-screen piano with light-up lessons (rising notes; the right key turns red with a burst). Free plan: first song; Lessons/Premium: all four.
 - `/live` (Premium): mock video call of Janet directly above the piano, with **key match**: keys Janet plays light up on the student's keys. No camera, microphone or network is used.
 - `/book` live sessions: month calendar and time slots. Pay per session, or included with Premium.
 
@@ -31,3 +31,6 @@ White background, one red accent (`--accent` in `src/index.css`).
 
 ## Not included yet
 Real payments, real access control (the plan unlock is a local mock), real video calls, and live availability. See `docs/BACKEND.md`.
+
+## Ambient background
+`src/components/Ambient.jsx`: about 20 faint 3D music notes (greys plus the logo red) tumbling at different orientations behind the page. They flare and drift when keys are played, when you scroll, and when you click buttons. Respects `prefers-reduced-motion`.
