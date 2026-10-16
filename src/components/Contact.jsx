@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import SectionBackground from './SectionBackground'
 
@@ -8,9 +8,49 @@ const CONTACT_IMAGES = [
   'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1920&q=80',
 ]
 
+const EMPTY = { first_name: '', last_name: '', phone: '', email: '', zip: '', service: 'Fiber Cement Siding', website: '' }
+
 export default function Contact() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
+  const [form, setForm] = useState(EMPTY)
+  const [state, setState] = useState({ phase: 'idle', errors: {}, message: '' })
+
+  const set = (name) => (e) => setForm((f) => ({ ...f, [name]: e.target.value }))
+
+  async function onSubmit(e) {
+    e.preventDefault()
+    if (state.phase === 'sending') return
+    setState({ phase: 'sending', errors: {}, message: '' })
+    const q = new URLSearchParams(window.location.search)
+    try {
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          page: window.location.pathname,
+          referrer: document.referrer,
+          utm_source: q.get('utm_source') || '',
+          utm_medium: q.get('utm_medium') || '',
+          utm_campaign: q.get('utm_campaign') || '',
+        }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.ok) {
+        setForm(EMPTY)
+        setState({ phase: 'done', errors: {}, message: '' })
+      } else {
+        setState({
+          phase: 'error',
+          errors: data.errors || {},
+          message: data.error || (data.errors ? 'Please check the highlighted fields.' : 'Something went wrong. Please call us at (541) 688-2997.'),
+        })
+      }
+    } catch {
+      setState({ phase: 'error', errors: {}, message: 'Could not send. Please call us at (541) 688-2997.' })
+    }
+  }
 
   return (
     <section
@@ -193,20 +233,34 @@ export default function Contact() {
             We respond within one business day. Usually faster.
           </p>
 
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div className="form-name-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <FormField label="First Name" placeholder="Travis" />
-              <FormField label="Last Name" placeholder="Prine" />
+          {state.phase === 'done' ? (
+            <div role="status" style={{ padding: '2rem 0', textAlign: 'center' }}>
+              <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem' }}>
+                Thank you, we got your request.
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>
+                We will be in touch within one business day. If it is urgent, call (541) 688-2997.
+              </p>
             </div>
-            <FormField label="Phone Number" placeholder="(541) 000-0000" type="tel" />
-            <FormField label="Email Address" placeholder="you@email.com" type="email" />
-            <FormField label="ZIP Code" placeholder="97405" />
+          ) : (
+          <form onSubmit={onSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* Honeypot: hidden from people, filled by bots */}
+            <input type="text" name="website" value={form.website} onChange={set('website')}
+              tabIndex={-1} autoComplete="off" aria-hidden="true"
+              style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0 }} />
+            <div className="form-name-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <FormField label="First Name" placeholder="Travis" name="first_name" value={form.first_name} onChange={set('first_name')} error={state.errors.first_name} autoComplete="given-name" />
+              <FormField label="Last Name" placeholder="Prine" name="last_name" value={form.last_name} onChange={set('last_name')} autoComplete="family-name" />
+            </div>
+            <FormField label="Phone Number" placeholder="(541) 000-0000" type="tel" name="phone" value={form.phone} onChange={set('phone')} error={state.errors.phone || state.errors.contact} autoComplete="tel" />
+            <FormField label="Email Address" placeholder="you@email.com" type="email" name="email" value={form.email} onChange={set('email')} error={state.errors.email} autoComplete="email" />
+            <FormField label="ZIP Code" placeholder="97405" name="zip" value={form.zip} onChange={set('zip')} error={state.errors.zip} autoComplete="postal-code" />
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
                 Service Needed
               </label>
-              <select style={{
+              <select name="service" value={form.service} onChange={set('service')} style={{
                 background: 'var(--surface)',
                 border: '1px solid var(--border)',
                 color: 'var(--text-muted)',
@@ -225,12 +279,17 @@ export default function Contact() {
               </select>
             </div>
 
+            {state.message && (
+              <p role="alert" style={{ fontSize: '0.8rem', color: '#e08a7a', margin: 0 }}>{state.message}</p>
+            )}
+
             <button
               type="submit"
               className="btn-primary"
-              style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem', padding: '1rem' }}
+              disabled={state.phase === 'sending'}
+              style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem', padding: '1rem', opacity: state.phase === 'sending' ? 0.6 : 1 }}
             >
-              Submit Estimate Request
+              {state.phase === 'sending' ? 'Sending...' : 'Submit Estimate Request'}
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -240,6 +299,7 @@ export default function Contact() {
               Licensed · Bonded · Insured · CCB #136733
             </p>
           </form>
+          )}
         </motion.div>
       </div>
 
@@ -247,7 +307,7 @@ export default function Contact() {
   )
 }
 
-function FormField({ label, placeholder, type = 'text' }) {
+function FormField({ label, placeholder, type = 'text', name, value, onChange, error, autoComplete }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
       <label style={{
@@ -257,10 +317,15 @@ function FormField({ label, placeholder, type = 'text' }) {
       }}>{label}</label>
       <input
         type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        autoComplete={autoComplete}
+        aria-invalid={error ? 'true' : undefined}
         placeholder={placeholder}
         style={{
           background: 'var(--surface)',
-          border: '1px solid var(--border)',
+          border: `1px solid ${error ? '#e08a7a' : 'var(--border)'}`,
           color: 'var(--text)',
           padding: '0.75rem 1rem',
           borderRadius: '2px',
@@ -270,8 +335,9 @@ function FormField({ label, placeholder, type = 'text' }) {
           transition: 'border-color 0.2s',
         }}
         onFocus={e => e.target.style.borderColor = 'var(--gold-line)'}
-        onBlur={e => e.target.style.borderColor = 'var(--border)'}
+        onBlur={e => e.target.style.borderColor = error ? '#e08a7a' : 'var(--border)'}
       />
+      {error && <span style={{ fontSize: '0.72rem', color: '#e08a7a' }}>{error}</span>}
     </div>
   )
 }
