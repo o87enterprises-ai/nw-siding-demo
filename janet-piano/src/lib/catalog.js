@@ -12,7 +12,7 @@ export const PLANS = [
     title: 'Lessons',
     detail: 'Interactive lessons · billed monthly',
     price: 19,
-    perks: ['Piano and vocal lessons', 'Vocal tuner and singalongs', 'Every song, add your own'],
+    perks: ['Add songs from YouTube', 'Your own song library'],
   },
   {
     id: 'plan-premium',
