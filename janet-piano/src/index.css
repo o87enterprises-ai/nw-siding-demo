@@ -181,22 +181,29 @@ kbd { border: 1px solid currentColor; border-radius: 4px; padding: 0 5px; font-s
 .pill.locked { display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; color: var(--muted); }
 .pill.locked:hover { color: var(--accent); }
 
-/* Soundstage "cyclorama": bright white backdrop that falls to soft grey at the ceiling, corners and floor curve,
-   with a hint of magenta on the walls and where the floor meets them. Fixed, so the room stays put. */
+/* Soundstage cyclorama, visible on every page: a lit back wall that curves down into a glossy floor,
+   a soft burgundy projector beam from above, and a faint holo grid on the floor. Fixed, so the room stays put. */
 body::before {
-  content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  content: ''; position: fixed; inset: 0; z-index: -3; pointer-events: none;
   background:
-    /* ceiling: soft grey falloff from the top edge */
-    linear-gradient(180deg, rgba(96, 86, 92, .13) 0%, rgba(96, 86, 92, .05) 14%, rgba(96, 86, 92, 0) 30%),
-    /* floor curve: grey rolling up into the back wall, with a magenta bounce along the join */
-    radial-gradient(ellipse 130% 34% at 50% 104%, rgba(190, 40, 90, .11) 0%, rgba(190, 40, 90, .04) 45%, rgba(190, 40, 90, 0) 75%),
-    linear-gradient(0deg, rgba(110, 100, 106, .16) 0%, rgba(110, 100, 106, .06) 18%, rgba(110, 100, 106, 0) 40%),
-    /* side walls: faint magenta wash, strongest mid-height */
-    radial-gradient(ellipse 38% 70% at -4% 58%, rgba(190, 40, 90, .085), rgba(190, 40, 90, 0) 70%),
-    radial-gradient(ellipse 38% 70% at 104% 58%, rgba(190, 40, 90, .085), rgba(190, 40, 90, 0) 70%),
-    /* corner vignette so the white reads as a lit backdrop */
-    radial-gradient(ellipse 85% 75% at 50% 42%, rgba(255, 255, 255, 0) 55%, rgba(98, 88, 94, .09) 100%),
-    #fff;
+    radial-gradient(ellipse 52% 44% at 50% -6%, rgba(179, 32, 44, .14), rgba(179, 32, 44, 0) 72%),
+    linear-gradient(180deg, rgba(92, 82, 88, .18) 0%, rgba(92, 82, 88, .07) 16%, rgba(92, 82, 88, 0) 34%),
+    radial-gradient(ellipse 34% 70% at -3% 50%, rgba(179, 32, 44, .13), rgba(179, 32, 44, 0) 72%),
+    radial-gradient(ellipse 34% 70% at 103% 50%, rgba(179, 32, 44, .13), rgba(179, 32, 44, 0) 72%),
+    radial-gradient(ellipse 125% 15% at 50% 63%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 72%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0) 60%, rgba(104, 94, 100, .10) 72%, rgba(82, 72, 78, .26) 100%),
+    radial-gradient(ellipse 92% 82% at 50% 46%, rgba(255, 255, 255, 0) 50%, rgba(76, 66, 72, .14) 100%),
+    #fcfafa;
+}
+body::after {
+  content: ''; position: fixed; left: -40%; right: -40%; bottom: -8%; height: 52%; z-index: -2; pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(179, 32, 44, .32) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(0deg, rgba(179, 32, 44, .32) 0 1px, transparent 1px 72px);
+  transform-origin: 50% 100%; transform: perspective(560px) rotateX(64deg);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 55%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 55%, #000 100%);
+  opacity: .5;
 }
 .room-bar, .paywall-bar { background: rgba(255, 255, 255, .86); }
 .plan-card { background: rgba(255, 255, 255, .72); }
@@ -296,4 +303,94 @@ body::before {
   .room-bar > a { display: none; }
   .room-status { min-width: 0; width: 100%; justify-content: center; }
   .seg button { padding: .25rem .7rem; }
+}
+
+/* ================= Holographic console ================= */
+.hero { display: block; min-height: 100svh; }
+.holo { position: relative; width: min(1080px, calc(100% - 24px)); margin: 60px auto 0; border: 1px solid rgba(179, 32, 44, .22); border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .42), rgba(255, 255, 255, .14));
+  box-shadow: 0 0 70px rgba(179, 32, 44, .10), inset 0 0 70px rgba(179, 32, 44, .05); }
+.holo::before { content: ''; position: absolute; left: 50%; top: -70px; width: 70%; height: 70px; transform: translateX(-50%); pointer-events: none;
+  background: radial-gradient(ellipse at 50% 100%, rgba(179, 32, 44, .20), rgba(179, 32, 44, 0) 70%); }
+.holo-tab { position: absolute; left: 50%; top: -1px; transform: translate(-50%, -100%); display: inline-flex; align-items: center; gap: .45rem; padding: .35rem 1.1rem; font-size: .85rem;
+  color: var(--accent); background: rgba(255, 255, 255, .72); border: 1px solid rgba(179, 32, 44, .30); border-bottom: 0; border-radius: 12px 12px 0 0; }
+.holo-tab svg { transition: transform .3s; } .holo-tab svg.flip { transform: rotate(180deg); }
+.holo-piano { position: relative; width: 100%; border-radius: 17px 17px 0 0; overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, #000 78%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(180deg, #000 78%, rgba(0,0,0,0) 100%); }
+.holo-piano canvas { display: block; touch-action: pan-y; }
+.holo-piano::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(179, 32, 44, .06) 0 1px, transparent 1px 4px), linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .45) 50%, transparent 60%);
+  background-size: auto, 250% 100%; background-position: 0 0, 160% 0; animation: sweep 7s ease-in-out infinite; mix-blend-mode: soft-light; }
+@keyframes sweep { 0%, 55% { background-position: 0 0, 160% 0; } 100% { background-position: 0 0, -60% 0; } }
+.holo-corner { position: absolute; width: 16px; height: 16px; border: 0 solid rgba(179, 32, 44, .55); pointer-events: none; z-index: 2; }
+.holo-corner.tl { left: 8px; top: 8px; border-width: 1.5px 0 0 1.5px; } .holo-corner.tr { right: 8px; top: 8px; border-width: 1.5px 1.5px 0 0; }
+.holo-corner.bl { left: 8px; bottom: 8px; border-width: 0 0 1.5px 1.5px; } .holo-corner.br { right: 8px; bottom: 8px; border-width: 0 1.5px 1.5px 0; }
+.holo-info { display: grid; grid-template-columns: 1.2fr 1fr; gap: .2rem 1.5rem; align-items: center; padding: .9rem 1.4rem .2rem; }
+.holo-hint { grid-column: 1 / -1; margin: 0; min-height: 1.3em; text-align: center; font-size: .85rem; color: var(--muted); }
+.holo-controls { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .6rem; padding: .3rem 1rem 1rem; }
+.lyrics { text-shadow: 0 0 14px rgba(179, 32, 44, .18); }
+.tuner { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-align: center; }
+.tuner.idle { cursor: pointer; display: block; opacity: .75; }
+.tuner-tap { display: block; margin-top: .2rem; font-size: .8rem; color: var(--muted); }
+.tuner-track { box-shadow: 0 0 14px rgba(179, 32, 44, .25); }
+
+/* Dropdowns, main button, menu */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.dd { position: relative; display: inline-flex; align-items: center; color: var(--accent); background: rgba(255, 255, 255, .75); border: 1px solid var(--accent); border-radius: 999px; }
+.dd select { appearance: none; -webkit-appearance: none; background: transparent; border: 0; color: inherit; font: inherit; font-size: .92rem; padding: .55rem 2rem .55rem 1.1rem; max-width: 230px; text-overflow: ellipsis; cursor: pointer; }
+.dd select option { color: var(--ink); background: #fff; }
+.dd-caret { position: absolute; right: .9rem; pointer-events: none; }
+.dd:focus-within { box-shadow: 0 0 0 2px rgba(179, 32, 44, .25); }
+.go { background: var(--accent); color: #fff; border: 1px solid var(--accent); border-radius: 999px; padding: .6rem 2.2rem; font-size: 1rem; font-weight: 600; box-shadow: 0 0 26px rgba(179, 32, 44, .35); transition: background .2s, color .2s; }
+.go.on { background: #fff; color: var(--accent); box-shadow: none; }
+.go:disabled { opacity: .35; box-shadow: none; }
+.navmenu { position: relative; }
+.navmenu.fixed { position: fixed; top: 14px; right: 14px; z-index: 40; }
+.navmenu-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--accent); background: rgba(255, 255, 255, .85); color: var(--accent); display: grid; place-items: center; }
+.navmenu-list { position: absolute; right: 0; top: 46px; z-index: 50; min-width: 150px; display: flex; flex-direction: column; padding: .35rem; background: rgba(255, 255, 255, .97); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 30px rgba(60, 20, 28, .15); }
+.navmenu-list a { text-decoration: none; padding: .5rem .8rem; border-radius: 8px; color: var(--ink); }
+.navmenu-list a:hover { background: var(--tint); }
+.navmenu-list a[aria-current] { color: var(--accent); font-weight: 600; }
+.navmenu-plan { padding: .3rem .8rem; font-size: .75rem; color: var(--muted); }
+.navmenu.inline .navmenu-list { top: auto; bottom: 46px; }
+.holo-logo { display: block; }
+
+/* Hero below the console */
+.hero-center { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; text-align: center; padding: 2rem 16px 4rem; }
+.hero-center .hero-seal-wrap { width: clamp(180px, min(36vw, 32svh), 420px); }
+
+/* Practice and live rooms: the console fills the screen */
+.room { overflow-y: auto; }
+.room > .holo { flex: 1 0 auto; width: 100%; margin: 0; border: 0; border-radius: 0; display: flex; flex-direction: column; background: none; box-shadow: none; }
+.room > .holo::before { display: none; }
+.room .holo-piano { flex: 1 1 auto; min-height: calc(var(--piano-h) + 5rem); border-radius: 0; }
+.room .holo-info, .room .holo-controls { flex: none; background: rgba(255, 255, 255, .5); }
+.live-room .video { margin-bottom: 4px; }
+@media (max-width: 760px) { .holo-info { grid-template-columns: 1fr; padding: .6rem 1rem 0; } .holo-controls { gap: .45rem; } .go { padding: .55rem 1.6rem; } }
+@media (orientation: landscape) and (max-height: 520px) {
+  .holo-info { padding: .3rem 1rem 0; gap: .1rem 1rem; } .holo-controls { padding: .2rem 1rem .5rem; }
+  .room .holo-piano { min-height: calc(var(--piano-h) + 3rem); }
+}
+@media (prefers-reduced-motion: reduce) { .holo-piano::after { animation: none; } }
+
+.holo .lyrics { font-size: clamp(1.2rem, 2.3vw, 1.7rem); min-height: 2.4em; }
+.holo .lyrics .now { font-size: 1.25em; }
+
+/* Controls stay reachable: pinned to the bottom of the console while it scrolls */
+.holo-controls { position: sticky; bottom: 0; z-index: 4; background: rgba(255, 255, 255, .88); border-radius: 0 0 17px 17px; }
+.room .holo-controls { border-radius: 0; padding-bottom: max(.8rem, env(safe-area-inset-bottom)); }
+.live-room .video { height: min(30vh, 260px); }
+.live-room .avatar img, .live-room .avatar svg { width: 84px !important; height: auto; }
+.live-room .video-controls { left: auto; right: 124px; transform: none; bottom: 14px; }
+
+/* Landscape phones: keep piano, lyrics, tuner and controls on one screen */
+@media (orientation: landscape) and (max-height: 520px) {
+  .holo { margin-top: 38px; }
+  .holo-tab { padding: .2rem 1rem; font-size: .8rem; }
+  .navmenu.fixed { top: 6px; right: 8px; }
+  .holo-hint { display: none; }
+  .holo-info { grid-template-columns: 1.2fr 1fr; padding: .15rem 1rem 0; }
+  .holo .lyrics { font-size: 1.05rem; min-height: 1.6em; }
+  .tuner-name { font-size: 1.7rem; } .tuner-level { height: 22px; } .tuner-bar { margin-top: .2rem; } .tuner-tap { font-size: .7rem; margin-top: 0; }
+  .holo-controls { padding: .15rem 1rem .4rem; gap: .4rem; } .go { padding: .35rem 1.6rem; font-size: .9rem; } .dd select { padding: .35rem 1.8rem .35rem .9rem; font-size: .8rem; }
 }

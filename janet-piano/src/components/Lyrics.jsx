@@ -1,8 +1,8 @@
 // Karaoke-style lyric strip: sung syllables fade, the current one is large and red.
 export default function Lyrics({ notes, index }) {
   const i = Math.max(0, index)
-  const from = Math.max(0, i - 3)
-  const to = Math.min(notes.length, i + 9)
+  const from = Math.max(0, i - 2)
+  const to = Math.min(notes.length, i + 7)
   return (
     <p className="lyrics" aria-live="off">
       {notes.slice(from, to).map((n, k) => {

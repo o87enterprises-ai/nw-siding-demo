@@ -16,7 +16,7 @@ export default function PlansPage() {
           <div className="plan-card">
             <h2>Free</h2>
             <p className="price">$0</p>
-            <ul><li>Piano and vocal tuner</li><li>1 free song</li></ul>
+            <ul><li>Piano and vocal tuner</li><li>Starter songs</li></ul>
             <Link className="btn" to="/sing">Try it</Link>
           </div>
           {PLANS.map((p) => (

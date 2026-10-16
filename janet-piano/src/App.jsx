@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { CartProvider, useCart } from './lib/cart'
 import Hero from './components/Hero'
-import Features from './components/Features'
 import Ambient from './components/Ambient'
 import PlansPage from './components/PlansPage'
 import LessonsPage from './components/LessonsPage'
@@ -33,6 +32,8 @@ function CheckoutBanner() {
 
 function CartButton() {
   const { items, setOpen } = useCart()
+  const path = usePath()
+  if (items.length === 0 && path !== '/plans' && path !== '/book') return null // keep the demo screens clean
   return (
     <button className="cart-btn" onClick={() => setOpen(true)} aria-label={`Open cart, ${items.length} items`}>
       🛒{items.length > 0 && <i>{items.length}</i>}
@@ -57,7 +58,6 @@ export default function App() {
           <>
             <main>
               <Hero />
-              <Features />
             </main>
             <footer className="footer">© Janet Holmes</footer>
           </>
