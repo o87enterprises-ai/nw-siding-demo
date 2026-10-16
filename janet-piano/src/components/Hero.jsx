@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import Piano3D from './Piano3D'
 import Logo from './Logo'
+import RotateHint from './RotateHint'
 import { SONGS, noteToKeyboard, pretty } from '../lib/notes'
 import { usePractice } from '../lib/practice'
 import { Link } from '../lib/router'
@@ -18,6 +19,7 @@ export default function Hero() {
 
       <div className="hero-content">
         <div className="tools">
+          <RotateHint />
           <div className="controls">
             <button className={mode === 'learn' ? 'on' : ''} onClick={mode === 'learn' ? stop : startLearn}>
               {mode === 'learn' ? 'Stop' : 'Learn'}

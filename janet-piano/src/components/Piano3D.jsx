@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { KEYS, KEYBOARD_MAP, noteToX } from '../lib/notes'
@@ -7,10 +7,10 @@ import { unlockAudio } from '../lib/audio'
 
 // Top-down (90 degree) orthographic view: x runs across the screen, z runs down it.
 // Key backs sit at the top edge of the screen (z = 0); fronts point down the page.
-const KEY_LEN = 3.2
-const HIT_Z = KEY_LEN + 0.45
+// Taller keys on portrait phones so the piano is comfortable to play (CSS --piano-h matches).
+const L = { keyLen: 3.2 }
+const hitZ = () => L.keyLen + 0.45
 const LANE_GAP = 2.2
-const SPAWN_Z = HIT_Z + 26
 const POOL = 6
 const WORLD_W = 16 // world units that span the full screen width
 
@@ -22,7 +22,7 @@ const tmp = new THREE.Color()
 function Key({ k }) {
   const mat = useRef()
   const amt = useRef(0)
-  const len = k.black ? KEY_LEN * 0.62 : KEY_LEN
+  const len = k.black ? L.keyLen * 0.62 : L.keyLen
   const w = k.black ? 0.58 : 0.94
 
   useFrame((_, dt) => {
@@ -45,7 +45,7 @@ function Key({ k }) {
 // Upcoming notes rise from the bottom of the screen toward their key.
 function RisingNotes({ practice }) {
   const refs = useRef([])
-  const meta = useRef(Array.from({ length: POOL }, () => ({ step: -1, z: SPAWN_Z })))
+  const meta = useRef(Array.from({ length: POOL }, () => ({ step: -1, z: 30 })))
 
   useFrame((_, dt) => {
     const { active, step, notes } = practice.current
@@ -55,8 +55,8 @@ function RisingNotes({ practice }) {
       const slot = s % POOL
       const mesh = refs.current[slot]
       const m = meta.current[slot]
-      if (m.step !== s) { m.step = s; m.z = SPAWN_Z }
-      const targetZ = HIT_Z + (s - step) * LANE_GAP
+      if (m.step !== s) { m.step = s; m.z = hitZ() + 26 }
+      const targetZ = hitZ() + (s - step) * LANE_GAP
       m.z += (targetZ - m.z) * Math.min(1, dt * 4)
       mesh.visible = true
       mesh.position.set(noteToX[notes[s][0]], 0.5, m.z)
@@ -71,7 +71,7 @@ function RisingNotes({ practice }) {
   return (
     <group>
       {KEYS.filter((k) => !k.black).map((k) => (
-        <mesh key={k.note} position={[k.x + 0.47, 0.01, KEY_LEN + 20]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh key={k.note} position={[k.x + 0.47, 0.01, L.keyLen + 20]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.012, 40]} />
           <meshBasicMaterial color="#b3202c" transparent opacity={0.08} />
         </mesh>
@@ -90,7 +90,7 @@ const BURST_N = 260
 function Bursts() {
   const pts = useRef()
   const state = useMemo(() => ({
-    pos: new Float32Array(BURST_N * 3),
+    pos: Float32Array.from({ length: BURST_N * 3 }, (_, i) => (i % 3 === 2 ? -100 : 0)), // idle particles parked offscreen
     col: new Float32Array(BURST_N * 3).fill(1),
     vel: new Float32Array(BURST_N * 3),
     life: new Float32Array(BURST_N),
@@ -103,7 +103,7 @@ function Bursts() {
       const x = noteToX[engine.pendingBursts.shift()]
       for (let n = 0; n < 34; n++) {
         const i = s.next++ % BURST_N
-        s.pos.set([x + (Math.random() - 0.5) * 0.5, 1, KEY_LEN * 0.6 + (Math.random() - 0.5) * 1.5], i * 3)
+        s.pos.set([x + (Math.random() - 0.5) * 0.5, 1, L.keyLen * 0.6 + (Math.random() - 0.5) * 1.5], i * 3)
         const a = Math.random() * Math.PI * 2
         const sp = 1.5 + Math.random() * 3.5
         s.vel.set([Math.cos(a) * sp, 0, Math.sin(a) * sp], i * 3)
@@ -112,7 +112,7 @@ function Bursts() {
     }
     for (let i = 0; i < BURST_N; i++) {
       const l = s.life[i]
-      if (l <= 0) { s.col[i * 3] = s.col[i * 3 + 1] = s.col[i * 3 + 2] = 1; continue }
+      if (l <= 0) { s.col[i * 3] = s.col[i * 3 + 1] = s.col[i * 3 + 2] = 1; s.pos[i * 3 + 2] = -100; continue }
       s.life[i] = l - dt * 1.5
       s.pos[i * 3] += s.vel[i * 3] * dt
       s.pos[i * 3 + 2] += s.vel[i * 3 + 2] * dt
@@ -208,8 +208,18 @@ function CameraRig() {
   return null
 }
 
+const PORTRAIT = '(max-width: 760px) and (orientation: portrait)'
+
 export default function Piano3D({ practice }) {
   const keysRef = useRef()
+  const [portrait, setPortrait] = useState(() => window.matchMedia(PORTRAIT).matches)
+  useEffect(() => {
+    const mq = window.matchMedia(PORTRAIT)
+    const on = () => setPortrait(mq.matches)
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+  L.keyLen = portrait ? 5.6 : 3.2
   useEffect(() => {
     const down = (e) => {
       if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return
@@ -230,11 +240,11 @@ export default function Piano3D({ practice }) {
     // pan-y keeps vertical page scrolling working on touch; horizontal drags play glissandos.
     <Canvas orthographic camera={{ near: 0.1, far: 50 }} dpr={[1, 2]} gl={{ alpha: true, antialias: true }} style={{ touchAction: 'pan-y' }}>
       <CameraRig />
-      <mesh position={[0, -0.05, KEY_LEN / 2]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[15.1, KEY_LEN + 0.08]} />
+      <mesh position={[0, -0.05, L.keyLen / 2]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[15.1, L.keyLen + 0.08]} />
         <meshBasicMaterial color="#d9d2cc" toneMapped={false} />
       </mesh>
-      <group ref={keysRef}>{KEYS.map((k) => <Key key={k.note} k={k} />)}</group>
+      <group ref={keysRef}>{KEYS.map((k) => <Key key={`${k.note}${L.keyLen}`} k={k} />)}</group>
       <RisingNotes practice={practice} />
       <Bursts />
       <PointerInput keysRef={keysRef} />
