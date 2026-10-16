@@ -394,3 +394,45 @@ body::after {
   .tuner-name { font-size: 1.7rem; } .tuner-level { height: 22px; } .tuner-bar { margin-top: .2rem; } .tuner-tap { font-size: .7rem; margin-top: 0; }
   .holo-controls { padding: .15rem 1rem .4rem; gap: .4rem; } .go { padding: .35rem 1.6rem; font-size: .9rem; } .dd select { padding: .35rem 1.8rem .35rem .9rem; font-size: .8rem; }
 }
+
+/* ================= One obvious action: big centered Play + flashing cue ================= */
+.flash-cue { position: absolute; left: 0; right: 0; top: 14px; margin: 0; text-align: center; pointer-events: none; z-index: 5;
+  font-family: var(--serif); font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 600; letter-spacing: .04em; color: var(--accent);
+  text-shadow: 0 0 18px rgba(179, 32, 44, .35); animation: flash 1.2s ease-in-out infinite; }
+@keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: .08; } }
+.hero { padding-top: 84px; }
+.hero .holo { margin-top: 0; }
+
+.holo-info { display: flex; flex-direction: column; align-items: center; gap: .5rem; padding: 1rem 1.4rem .4rem; }
+.holo-info .lyrics { width: 100%; }
+.holo-info .tuner { max-width: 440px; width: 100%; }
+.play { position: relative; width: 92px; height: 92px; flex: none; border-radius: 50%; border: 0; display: grid; place-items: center; color: #fff;
+  background: radial-gradient(circle at 35% 30%, #d3303d, var(--accent) 55%, #7d1019); box-shadow: 0 0 34px rgba(179, 32, 44, .45), inset 0 2px 6px rgba(255, 255, 255, .35); transition: transform .15s; }
+.play svg { margin-left: 4px; } .play.on svg { margin-left: 0; }
+.play:not(.on):not(:disabled)::before { content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid rgba(179, 32, 44, .5); animation: ping 1.8s ease-out infinite; }
+@keyframes ping { 0% { transform: scale(.9); opacity: .9; } 100% { transform: scale(1.45); opacity: 0; } }
+.play:active { transform: scale(.94); }
+.play.on { background: #fff; color: var(--accent); border: 2px solid var(--accent); box-shadow: 0 0 26px rgba(179, 32, 44, .25); }
+.play:disabled { opacity: .35; box-shadow: none; }
+.holo-controls { padding-top: .1rem; }
+.dd select { font-size: .85rem; padding-top: .4rem; padding-bottom: .4rem; }
+.holo-hint { min-height: 1.1em; }
+
+@media (max-width: 760px) { .play { width: 80px; height: 80px; } .hero { padding-top: 76px; } }
+@media (orientation: landscape) and (max-height: 520px) {
+  .flash-cue { top: 2px; font-size: 1rem; }
+  .hero { padding-top: 74px; }
+  .holo-info { flex-direction: row; justify-content: space-between; align-items: center; gap: .8rem; padding: .15rem 1rem 0; }
+  .holo-info .lyrics { flex: 1 1 0; min-width: 0; } .holo-info .tuner { flex: 1 1 0; min-width: 0; max-width: none; }
+  .play { width: 52px; height: 52px; } .play svg { width: 22px; height: 22px; }
+}
+@media (prefers-reduced-motion: reduce) { .flash-cue { animation: none; } .play::before { animation: none; } }
+
+/* "Sing along" lettered like the seal: spaced Roman capitals, pressed into burgundy wax */
+.flash-cue { font-family: 'Cinzel', 'Cormorant Garamond', Georgia, serif; font-weight: 700; text-transform: uppercase; letter-spacing: .32em; padding-left: .32em;
+  font-size: clamp(1.2rem, 3.4vw, 1.9rem);
+  background: linear-gradient(180deg, #d9414d 0%, #b3202c 45%, #6f0d18 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  text-shadow: none; filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .85)) drop-shadow(0 -1px 0 rgba(60, 5, 12, .35)) drop-shadow(0 0 14px rgba(179, 32, 44, .35)); }
+.flash-cue::before, .flash-cue::after { content: ''; display: inline-block; vertical-align: middle; width: clamp(24px, 6vw, 70px); height: 1px; margin: 0 .9em;
+  background: linear-gradient(90deg, transparent, #b3202c); -webkit-text-fill-color: initial; }
+.flash-cue::after { background: linear-gradient(270deg, transparent, #b3202c); }
