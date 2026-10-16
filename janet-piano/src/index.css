@@ -436,3 +436,6 @@ body::after {
 .flash-cue::before, .flash-cue::after { content: ''; display: inline-block; vertical-align: middle; width: clamp(24px, 6vw, 70px); height: 1px; margin: 0 .9em;
   background: linear-gradient(90deg, transparent, #b3202c); -webkit-text-fill-color: initial; }
 .flash-cue::after { background: linear-gradient(270deg, transparent, #b3202c); }
+
+.holo-hint.err { color: var(--accent); font-weight: 500; }
+.play.busy { opacity: .75; } .play.busy::before { animation-duration: .9s; }

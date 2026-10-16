@@ -60,10 +60,11 @@ export default function Studio({ mode0 = 'sing', collapsible = false, open = tru
   active.current = sing.running ? sing.practice.current : piano.practice.current
 
   const stopAll = () => { piano.stop(); sing.stop() }
+  const endSession = () => { stopAll(); if (mode !== 'tune') mic.stop() } // release the microphone when a session ends
   const changeMode = (m) => { stopAll(); if (m !== 'tune') mic.stop(); setMode(m) }
   const changeSong = (v) => {
     if (v === '__add__') { hasLessons ? setAdding(true) : window.history.pushState({}, '', '/plans') || window.dispatchEvent(new PopStateEvent('popstate')); return }
-    stopAll(); setSongId(v)
+    endSession(); setSongId(v)
   }
 
   // Live sessions: Janet starts by playing the song and the keys light up (key match).
@@ -72,16 +73,20 @@ export default function Studio({ mode0 = 'sing', collapsible = false, open = tru
       const id = setTimeout(() => piano.startJanet(), 600)
       return () => clearTimeout(id)
     }
-    if (live === false) stopAll()
+    if (live === false) endSession()
   }, [live]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const hint = sing.running ? sing.hint : piano.mode !== 'free' ? piano.hint : ''
+  const hint = mic.error && !mic.listening ? mic.error : sing.starting || sing.running ? sing.hint : piano.mode !== 'free' ? piano.hint : ''
+
+  // The song is over: let go of the microphone (the score stays on screen).
+  useEffect(() => { if (sing.state === 'done' && mode !== 'tune') mic.stop() }, [sing.state]) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { onCaption?.(sing.running ? sing.hint : piano.hint) }, [sing.hint, sing.running, piano.hint]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const running = mode === 'hear' ? piano.mode === 'janet' : mode === 'play' ? piano.mode === 'learn' : mode === 'tune' ? mic.listening : sing.running
   const act = () => {
     unlockAudio() // must happen inside the tap so the song can start right after the mic is allowed
-    if (running) { stopAll(); if (mode === 'tune') mic.stop(); return }
+    if (sing.starting) return // the permission prompt is already open
+    if (running) { stopAll(); mic.stop(); return }
     stopAll()
     if (mode === 'hear') piano.startJanet()
     else if (mode === 'play') piano.startLearn()
@@ -126,13 +131,13 @@ export default function Studio({ mode0 = 'sing', collapsible = false, open = tru
         ) : (
           <Lyrics notes={song.notes} index={lyricIndex} />
         )}
-        <button className={`play ${running ? 'on' : ''}`} disabled={disabled} onClick={act} aria-label={running ? 'Stop' : 'Play'}>
+        <button className={`play ${running ? 'on' : ''} ${sing.starting ? 'busy' : ''}`} disabled={disabled} aria-busy={sing.starting} onClick={act} aria-label={running ? 'Stop' : 'Play'}>
           {running
             ? <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" /></svg>
             : <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" fill="currentColor" /></svg>}
         </button>
         <TunerMeter freq={mic.freq} target={tunerTarget} listening={mic.listening} level={mic.level} error={mic.error} onEnable={mic.start} />
-        <p className="holo-hint" aria-live="polite">{hint}</p>
+        <p className={`holo-hint ${mic.error && !mic.listening ? 'err' : ''}`} aria-live="polite">{hint}</p>
       </div>
 
       <div className="holo-controls">
