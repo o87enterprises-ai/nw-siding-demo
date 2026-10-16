@@ -8,6 +8,10 @@ const CONTACT_IMAGES = [
   'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1920&q=80',
 ]
 
+// The lead backend (backend/functions) is switched off for the preview.
+// Build with VITE_LEAD_API=on to send submissions to /api/lead.
+const LEAD_API_ON = import.meta.env.VITE_LEAD_API === 'on'
+
 const EMPTY = { first_name: '', last_name: '', phone: '', email: '', zip: '', service: 'Fiber Cement Siding', website: '' }
 
 export default function Contact() {
@@ -21,6 +25,11 @@ export default function Contact() {
   async function onSubmit(e) {
     e.preventDefault()
     if (state.phase === 'sending') return
+    if (!LEAD_API_ON) {
+      // Preview mode: nothing is sent anywhere.
+      setState({ phase: 'preview', errors: {}, message: '' })
+      return
+    }
     setState({ phase: 'sending', errors: {}, message: '' })
     const q = new URLSearchParams(window.location.search)
     try {
@@ -233,7 +242,17 @@ export default function Contact() {
             We respond within one business day. Usually faster.
           </p>
 
-          {state.phase === 'done' ? (
+          {state.phase === 'preview' ? (
+            <div role="status" style={{ padding: '2rem 0', textAlign: 'center' }}>
+              <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem' }}>
+                Preview only
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>
+                This form is not connected in the preview, so nothing was sent. On the live site, estimate requests
+                go straight to the owner and the customer gets an automatic reply. To reach us now, call (541) 688-2997.
+              </p>
+            </div>
+          ) : state.phase === 'done' ? (
             <div role="status" style={{ padding: '2rem 0', textAlign: 'center' }}>
               <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem' }}>
                 Thank you, we got your request.

@@ -1,5 +1,12 @@
 # Lead backend
 
+**Status: switched off for the preview.** The code lives in `backend/` (not `functions/`) so `wrangler pages deploy`
+does not bundle it, and the contact form only calls the API when the site is built with `VITE_LEAD_API=on`.
+To turn it on:
+1. `git mv backend/functions functions` (Pages deploys the `functions/` folder at the project root).
+2. Create the database and add the D1 block to `wrangler.toml` (see One-time setup below).
+3. Set the secrets and variables, then `VITE_LEAD_API=on npm run build` and deploy.
+
 Cloudflare Pages Functions plus a D1 database, all on free tiers. Email goes out through Resend's free plan.
 Nothing here sends a real email until `RESEND_API_KEY` and `FROM_EMAIL` are set; until then every message is
 recorded in the `messages` table with status `dry-run`.
@@ -35,7 +42,7 @@ npx wrangler@3 d1 create nw-siding-leads        # prints a database_id
 #   binding = "DB"
 #   database_name = "nw-siding-leads"
 #   database_id = "<id from above>"
-npx wrangler@3 d1 execute nw-siding-leads --remote --file=schema.sql
+npx wrangler@3 d1 execute nw-siding-leads --remote --file=backend/schema.sql
 ```
 Then set the secrets and variables above and deploy (see `DEPLOY.md`).
 
@@ -55,7 +62,7 @@ curl -H "Authorization: Bearer $TOKEN" https://<site>/api/admin/report
 ## Local testing
 ```sh
 npm run build
-npx wrangler@3 d1 execute nw-siding-leads --local --file=schema.sql   # needs the d1 block in wrangler.toml
+npx wrangler@3 d1 execute nw-siding-leads --local --file=backend/schema.sql   # needs the d1 block in wrangler.toml
 npx wrangler@3 pages dev dist --d1=DB=<database_id> \
   --binding OWNER_EMAIL=you@example.com ADMIN_TOKEN=some-long-test-token
 ```

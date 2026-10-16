@@ -55,5 +55,6 @@ also visible through the API:
 ## Notes
 - `node_modules/` is not tracked (see `.gitignore`); run `npm install` before building.
 - `dist/` is committed so the preview can be uploaded without a build.
+- A deploy uploads only `dist/`. The lead backend lives in `backend/` and is switched off (see `BACKEND.md`); the preview form shows a "Preview only" message and sends nothing.
 - Pages calls the `main` branch "production", but this is still just the preview site.
 - Last deployment: `7a1b4d82`, bundle `index-DjkIPEmM.js`.
