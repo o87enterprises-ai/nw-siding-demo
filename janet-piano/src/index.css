@@ -200,3 +200,33 @@ body::before {
 }
 .room-bar, .paywall-bar { background: rgba(255, 255, 255, .86); }
 .plan-card { background: rgba(255, 255, 255, .72); }
+
+/* ---- Rooms that fit any screen: scroll instead of squashing the piano (landscape phones) ---- */
+:root { --piano-h: calc(100vw * 0.215); }
+@media (max-width: 760px) and (orientation: portrait) { :root { --piano-h: calc(100vw * 0.37); } }
+.piano-layer canvas, .room-canvas canvas { touch-action: pan-y; } /* vertical drags scroll the page; horizontal drags play */
+.room { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.room-canvas { flex: 1 0 auto; min-height: calc(var(--piano-h) + 7rem); } /* never shorter than the piano plus some lane */
+.video { flex: none; }
+.room-bar { position: sticky; bottom: 0; z-index: 3; flex: none;
+  padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right));
+  padding-bottom: max(.6rem, env(safe-area-inset-bottom)); }
+.paywall-bar { flex: none; position: sticky; bottom: 0; z-index: 3; }
+
+/* Short landscape screens (phones): compact video call and bars */
+@media (orientation: landscape) and (max-height: 520px) {
+  .video { height: 112px; margin: 6px 12px 0; border-radius: 12px; }
+  .video-main { flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; gap: .2rem .8rem; max-width: 62%; }
+  .avatar { padding: 4px; }
+  .avatar img, .avatar svg { width: 52px !important; height: auto; }
+  .video-name { font-size: 1.1rem; }
+  .caption { margin: 0; font-size: .85rem; }
+  .video-self { width: 52px; height: 70px; right: 8px; bottom: 8px; }
+  .video-controls { left: auto; right: 72px; bottom: 8px; transform: none; }
+  .mock-tag { top: 6px; }
+  .room-bar { gap: .3rem .7rem; padding-top: .35rem; padding-bottom: max(.35rem, env(safe-area-inset-bottom)); }
+  .room-bar .pill { padding: .3rem .8rem; font-size: .8rem; }
+  .room-bar .controls button { padding: .3rem .9rem; font-size: .8rem; }
+  .paywall-bar { flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; gap: .4rem .9rem; padding: .5rem 16px; }
+  .paywall-bar h2 { font-size: 1.2rem; }
+}
