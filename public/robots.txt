@@ -1,0 +1,5 @@
+# Robots.txt for Northwest Siding Contractors of Eugene
+User-agent: *
+Allow: /
+
+Sitemap: https://northwestsiding.com/sitemap.xml

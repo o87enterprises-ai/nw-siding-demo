@@ -1,2 +1,8 @@
-name = "nw-siding-demo"
+name = "northwest-siding"
 pages_build_output_dir = "dist"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+CONTACT_EMAIL_TO = "sidinggurus@northwestsiding.com"
+CONTACT_EMAIL_FROM = "Northwest Siding <leads@northwestsiding.com>"

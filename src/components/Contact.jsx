@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useState, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import SectionBackground from './SectionBackground'
 
@@ -8,9 +8,78 @@ const CONTACT_IMAGES = [
   'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1920&q=80',
 ]
 
+const INITIAL_FORM = {
+  firstName: '',
+  lastName: '',
+  phone: '',
+  email: '',
+  zip: '',
+  service: 'Fiber Cement Siding',
+  message: '',
+  hp_website: '', // honeypot for spam bots
+}
+
 export default function Contact() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
+
+  const [formData, setFormData] = useState(INITIAL_FORM)
+  const [status, setStatus] = useState('idle') // 'idle' | 'loading' | 'success' | 'error'
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    // Validate required fields
+    if (!formData.firstName.trim() || !formData.lastName.trim()) {
+      setErrorMessage('Please provide your first and last name.')
+      setStatus('error')
+      return
+    }
+
+    if (!formData.phone.trim() && !formData.email.trim()) {
+      setErrorMessage('Please provide at least a phone number or email address so we can reach you.')
+      setStatus('error')
+      return
+    }
+
+    setStatus('loading')
+    setErrorMessage('')
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await res.json().catch(() => ({}))
+
+      if (!res.ok || data.success === false) {
+        throw new Error(data.error || 'Failed to submit estimate request. Please try again or call us.')
+      }
+
+      setStatus('success')
+    } catch (err) {
+      console.error('Estimate submission error:', err)
+      setStatus('error')
+      setErrorMessage(err.message || 'Unable to submit your request at this time. Please call us directly at (541) 688-2997.')
+    }
+  }
+
+  const handleReset = () => {
+    setFormData(INITIAL_FORM)
+    setStatus('idle')
+    setErrorMessage('')
+  }
 
   return (
     <section
@@ -170,7 +239,7 @@ export default function Contact() {
           </motion.div>
         </div>
 
-        {/* Right: form */}
+        {/* Right: form or success state */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={inView ? { opacity: 1, x: 0 } : {}}
@@ -180,66 +249,276 @@ export default function Contact() {
             border: '1px solid var(--border)',
             borderRadius: '4px',
             padding: 'clamp(2rem, 4vw, 3rem)',
+            position: 'relative',
           }}
         >
-          <div style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: '1.4rem',
-            fontWeight: 700,
-            color: 'var(--text)',
-            marginBottom: '0.4rem',
-          }}>Request a Free Estimate</div>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6 }}>
-            We respond within one business day. Usually faster.
-          </p>
+          {status === 'success' ? (
+            <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+              <div style={{
+                width: '56px', height: '56px',
+                borderRadius: '50%',
+                background: 'var(--gold-dim)',
+                border: '1px solid var(--gold)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1.5rem',
+              }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 13l4 4L19 7" stroke="var(--gold)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
 
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div className="form-name-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <FormField label="First Name" placeholder="Travis" />
-              <FormField label="Last Name" placeholder="Prine" />
-            </div>
-            <FormField label="Phone Number" placeholder="(541) 000-0000" type="tel" />
-            <FormField label="Email Address" placeholder="you@email.com" type="email" />
-            <FormField label="ZIP Code" placeholder="97405" />
+              <h3 style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: '1.6rem',
+                color: 'var(--text)',
+                marginBottom: '0.75rem',
+              }}>
+                Estimate Request Received!
+              </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
-                Service Needed
-              </label>
-              <select style={{
+              <p style={{
+                fontSize: '0.9rem',
+                color: 'var(--text-muted)',
+                lineHeight: 1.7,
+                maxWidth: '440px',
+                margin: '0 auto 1.75rem',
+              }}>
+                Thank you, <strong style={{ color: 'var(--gold)' }}>{formData.firstName}</strong>. Gary and the Northwest Siding team have received your request for <strong>{formData.service}</strong>. We review all inquiries promptly and will contact you within one business day.
+              </p>
+
+              <div style={{
                 background: 'var(--surface)',
                 border: '1px solid var(--border)',
+                borderRadius: '4px',
+                padding: '1.2rem',
+                textAlign: 'left',
+                marginBottom: '2rem',
+                fontSize: '0.8rem',
                 color: 'var(--text-muted)',
-                padding: '0.75rem 1rem',
-                borderRadius: '2px',
-                fontSize: '0.88rem',
-                fontFamily: 'var(--font-sans)',
-                outline: 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.4rem',
               }}>
-                <option>Fiber Cement Siding</option>
-                <option>Cedar / Wood Siding</option>
-                <option>Replacement Windows</option>
-                <option>Seamless Gutters</option>
-                <option>Painting & Trim</option>
-                <option>Multiple Services</option>
-              </select>
+                <div><span style={{ color: 'var(--gold)', fontWeight: 600 }}>Project:</span> {formData.service}</div>
+                {formData.phone && <div><span style={{ color: 'var(--gold)', fontWeight: 600 }}>Phone:</span> {formData.phone}</div>}
+                {formData.email && <div><span style={{ color: 'var(--gold)', fontWeight: 600 }}>Email:</span> {formData.email}</div>}
+                {formData.zip && <div><span style={{ color: 'var(--gold)', fontWeight: 600 }}>ZIP:</span> {formData.zip}</div>}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', alignItems: 'center' }}>
+                <a
+                  href="tel:5416882997"
+                  className="btn-primary"
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
+                  Need Immediate Help? Call (541) 688-2997
+                </a>
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  style={{
+                    fontSize: '0.75rem',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    color: 'var(--text-muted)',
+                    padding: '0.5rem 1rem',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                >
+                  Submit Another Estimate Request
+                </button>
+              </div>
             </div>
+          ) : (
+            <>
+              <div style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: '1.4rem',
+                fontWeight: 700,
+                color: 'var(--text)',
+                marginBottom: '0.4rem',
+              }}>
+                Request a Free Estimate
+              </div>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6 }}>
+                We respond within one business day. Usually faster.
+              </p>
 
-            <button
-              type="submit"
-              className="btn-primary"
-              style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem', padding: '1rem' }}
-            >
-              Submit Estimate Request
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
+              {status === 'error' && errorMessage && (
+                <div style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.35)',
+                  borderRadius: '3px',
+                  padding: '0.85rem 1rem',
+                  marginBottom: '1.5rem',
+                  fontSize: '0.82rem',
+                  color: '#FCA5A5',
+                  lineHeight: 1.5,
+                }}>
+                  {errorMessage}
+                </div>
+              )}
 
-            <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textAlign: 'center', marginTop: '0.2rem' }}>
-              Licensed · Bonded · Insured · CCB #136733
-            </p>
-          </form>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {/* Honeypot field - invisible to real users, catches bots */}
+                <input
+                  type="text"
+                  name="hp_website"
+                  value={formData.hp_website}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }}
+                  aria-hidden="true"
+                />
+
+                <div className="form-name-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <FormField
+                    label="First Name *"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="Gary"
+                    required
+                    disabled={status === 'loading'}
+                  />
+                  <FormField
+                    label="Last Name *"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Smith"
+                    required
+                    disabled={status === 'loading'}
+                  />
+                </div>
+
+                <FormField
+                  label="Phone Number *"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="(541) 000-0000"
+                  type="tel"
+                  required
+                  disabled={status === 'loading'}
+                />
+
+                <FormField
+                  label="Email Address *"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="you@email.com"
+                  type="email"
+                  required
+                  disabled={status === 'loading'}
+                />
+
+                <FormField
+                  label="ZIP Code *"
+                  name="zip"
+                  value={formData.zip}
+                  onChange={handleChange}
+                  placeholder="97405"
+                  required
+                  disabled={status === 'loading'}
+                />
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <label htmlFor="service-select" style={{ fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+                    Service Needed
+                  </label>
+                  <select
+                    id="service-select"
+                    name="service"
+                    value={formData.service}
+                    onChange={handleChange}
+                    disabled={status === 'loading'}
+                    style={{
+                      background: 'var(--surface)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '2px',
+                      fontSize: '0.88rem',
+                      fontFamily: 'var(--font-sans)',
+                      outline: 'none',
+                    }}
+                  >
+                    <option value="Fiber Cement Siding">Fiber Cement Siding (James Hardie®)</option>
+                    <option value="Cedar / Wood Siding">Cedar / Wood Siding</option>
+                    <option value="Replacement Windows">Replacement Windows (Milgard®)</option>
+                    <option value="Seamless Gutters">Seamless Gutters</option>
+                    <option value="Painting & Trim">Painting & Trim</option>
+                    <option value="Multiple Services">Multiple Services / Complete Exterior</option>
+                  </select>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <label htmlFor="project-notes" style={{ fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+                    Project Details or Scope (Optional)
+                  </label>
+                  <textarea
+                    id="project-notes"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Tell us about your home (e.g., approximate home size, current siding material, timeline, or dry rot concerns)..."
+                    rows={3}
+                    disabled={status === 'loading'}
+                    style={{
+                      background: 'var(--surface)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                      padding: '0.75rem 1rem',
+                      borderRadius: '2px',
+                      fontSize: '0.88rem',
+                      fontFamily: 'var(--font-sans)',
+                      outline: 'none',
+                      resize: 'vertical',
+                      lineHeight: 1.6,
+                      transition: 'border-color 0.2s',
+                    }}
+                    onFocus={e => e.target.style.borderColor = 'var(--gold-line)'}
+                    onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="btn-primary"
+                  style={{
+                    width: '100%',
+                    justifyContent: 'center',
+                    marginTop: '0.5rem',
+                    padding: '1rem',
+                    opacity: status === 'loading' ? 0.75 : 1,
+                    cursor: status === 'loading' ? 'not-allowed' : 'pointer',
+                  }}
+                >
+                  {status === 'loading' ? (
+                    <span>Submitting Request...</span>
+                  ) : (
+                    <>
+                      <span>Submit Estimate Request</span>
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </>
+                  )}
+                </button>
+
+                <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textAlign: 'center', marginTop: '0.2rem' }}>
+                  Licensed · Bonded · Insured · CCB #136733
+                </p>
+              </form>
+            </>
+          )}
         </motion.div>
       </div>
 
@@ -247,17 +526,28 @@ export default function Contact() {
   )
 }
 
-function FormField({ label, placeholder, type = 'text' }) {
+function FormField({ label, name, value, onChange, placeholder, type = 'text', required = false, disabled = false }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-      <label style={{
-        fontSize: '0.68rem', fontWeight: 500,
-        letterSpacing: '0.12em', textTransform: 'uppercase',
-        color: 'var(--text-muted)',
-      }}>{label}</label>
+      <label
+        htmlFor={name}
+        style={{
+          fontSize: '0.68rem', fontWeight: 500,
+          letterSpacing: '0.12em', textTransform: 'uppercase',
+          color: 'var(--text-muted)',
+        }}
+      >
+        {label}
+      </label>
       <input
+        id={name}
+        name={name}
         type={type}
+        value={value}
+        onChange={onChange}
         placeholder={placeholder}
+        required={required}
+        disabled={disabled}
         style={{
           background: 'var(--surface)',
           border: '1px solid var(--border)',

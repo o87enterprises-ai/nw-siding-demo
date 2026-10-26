@@ -327,14 +327,6 @@ button {
 .form-name-grid    { grid-template-columns: 1fr; }
 .contact-grid      { grid-template-columns: 1fr; }
 .footer-grid       { grid-template-columns: 1fr; }
-.tier-grid         { grid-template-columns: 1fr; }
-.advantages-grid   { grid-template-columns: 1fr; }
-.audit-stat-grid   { grid-template-columns: 1fr 1fr; }
-.summary-pricing-grid { grid-template-columns: 1fr; }
-.proposal-keyboard-hint { display: none; }
-.next-steps-grid   { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-.metric-legend     { flex-wrap: wrap; gap: 0.5rem; }
-.cover-stats       { flex-wrap: wrap; gap: 1rem; justify-content: center; }
 
 /* ─── 561px+: footer 2-col ───────────────────────────────────── */
 @media (min-width: 561px) {
@@ -348,7 +340,6 @@ button {
   .portfolio-grid > div { grid-column: unset !important; aspect-ratio: unset !important; }
   .form-name-grid { grid-template-columns: 1fr 1fr; }
   .contact-grid   { grid-template-columns: 1fr 1fr; }
-  .proposal-keyboard-hint { display: block; }
 }
 
 /* ─── 900px+: hero left-align, wide grids ────────────────────── */
@@ -358,11 +349,4 @@ button {
   .hero-buttons   { justify-content: flex-start; }
   .hero-stats     { grid-template-columns: repeat(4, auto); max-width: none; gap: 2rem 3rem; justify-content: flex-start; }
   .footer-grid    { grid-template-columns: 1.5fr 1fr 1fr 1fr; }
-  .tier-grid      { grid-template-columns: 1fr 1fr; }
-  .advantages-grid { grid-template-columns: repeat(3, 1fr); }
-  .audit-stat-grid { grid-template-columns: repeat(4, 1fr); }
-  .summary-pricing-grid { grid-template-columns: repeat(3, 1fr); }
-  .next-steps-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-  .metric-legend  { flex-wrap: nowrap; }
-  .cover-stats    { flex-wrap: nowrap; justify-content: flex-start; }
 }
