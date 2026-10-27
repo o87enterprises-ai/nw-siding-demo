@@ -30,6 +30,9 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Keep anchored sections clear of the fixed header. */
+section[id] { scroll-margin-top: var(--nav-h, 72px); }
+
 body {
   font-family: var(--font-sans);
   background: var(--bg);

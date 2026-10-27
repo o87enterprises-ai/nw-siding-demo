@@ -60,7 +60,7 @@ export default function Stats() {
   return (
     <>
       {/* Stats row */}
-      <section style={{
+      <section id="about" style={{
         background: 'var(--surface)',
         borderTop: '1px solid var(--border)',
         borderBottom: '1px solid var(--border)',

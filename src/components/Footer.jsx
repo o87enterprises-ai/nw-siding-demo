@@ -69,7 +69,7 @@ export default function Footer() {
 
           {/* Company */}
           <FooterCol title="Company" links={[
-            { label: 'About Us', href: '#' },
+            { label: 'About Us', href: '#about' },
             { label: 'Portfolio', href: '#portfolio' },
             { label: 'Financing', href: '#' },
             { label: 'Incentive Programs', href: '#' },
