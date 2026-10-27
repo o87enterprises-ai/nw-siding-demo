@@ -10,17 +10,27 @@ export function ownerAlert(env, lead) {
     ['Name', name],
     ['Phone', lead.phone],
     ['Email', lead.email],
+    ['Address', lead.address],
     ['ZIP', lead.zip],
     ['Service', lead.service],
+    ['Budget', lead.budget],
+    ['Timeline', lead.timeline],
     ['Message', lead.message],
     ['Source', lead.source + (lead.utm_campaign ? ` / ${lead.utm_campaign}` : '')],
     ['Page', lead.page],
   ].filter(([, v]) => v)
-  const text = `New estimate request #${lead.id}\n\n` + lines.map(([k, v]) => `${k}: ${v}`).join('\n') + '\n\nCall or reply as soon as you can.'
+  // Opens the property on Google Maps (switch to satellite or Street View there).
+  const place = [lead.address, lead.zip].filter(Boolean).join(' ')
+  const mapUrl = place ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place + ' OR')}` : ''
+  const text =
+    `New estimate request #${lead.id}\n\n` + lines.map(([k, v]) => `${k}: ${v}`).join('\n') +
+    (mapUrl ? `\n\nView the property: ${mapUrl}` : '') + '\n\nCall or reply as soon as you can.'
   const html =
     `<p><b>New estimate request #${lead.id}</b></p><table cellpadding="4">` +
     lines.map(([k, v]) => `<tr><td><b>${h(k)}</b></td><td>${h(v)}</td></tr>`).join('') +
-    '</table><p>Call or reply as soon as you can.</p>'
+    '</table>' +
+    (mapUrl ? `<p><a href="${h(mapUrl)}">View the property on Google Maps</a></p>` : '') +
+    '<p>Call or reply as soon as you can.</p>'
   return { subject: `New lead: ${name} (${lead.service || 'estimate'})`, text, html }
 }
 

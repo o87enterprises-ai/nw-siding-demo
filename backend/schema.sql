@@ -9,8 +9,11 @@ CREATE TABLE IF NOT EXISTS leads (
   last_name    TEXT NOT NULL DEFAULT '',
   phone        TEXT NOT NULL DEFAULT '',
   email        TEXT NOT NULL DEFAULT '',
+  address      TEXT NOT NULL DEFAULT '',
   zip          TEXT NOT NULL DEFAULT '',
   service      TEXT NOT NULL DEFAULT '',
+  budget       TEXT NOT NULL DEFAULT '',
+  timeline     TEXT NOT NULL DEFAULT '',
   message      TEXT NOT NULL DEFAULT '',
   source       TEXT NOT NULL DEFAULT 'website',   -- website, google, referral, ...
   utm_source   TEXT NOT NULL DEFAULT '',

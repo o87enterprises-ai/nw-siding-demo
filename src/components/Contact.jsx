@@ -12,7 +12,14 @@ const CONTACT_IMAGES = [
 // Build with VITE_LEAD_API=on to send submissions to /api/lead.
 const LEAD_API_ON = import.meta.env.VITE_LEAD_API === 'on'
 
-const EMPTY = { first_name: '', last_name: '', phone: '', email: '', zip: '', service: 'Fiber Cement Siding', website: '' }
+const EMPTY = {
+  first_name: '', last_name: '', phone: '', email: '', address: '', zip: '',
+  service: 'Fiber Cement Siding', budget: '', timeline: '', website: '',
+}
+
+// Must match BUDGETS / TIMELINES in functions/_lib/util.js.
+const BUDGETS = ['Under $5,000', '$5,000 - $15,000', '$15,000 - $30,000', '$30,000+', 'Not sure yet']
+const TIMELINES = ['As soon as possible', 'Within 1-3 months', '3-6 months', 'Just exploring']
 
 export default function Contact() {
   const ref = useRef(null)
@@ -273,6 +280,7 @@ export default function Contact() {
             </div>
             <FormField label="Phone Number" placeholder="(541) 000-0000" type="tel" name="phone" value={form.phone} onChange={set('phone')} error={state.errors.phone || state.errors.contact} autoComplete="tel" />
             <FormField label="Email Address" placeholder="you@email.com" type="email" name="email" value={form.email} onChange={set('email')} error={state.errors.email} autoComplete="email" />
+            <FormField label="Project Address" placeholder="123 Main St, Eugene" name="address" value={form.address} onChange={set('address')} error={state.errors.address} autoComplete="street-address" />
             <FormField label="ZIP Code" placeholder="97405" name="zip" value={form.zip} onChange={set('zip')} error={state.errors.zip} autoComplete="postal-code" />
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -299,6 +307,15 @@ export default function Contact() {
               </select>
             </div>
 
+            <div className="form-name-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <SelectField label="Budget (optional)" name="budget" value={form.budget} onChange={set('budget')} options={BUDGETS} error={state.errors.budget} />
+              <SelectField label="Timeline (optional)" name="timeline" value={form.timeline} onChange={set('timeline')} options={TIMELINES} error={state.errors.timeline} />
+            </div>
+
+            <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+              We use your address only to prepare your estimate.
+            </p>
+
             {state.message && (
               <p role="alert" style={{ fontSize: '0.8rem', color: '#e08a7a', margin: 0 }}>{state.message}</p>
             )}
@@ -324,6 +341,31 @@ export default function Contact() {
       </div>
 
     </section>
+  )
+}
+
+function SelectField({ label, name, value, onChange, options, error }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <label style={{ fontSize: '0.68rem', fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+        {label}
+      </label>
+      <select name={name} value={value} onChange={onChange} aria-invalid={error ? 'true' : undefined} style={{
+        width: '100%', minWidth: 0, boxSizing: 'border-box',
+        background: 'var(--surface)',
+        border: `1px solid ${error ? '#e08a7a' : 'var(--border)'}`,
+        color: 'var(--text-muted)',
+        padding: '0.75rem 1rem',
+        borderRadius: '2px',
+        fontSize: '0.88rem',
+        fontFamily: 'var(--font-sans)',
+        outline: 'none',
+      }}>
+        <option value="">Select</option>
+        {options.map((o) => <option key={o} value={o}>{o}</option>)}
+      </select>
+      {error && <span style={{ fontSize: '0.72rem', color: '#e08a7a' }}>{error}</span>}
+    </div>
   )
 }
 

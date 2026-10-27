@@ -10,7 +10,7 @@ export async function onRequestGet({ request, env }) {
 
   const where = status ? 'WHERE l.status = ?' : ''
   const stmt = env.DB.prepare(
-    `SELECT l.id, l.created_at, l.first_name, l.last_name, l.phone, l.email, l.zip, l.service, l.message,
+    `SELECT l.id, l.created_at, l.first_name, l.last_name, l.phone, l.email, l.address, l.zip, l.service, l.budget, l.timeline, l.message,
             l.source, l.utm_campaign, l.status, l.notes,
             j.status AS job_status, j.value_cents, j.review_requested_at
      FROM leads l LEFT JOIN jobs j ON j.lead_id = l.id

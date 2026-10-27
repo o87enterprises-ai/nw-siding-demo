@@ -9,6 +9,10 @@ export const SERVICES = [
   'Multiple Services',
 ]
 
+// Optional qualifying answers from the estimate form. Keep in sync with src/components/Contact.jsx.
+export const BUDGETS = ['Under $5,000', '$5,000 - $15,000', '$15,000 - $30,000', '$30,000+', 'Not sure yet']
+export const TIMELINES = ['As soon as possible', 'Within 1-3 months', '3-6 months', 'Just exploring']
+
 export const LEAD_STATUSES = ['new', 'contacted', 'quoted', 'booked', 'lost']
 export const JOB_STATUSES = ['booked', 'completed', 'cancelled']
 
