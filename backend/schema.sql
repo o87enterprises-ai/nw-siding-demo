@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS leads (
   page         TEXT NOT NULL DEFAULT '',
   status       TEXT NOT NULL DEFAULT 'new',       -- new, contacted, quoted, booked, lost
   notes        TEXT NOT NULL DEFAULT '',
+  property     TEXT NOT NULL DEFAULT '',          -- JSON from the county property lookup
   ip_hash      TEXT NOT NULL DEFAULT ''
 );
 CREATE INDEX IF NOT EXISTS idx_leads_created ON leads (created_at);
