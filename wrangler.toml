@@ -1,2 +1,15 @@
 name = "nw-siding-demo"
 pages_build_output_dir = "dist"
+compatibility_date = "2026-09-29"
+
+# With pages_build_output_dir set, this file is the source of truth for
+# bindings and plain-text vars. Secrets (ADMIN_TOKEN, RESEND_API_KEY) stay
+# in the dashboard.
+[vars]
+FROM_EMAIL = "Northwest Siding <leads@northwestsiding.com>"
+OWNER_EMAIL = "sidinggurus@northwestsiding.com"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nw-siding-leads"
+database_id = "e89e94fc-62e5-4c94-ae48-23d94ee8a1c6"
