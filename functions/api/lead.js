@@ -1,5 +1,5 @@
 // POST /api/lead - public lead-capture endpoint used by the contact form.
-import { json, clean, isEmail, isZip, phoneDigits, readJson, sha256Hex, SERVICES } from '../_lib/util.js'
+import { json, clean, isEmail, isZip, phoneDigits, readJson, sha256Hex, SERVICES, BUDGETS, TIMELINES } from '../_lib/util.js'
 import { sendMail } from '../_lib/mail.js'
 import { ownerAlert, autoReply } from '../_lib/templates.js'
 
@@ -21,8 +21,11 @@ export async function onRequestPost({ request, env }) {
     last_name: clean(body.last_name, 60),
     phone: clean(body.phone, 30),
     email: clean(body.email, 254).toLowerCase(),
+    address: clean(body.address, 150),
     zip: clean(body.zip, 10),
     service: clean(body.service, 60),
+    budget: clean(body.budget, 40),
+    timeline: clean(body.timeline, 40),
     message: clean(body.message, 1000),
     source: clean(body.source, 40) || 'website',
     utm_source: clean(body.utm_source, 80),
@@ -39,6 +42,8 @@ export async function onRequestPost({ request, env }) {
   if (lead.email && !isEmail(lead.email)) errors.email = 'Enter a valid email address'
   if (lead.zip && !isZip(lead.zip)) errors.zip = 'Enter a 5-digit ZIP code'
   if (lead.service && !SERVICES.includes(lead.service)) errors.service = 'Pick a service from the list'
+  if (lead.budget && !BUDGETS.includes(lead.budget)) errors.budget = 'Pick a budget from the list'
+  if (lead.timeline && !TIMELINES.includes(lead.timeline)) errors.timeline = 'Pick a timeline from the list'
   if (Object.keys(errors).length) return json({ ok: false, errors }, 422)
 
   const ip = request.headers.get('cf-connecting-ip') || 'unknown'
@@ -50,11 +55,11 @@ export async function onRequestPost({ request, env }) {
   if (recent && recent.n >= RATE_LIMIT) return json({ ok: false, error: 'Too many requests. Please call us instead.' }, 429)
 
   const res = await env.DB.prepare(
-    `INSERT INTO leads (first_name, last_name, phone, email, zip, service, message, source,
+    `INSERT INTO leads (first_name, last_name, phone, email, address, zip, service, budget, timeline, message, source,
                         utm_source, utm_medium, utm_campaign, referrer, page, ip_hash)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).bind(
-    lead.first_name, lead.last_name, lead.phone, lead.email, lead.zip, lead.service, lead.message, lead.source,
+    lead.first_name, lead.last_name, lead.phone, lead.email, lead.address, lead.zip, lead.service, lead.budget, lead.timeline, lead.message, lead.source,
     lead.utm_source, lead.utm_medium, lead.utm_campaign, lead.referrer, lead.page, ipHash
   ).run()
   lead.id = res.meta.last_row_id
