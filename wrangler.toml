@@ -7,7 +7,7 @@ compatibility_date = "2026-09-29"
 # in the dashboard.
 [vars]
 FROM_EMAIL = "Northwest Siding <leads@northwestsiding.com>"
-OWNER_EMAIL = "sidinggurus@northwestsiding.com"
+OWNER_EMAIL = "nw@northwestsiding.com"
 
 [[d1_databases]]
 binding = "DB"
