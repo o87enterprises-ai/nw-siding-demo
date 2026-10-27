@@ -68,7 +68,8 @@ export function ownerAlert(env, lead, extras = {}) {
 
   // Opens the property on Google Maps (switch to satellite or Street View there).
   const place = [lead.address, lead.zip].filter(Boolean).join(' ')
-  const mapUrl = place ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place + ' OR')}` : ''
+  const hasState = /\b(OR|Oregon)\b/i.test(place)
+  const mapUrl = place ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hasState ? place : place + ' OR')}` : ''
   const portalUrl = 'https://apps.lanecounty.org/PropertyAccountInformation/'
   const propNote = 'Lane County assessor records. Values are county figures, not an appraisal, and square footage is not included.'
 

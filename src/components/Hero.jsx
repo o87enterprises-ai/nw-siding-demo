@@ -103,26 +103,31 @@ export default function Hero() {
           />
 
           {/* Headline */}
-          <div style={{ overflow: 'hidden' }}>
-            <motion.h1
-              initial={{ y: 60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.9, delay: 0.72, ease: [0.22, 1, 0.36, 1] }}
-              className="hero-h1"
-            >
-              Eugene's Exterior
-            </motion.h1>
-          </div>
-          <div style={{ overflow: 'hidden' }}>
-            <motion.h1
-              initial={{ y: 60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.9, delay: 0.84, ease: [0.22, 1, 0.36, 1] }}
-              className="hero-h1 hero-h1-gold"
-            >
-              Gold Standard.
-            </motion.h1>
-          </div>
+          {/* One h1 for the page; the two lines animate separately. */}
+          <h1 style={{ margin: 0, font: 'inherit' }}>
+            <span style={{ display: 'block', overflow: 'hidden' }}>
+              <motion.span
+                initial={{ y: 60, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.9, delay: 0.72, ease: [0.22, 1, 0.36, 1] }}
+                className="hero-h1"
+                style={{ display: 'block' }}
+              >
+                Eugene's Exterior
+              </motion.span>
+            </span>
+            <span style={{ display: 'block', overflow: 'hidden' }}>
+              <motion.span
+                initial={{ y: 60, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.9, delay: 0.84, ease: [0.22, 1, 0.36, 1] }}
+                className="hero-h1 hero-h1-gold"
+                style={{ display: 'block' }}
+              >
+                Gold Standard.
+              </motion.span>
+            </span>
+          </h1>
 
           {/* Paragraph */}
           <motion.p

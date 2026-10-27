@@ -172,7 +172,7 @@ export default function Contact() {
 
             {/* Email */}
             <a
-              href="mailto:sidinggurus@northwestsiding.com"
+              href="mailto:nw@northwestsiding.com"
               style={{
                 display: 'flex', alignItems: 'center', gap: '1rem',
                 padding: '1.2rem 1.5rem',
@@ -196,7 +196,7 @@ export default function Contact() {
               </div>
               <div>
                 <div style={{ fontSize: '0.65rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Email Us</div>
-                <div style={{ fontWeight: 500, color: 'var(--text)', fontSize: '0.88rem' }}>sidinggurus@northwestsiding.com</div>
+                <div style={{ fontWeight: 500, color: 'var(--text)', fontSize: '0.88rem' }}>nw@northwestsiding.com</div>
               </div>
             </a>
 
