@@ -1,6 +1,6 @@
 # Lead backend
 
-**Status: switched off for the preview.** The code lives in `backend/` (not `functions/`) so `wrangler pages deploy`
+**Status: code moved to `functions/` and D1 `nw-siding-leads` created and bound in Cloudflare. Deploy with `VITE_LEAD_API=on` once the Resend domain is verified.** The code lives in `backend/` (not `functions/`) so `wrangler pages deploy`
 does not bundle it, and the contact form only calls the API when the site is built with `VITE_LEAD_API=on`.
 To turn it on:
 1. `git mv backend/functions functions` (Pages deploys the `functions/` folder at the project root).
