@@ -2,6 +2,23 @@
 import { json, clean, isEmail, isZip, phoneDigits, readJson, sha256Hex, SERVICES, BUDGETS, TIMELINES } from '../_lib/util.js'
 import { sendMail } from '../_lib/mail.js'
 import { ownerAlert, autoReply } from '../_lib/templates.js'
+import { lookupProperty } from '../_lib/property.js'
+
+// Earlier requests from the same person (same email or phone number), for the owner alert.
+async function findPriorLeads(db, lead) {
+  const digits = phoneDigits(lead.phone)
+  if (!lead.email && digits.length < 10) return null
+  try {
+    const row = await db.prepare(
+      `SELECT COUNT(*) AS n, MAX(created_at) AS last_at,
+              (SELECT service FROM leads p2 WHERE p2.id <> ?1 AND ((?2 <> '' AND p2.email = ?2) OR (?3 <> '' AND replace(replace(replace(replace(replace(p2.phone,'(',''),')',''),'-',''),' ',''),'.','') = ?3)) ORDER BY p2.id DESC LIMIT 1) AS last_service
+       FROM leads p WHERE p.id <> ?1 AND ((?2 <> '' AND p.email = ?2) OR (?3 <> '' AND replace(replace(replace(replace(replace(p.phone,'(',''),')',''),'-',''),' ',''),'.','') = ?3))`
+    ).bind(lead.id, lead.email, digits.length >= 10 ? digits : '').first()
+    return row && row.n ? { count: row.n, last_at: row.last_at, last_service: row.last_service || '' } : null
+  } catch {
+    return null
+  }
+}
 
 const RATE_LIMIT = 5 // leads per IP per 10 minutes
 
@@ -65,7 +82,16 @@ export async function onRequestPost({ request, env }) {
   lead.id = res.meta.last_row_id
 
   // Owner alert, then the auto-reply to the customer (only if they gave an email).
-  const alert = ownerAlert(env, lead)
+  // Extra context for the owner. Neither lookup can block or fail the lead.
+  const [property, prior] = await Promise.all([lead.address ? lookupProperty(lead.address, lead.zip) : null, findPriorLeads(env.DB, lead)])
+  if (property && property.status === 'found') {
+    try {
+      await env.DB.prepare('UPDATE leads SET property = ? WHERE id = ?').bind(JSON.stringify(property), lead.id).run()
+    } catch {
+      // storing the lookup is optional
+    }
+  }
+  const alert = ownerAlert(env, lead, { property, prior, receivedAt: new Date() })
   await sendMail(env, { leadId: lead.id, kind: 'owner_alert', to: env.OWNER_EMAIL, replyTo: lead.email || undefined, ...alert })
 
   if (lead.email) {
