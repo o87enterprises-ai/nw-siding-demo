@@ -8,6 +8,8 @@ import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
 import FAQ from './components/FAQ'
 import Footer from './components/Footer'
+import ServicePage from './pages/ServicePage'
+import { servicePages } from './content/servicePages'
 import { O87Watermark } from './components/O87'
 
 function HomePage() {
@@ -26,14 +28,26 @@ function HomePage() {
   )
 }
 
-export default function App() {
+// Shared by the browser (BrowserRouter) and the build-time prerenderer (StaticRouter).
+export function AppRoutes() {
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        {servicePages.map((page) => (
+          <Route key={page.path} path={page.path} element={<ServicePage page={page} />} />
+        ))}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   )
 }
