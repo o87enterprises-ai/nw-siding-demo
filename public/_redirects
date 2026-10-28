@@ -1,1 +1,72 @@
+# Old WordPress/PHP site URLs -> closest section of the current one-page site (301).
+# Keeps indexed links and backlinks working. Order matters: first match wins; the SPA fallback stays last.
+
+# About
+/about-us            /#about  301
+/about-us/*          /#about  301
+/about-us.php        /#about  301
+
+# Contact / estimate
+/contact-us          /#contact  301
+/contact-us/*        /#contact  301
+/contact-us.php      /#contact  301
+/estimate-request    /#contact  301
+/estimate-request/*  /#contact  301
+/estimate-request.php /#contact  301
+/request-estimate    /#contact  301
+/request-estimate/*  /#contact  301
+/request-estimate.php /#contact  301
+/get-a-quote         /#contact  301
+/get-a-quote/*       /#contact  301
+
+# FAQ
+/frequently-asked-questions    /#faq  301
+/frequently-asked-questions/*  /#faq  301
+/frequently-asked-questions.php /#faq  301
+
+# Portfolio / references
+/portfolio           /#portfolio  301
+/portfolio/*         /#portfolio  301
+/portfolio.php       /#portfolio  301
+/references          /#portfolio  301
+/references/*        /#portfolio  301
+/references.php      /#portfolio  301
+
+# Services, products, service-area (city and service) pages
+/siding              /#services  301
+/siding/*            /#services  301
+/gutters             /#services  301
+/gutters/*           /#services  301
+/products            /#services  301
+/products/*          /#services  301
+/products.php        /#services  301
+/categories          /#services  301
+/categories/*        /#services  301
+/service-area        /#services  301
+/service-area/*      /#services  301
+/areas-served        /#services  301
+/areas-served/*      /#services  301
+
+# Pages with no equivalent -> home
+/financing           /  301
+/financing/*         /  301
+/incentive-programs  /  301
+/incentive-programs/*  /  301
+/incentive-programs.php /  301
+/privacy-statement   /  301
+/privacy-statement/* /  301
+/privacy-statement.php /  301
+/terms-of-use        /  301
+/terms-of-use.php    /  301
+/copyright           /  301
+/copyright/*         /  301
+/copyright.php       /  301
+/links               /  301
+/links/*             /  301
+/links.php           /  301
+/sitemap.php         /  301
+/index.php           /  301
+/indexpromo.php      /  301
+
+# Single-page app fallback (must be last)
 /* /index.html 200
