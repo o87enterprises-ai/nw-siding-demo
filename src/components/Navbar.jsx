@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import Logo from './Logo'
 
 const links = ['Services', 'Portfolio', 'About', 'Contact']
+// Section links go to the homepage from any page; the contact form exists on every page.
+const hrefFor = (link) => (link === 'Contact' ? '#contact' : `/#${link.toLowerCase()}`)
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -40,7 +42,7 @@ export default function Navbar() {
         {/* Desktop nav */}
         <div style={{ alignItems: 'center', gap: '2.5rem' }} className="desktop-nav">
           {links.map(link => (
-            <a key={link} href={`#${link.toLowerCase()}`} style={{
+            <a key={link} href={hrefFor(link)} style={{
               fontSize: '0.72rem', fontWeight: 500,
               letterSpacing: '0.14em', textTransform: 'uppercase',
               color: 'var(--text-muted)', transition: 'color 0.2s',
@@ -91,7 +93,7 @@ export default function Navbar() {
             }}
           >
             {links.map((link, i) => (
-              <motion.a key={link} href={`#${link.toLowerCase()}`}
+              <motion.a key={link} href={hrefFor(link)}
                 onClick={() => setMenuOpen(false)}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}

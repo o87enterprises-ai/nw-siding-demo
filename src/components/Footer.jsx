@@ -51,7 +51,7 @@ export default function Footer() {
 
           {/* Services */}
           <FooterCol title="Services" links={[
-            { label: 'Fiber Cement Siding', href: '#' },
+            { label: 'Fiber Cement Siding', href: '/siding/fiber-cement-siding/' },
             { label: 'Cedar Siding', href: '#' },
             { label: 'Replacement Windows', href: '#' },
             { label: 'Seamless Gutters', href: '#' },
@@ -69,8 +69,8 @@ export default function Footer() {
 
           {/* Company */}
           <FooterCol title="Company" links={[
-            { label: 'About Us', href: '#about' },
-            { label: 'Portfolio', href: '#portfolio' },
+            { label: 'About Us', href: '/#about' },
+            { label: 'Portfolio', href: '/#portfolio' },
             { label: 'Financing', href: '#' },
             { label: 'Incentive Programs', href: '#' },
             { label: 'Contact', href: '#contact' },

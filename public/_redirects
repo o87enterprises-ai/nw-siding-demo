@@ -34,7 +34,17 @@
 
 # Services, products, service-area (city and service) pages
 /siding              /#services  301
-/siding/*            /#services  301
+# /siding/fiber-cement-siding/ is a real page now, so only the other old /siding/ children redirect.
+/siding/breckenridge-douglas-fir-panel    /#services  301
+/siding/breckenridge-douglas-fir-panel/*  /#services  301
+/siding/cedar-shingles                    /#services  301
+/siding/cedar-shingles/*                  /#services  301
+/siding/clear-beveled-lap-cedar-siding    /#services  301
+/siding/clear-beveled-lap-cedar-siding/*  /#services  301
+/siding/painting                          /#services  301
+/siding/painting/*                        /#services  301
+/siding/trim                              /#services  301
+/siding/trim/*                            /#services  301
 /gutters             /#services  301
 /gutters/*           /#services  301
 /products            /#services  301
