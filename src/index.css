@@ -195,7 +195,7 @@ button {
   position: relative;
   z-index: 10;
   width: 100%;
-  padding: calc(var(--nav-h) + 1rem) clamp(1.5rem, 6vw, 6rem) 6.5rem;
+  padding: calc(var(--nav-h) + 1rem) clamp(1.5rem, 6vw, 6rem) 5rem;
 }
 
 .hero-inner {
@@ -299,7 +299,6 @@ button {
 .hero-buttons > .btn-ghost { border-color: rgba(201, 169, 110, 0.6); background: rgba(8, 12, 20, 0.35); }
 
 .hero-scroll { display: none !important; }
-.hero-slide-label { max-width: calc(100vw - 2rem); text-align: right; }
 
 /* Stats band: balanced grid instead of a wrapping row (no orphaned card, no stray borders). */
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; max-width: 1100px; margin: 0 auto; }

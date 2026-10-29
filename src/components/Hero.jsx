@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { LogoMark } from './Logo'
 
 const SLIDES = [
-  { url: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1920&q=80', label: 'James Hardie® Fiber Cement · Eugene, OR' },
-  { url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80', label: 'Complete Exterior Renovation · Springfield, OR' },
-  { url: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1920&q=80', label: 'Premium Cedar Siding · Albany, OR' },
-  { url: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?auto=format&fit=crop&w=1920&q=80', label: 'Seamless Steel Gutters · Roseburg, OR' },
-  { url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1920&q=80', label: 'Full Exterior Remodel · Creswell, OR' },
+  { url: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1920&q=80' },
+  { url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80' },
+  { url: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1920&q=80' },
+  { url: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?auto=format&fit=crop&w=1920&q=80' },
+  { url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1920&q=80' },
 ]
 
 const INTERVAL = 7000
@@ -179,19 +179,6 @@ export default function Hero() {
         position: 'absolute', bottom: '1.5rem', right: 'clamp(1rem, 4vw, 4rem)',
         zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.6rem',
       }}>
-        <AnimatePresence mode="wait">
-          <motion.span
-            key={current}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.4 }}
-            className="hero-slide-label"
-            style={{ fontSize: '0.58rem', fontWeight: 500, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(201,169,110,0.65)' }}
-          >
-            {SLIDES[current].label}
-          </motion.span>
-        </AnimatePresence>
         <div style={{ display: 'flex', gap: '0', margin: '-11px -3px' }}>
           {SLIDES.map((_, i) => (
             <button key={i} onClick={() => setCurrent(i)} aria-label={`Show slide ${i + 1} of ${SLIDES.length}`} style={{
