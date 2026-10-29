@@ -219,8 +219,8 @@ export default function Contact() {
                 </svg>
               </div>
               <div>
-                <div style={{ fontSize: '0.65rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Office</div>
-                <div style={{ fontWeight: 500, color: 'var(--text)', fontSize: '0.88rem' }}>608 Startouch Dr, Eugene, OR 97405</div>
+                <div style={{ fontSize: '0.65rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Service Area</div>
+                <div style={{ fontWeight: 500, color: 'var(--text)', fontSize: '0.88rem' }}>Eugene, OR &amp; surrounding areas</div>
               </div>
             </div>
           </motion.div>
