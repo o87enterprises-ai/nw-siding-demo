@@ -105,7 +105,7 @@ export default function Hero() {
           {/* Headline */}
           {/* One h1 for the page; the two lines animate separately. */}
           <h1 style={{ margin: 0, font: 'inherit' }}>
-            <span style={{ display: 'block', overflow: 'hidden' }}>
+            <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.14em', marginBottom: '-0.14em' }}>
               <motion.span
                 initial={{ y: 60, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -116,7 +116,7 @@ export default function Hero() {
                 Eugene's Exterior
               </motion.span>
             </span>
-            <span style={{ display: 'block', overflow: 'hidden' }}>
+            <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.14em', marginBottom: '-0.14em' }}>
               <motion.span
                 initial={{ y: 60, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -186,17 +186,20 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.4 }}
+            className="hero-slide-label"
             style={{ fontSize: '0.58rem', fontWeight: 500, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(201,169,110,0.65)' }}
           >
             {SLIDES[current].label}
           </motion.span>
         </AnimatePresence>
-        <div style={{ display: 'flex', gap: '5px' }}>
+        <div style={{ display: 'flex', gap: '0', margin: '-11px -3px' }}>
           {SLIDES.map((_, i) => (
-            <button key={i} onClick={() => setCurrent(i)} style={{
-              width: i === current ? '20px' : '5px', height: '3px',
-              borderRadius: '2px', background: i === current ? 'var(--gold)' : 'rgba(255,255,255,0.22)',
-              border: 'none', cursor: 'pointer', padding: 0, transition: 'all 0.4s',
+            <button key={i} onClick={() => setCurrent(i)} aria-label={`Show slide ${i + 1} of ${SLIDES.length}`} style={{
+              // 3px-tall bar with padding so the tap target is ~23px tall without changing the look
+              boxSizing: 'content-box', width: i === current ? '20px' : '8px', height: '3px',
+              padding: '11px 3px', backgroundClip: 'content-box',
+              backgroundColor: i === current ? 'var(--gold)' : 'rgba(255,255,255,0.22)',
+              border: 'none', cursor: 'pointer', transition: 'all 0.4s',
             }} />
           ))}
         </div>
@@ -204,6 +207,7 @@ export default function Hero() {
 
       {/* Scroll indicator */}
       <motion.div
+        className="hero-scroll"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8, duration: 0.6 }}

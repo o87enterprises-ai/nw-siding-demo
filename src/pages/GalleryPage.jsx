@@ -3,7 +3,7 @@ import Contact from '../components/Contact'
 import Footer from '../components/Footer'
 import { galleryPhotos, galleryPage } from '../content/gallery'
 
-const crumbLink = { color: 'var(--text-muted)', textDecoration: 'underline', textUnderlineOffset: '3px' }
+const crumbLink = { color: 'var(--text-muted)', textDecoration: 'underline', textUnderlineOffset: '3px', display: 'inline-block', padding: '0.5rem 0' }
 const subTitle = { fontSize: 'clamp(1.4rem, 3vw, 2rem)', margin: '3.5rem 0 1.4rem' }
 
 // Rendered widths: 1 column on phones, 2 from 561px, 3 (projects) from 900px; the page maxes out at 1200px.

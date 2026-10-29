@@ -26,6 +26,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
+  overflow-x: clip; /* iOS can pan sideways if only <body> clips */
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
 }
@@ -182,8 +183,9 @@ button {
 /* ─── Hero ───────────────────────────────────────────────────── */
 .hero-section {
   position: relative;
-  height: 100vh;
   min-height: 600px;
+  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -193,7 +195,7 @@ button {
   position: relative;
   z-index: 10;
   width: 100%;
-  padding: calc(var(--nav-h) + 1rem) clamp(1.5rem, 6vw, 6rem) 4rem;
+  padding: calc(var(--nav-h) + 1rem) clamp(1.5rem, 6vw, 6rem) 6.5rem;
 }
 
 .hero-inner {
@@ -286,11 +288,24 @@ button {
 
 .hero-buttons {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
   gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
+  width: 100%;
+  max-width: 320px;
   margin-top: 2rem;
 }
+.hero-buttons > a { justify-content: center; text-align: center; }
+.hero-buttons > .btn-ghost { border-color: rgba(201, 169, 110, 0.6); background: rgba(8, 12, 20, 0.35); }
+
+.hero-scroll { display: none !important; }
+.hero-slide-label { max-width: calc(100vw - 2rem); text-align: right; }
+
+/* Stats band: balanced grid instead of a wrapping row (no orphaned card, no stray borders). */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; max-width: 1100px; margin: 0 auto; }
+.stats-grid > .stat-card { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2.2rem 1.2rem; }
+.stats-grid > .stat-card:nth-child(2n) { border-right: none; }
+.stats-grid > .stat-card:last-child { grid-column: 1 / -1; border-right: none; border-bottom: none; }
 
 .hero-stats {
   display: grid;
@@ -325,7 +340,7 @@ button {
 
 /* ─── Mobile-first: base (mobile) class layouts ─────────────── */
 .desktop-nav       { display: none; }
-.mobile-menu-btn   { display: flex; flex-direction: column; gap: 5px; padding: 4px; }
+.mobile-menu-btn   { display: flex; flex-direction: column; gap: 5px; padding: 14px 12px; margin-right: -12px; }
 .portfolio-grid    { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .form-name-grid    { grid-template-columns: 1fr; }
 .contact-grid      { grid-template-columns: 1fr; }
@@ -335,11 +350,13 @@ button {
 /* ─── 561px+: footer 2-col ───────────────────────────────────── */
 @media (min-width: 561px) {
   .footer-grid { grid-template-columns: 1fr 1fr; }
+  .hero-buttons { flex-direction: row; flex-wrap: wrap; justify-content: center; max-width: none; width: auto; }
 }
 
 /* ─── 769px+: tablet / desktop ──────────────────────────────── */
 @media (min-width: 769px) {
   .desktop-nav    { display: flex; }
+  .hero-scroll    { display: flex !important; }
   .mobile-menu-btn { display: none; }
   .portfolio-grid { grid-template-columns: repeat(3, 1fr); }
   .form-name-grid { grid-template-columns: 1fr 1fr; }
@@ -353,6 +370,15 @@ button {
   .hero-buttons   { justify-content: flex-start; }
   .hero-stats     { grid-template-columns: repeat(4, auto); max-width: none; gap: 2rem 3rem; justify-content: flex-start; }
   .footer-grid    { grid-template-columns: 1.5fr 1fr 1fr 1fr; }
+  .hero-buttons   { justify-content: flex-start; }
+}
+
+@media (min-width: 1000px) {
+  .stats-grid { grid-template-columns: repeat(6, 1fr); }
+  .stats-grid > .stat-card { grid-column: span 2; padding: 2.5rem 2rem; border-right: 1px solid var(--border) !important; border-bottom: 1px solid var(--border); }
+  .stats-grid > .stat-card:nth-child(3), .stats-grid > .stat-card:nth-child(5) { border-right: none !important; }
+  .stats-grid > .stat-card:nth-child(4) { grid-column: 2 / span 2; border-bottom: none; }
+  .stats-grid > .stat-card:nth-child(5) { grid-column: 4 / span 2; border-bottom: none; }
 }
 
 /* ─── FAQ ───────────────────────────────────────────────────────── */
@@ -368,6 +394,16 @@ button {
 .faq-item[open] > summary { border-bottom: 1px solid var(--border); }
 .faq-item > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
 .faq-item > p { padding: 1rem 1.25rem 1.2rem; font-size: 0.86rem; color: var(--text-muted); line-height: 1.75; }
+
+/* ─── Social icon link (footer) ──────────────────────────────────── */
+.social-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--gold-line); color: var(--gold);
+  transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.2s var(--ease-out);
+}
+.social-link:hover { background: var(--gold-dim); border-color: var(--gold); color: var(--gold-light); transform: translateY(-2px); }
+.social-link:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 /* ─── Gallery page ─────────────────────────────────────────────── */
 .gallery-tile {

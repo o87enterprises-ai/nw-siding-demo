@@ -1,7 +1,7 @@
 import Contact from '../components/Contact'
 import Footer from '../components/Footer'
 
-const crumbLink = { color: 'var(--text-muted)', textDecoration: 'underline', textUnderlineOffset: '3px' }
+const crumbLink = { color: 'var(--text-muted)', textDecoration: 'underline', textUnderlineOffset: '3px', display: 'inline-block', padding: '0.5rem 0' }
 
 export default function ServicePage({ page }) {
   return (
