@@ -204,13 +204,13 @@ export default function Portfolio() {
           </div>
 
           <motion.a
-            href="#contact"
+            href="/gallery/"
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="btn-ghost"
           >
-            Start Your Project
+            View Full Gallery
           </motion.a>
         </div>
 

@@ -24,10 +24,10 @@
 /frequently-asked-questions/*  /#faq  301
 /frequently-asked-questions.php /#faq  301
 
-# Portfolio / references
-/portfolio           /#portfolio  301
-/portfolio/*         /#portfolio  301
-/portfolio.php       /#portfolio  301
+# Portfolio (now the photo gallery) / references
+/portfolio           /gallery/  301
+/portfolio/*         /gallery/  301
+/portfolio.php       /gallery/  301
 /references          /#portfolio  301
 /references/*        /#portfolio  301
 /references.php      /#portfolio  301
