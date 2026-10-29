@@ -63,7 +63,7 @@ export default function Testimonials() {
       />
 
       {/* Decorative large quote mark */}
-      <div style={{
+      <div aria-hidden="true" style={{
         position: 'absolute',
         top: '5%', right: '3%',
         fontFamily: 'var(--font-serif)',
@@ -154,16 +154,21 @@ export default function Testimonials() {
         </AnimatePresence>
 
         {/* Dot navigation */}
-        <div style={{ display: 'flex', gap: '0.6rem', marginTop: '3rem' }}>
+        <div style={{ display: 'flex', gap: '0.2rem', marginTop: 'calc(3rem - 10px)' }}>
           {TESTIMONIALS.map((_, i) => (
             <button
               key={i}
               onClick={() => setActive(i)}
+              aria-label={`Show testimonial ${i + 1} of ${TESTIMONIALS.length}`}
+              aria-current={i === active ? 'true' : undefined}
               style={{
+                // 4px-tall bar with padding: the tap target is ~24px tall, the look is unchanged
+                boxSizing: 'content-box',
                 width: i === active ? '28px' : '8px',
                 height: '4px',
-                borderRadius: '2px',
-                background: i === active ? 'var(--gold)' : 'var(--border)',
+                padding: '10px 4px',
+                backgroundClip: 'content-box',
+                backgroundColor: i === active ? 'var(--gold)' : 'rgba(237,233,226,0.28)',
                 transition: 'all 0.3s var(--ease-out)',
                 cursor: 'pointer',
                 border: 'none',

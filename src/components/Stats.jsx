@@ -28,16 +28,12 @@ function StatCard({ number, label, delay }) {
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
-      style={{
-        textAlign: 'center',
-        padding: '2.5rem 2rem',
-        borderRight: '1px solid var(--border)',
-        flex: '1 1 160px',
-      }}
+      className="stat-card"
+      style={{ textAlign: 'center' }}
     >
       <div style={{
         fontFamily: 'var(--font-serif)',
-        fontSize: 'clamp(2.4rem, 4vw, 3.5rem)',
+        fontSize: 'clamp(1.8rem, 9vw, 3.5rem)',
         fontWeight: 700,
         color: 'var(--gold)',
         lineHeight: 1,
@@ -69,13 +65,7 @@ export default function Stats() {
       }}>
         <SectionBackground images={STATS_IMAGES} overlay={0.88} />
         <div style={{ position: 'relative', zIndex: 1 }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          maxWidth: '1100px',
-          margin: '0 auto',
-        }}>
+        <div className="stats-grid">
           <StatCard number="25+" label="Years of Excellence" delay={0} />
           <StatCard number="2,000+" label="Homes Completed" delay={0.1} />
           <StatCard number="Master" label="GuildQuality Award" delay={0.2} />

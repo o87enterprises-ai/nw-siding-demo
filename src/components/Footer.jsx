@@ -101,6 +101,8 @@ export default function Footer() {
           <div style={{ display: 'flex', gap: '1.5rem' }}>
             {['Privacy Policy', 'Terms of Use'].map(link => (
               <a key={link} href="#" style={{
+                display: 'inline-block',
+                padding: '0.5rem 0',
                 fontSize: '0.72rem',
                 color: 'var(--text-muted)',
                 letterSpacing: '0.06em',
@@ -130,12 +132,14 @@ function FooterCol({ title, links }) {
         color: 'var(--gold)',
         marginBottom: '1.2rem',
       }}>{title}</div>
-      <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
         {links.map(({ label, href }) => (
           <li key={label}>
             <a
               href={href}
               style={{
+                display: 'inline-block',
+                padding: '0.4rem 0',
                 fontSize: '0.83rem',
                 color: 'var(--text-muted)',
                 transition: 'color 0.2s',
