@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import SectionBackground from './SectionBackground'
+import { galleryPhotos } from '../content/gallery'
 
 const PORTFOLIO_IMAGES = [
   'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1920&q=80',
@@ -9,152 +10,41 @@ const PORTFOLIO_IMAGES = [
   'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=1920&q=80',
 ]
 
-const PROJECTS = [
-  {
-    title: 'James Hardie Installation',
-    location: 'Eugene, OR',
-    type: 'Fiber Cement Siding',
-    bg: 'linear-gradient(135deg, #2A2D34 0%, #363840 100%)',
-    size: 'large',
-  },
-  {
-    title: 'Cedar Shingle Replacement',
-    location: 'Springfield, OR',
-    type: 'Cedar Shingles',
-    bg: 'linear-gradient(135deg, #3D3128 0%, #4E4035 100%)',
-    size: 'small',
-  },
-  {
-    title: 'Complete Exterior Remodel',
-    location: 'Albany, OR',
-    type: 'Hardie + Windows + Gutters',
-    bg: 'linear-gradient(135deg, #C4BCAF 0%, #D4CCC0 100%)',
-    size: 'small',
-  },
-  {
-    title: 'Window Replacement',
-    location: 'Eugene, OR',
-    type: 'Milgard Tuscany® Series',
-    bg: 'linear-gradient(135deg, #445040 0%, #556050 100%)',
-    size: 'small',
-  },
-  {
-    title: 'Seamless Steel Gutters',
-    location: 'Creswell, OR',
-    type: '6" Fascia-Style',
-    bg: 'linear-gradient(135deg, #1C2635 0%, #253040 100%)',
-    size: 'small',
-  },
-  {
-    title: 'HardiePlank® Installation',
-    location: 'Roseburg, OR',
-    type: 'Fiber Cement · Lap Siding',
-    bg: 'linear-gradient(135deg, #E8E2DA 0%, #F0EBE3 100%)',
-    size: 'large',
-  },
-]
+// Six photos from the gallery page (ids in src/content/gallery.js). Each tile opens the full gallery.
+const FEATURED_IDS = ['06', '07', '08', '10', '11', '12']
+const FEATURED = FEATURED_IDS.map((id) => galleryPhotos.find((p) => p.id === id))
 
-function ProjectCard({ project, delay }) {
+function ProjectCard({ photo, delay }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
-  const isLarge = project.size === 'large'
-
   return (
-    <motion.div
+    <motion.a
       ref={ref}
+      href="/gallery/"
+      aria-label={`View the project gallery: ${photo.alt}`}
       initial={{ opacity: 0, scale: 0.97 }}
       animate={inView ? { opacity: 1, scale: 1 } : {}}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
-      whileHover="hover"
       style={{
-        gridColumn: isLarge ? 'span 2' : 'span 1',
         position: 'relative',
+        display: 'block',
         borderRadius: '3px',
         overflow: 'hidden',
-        aspectRatio: isLarge ? '16/7' : '4/3',
-        cursor: 'pointer',
-        background: project.bg,
+        aspectRatio: '4/3',
+        background: 'var(--surface-2)',
       }}
     >
-      {/* Overlay */}
-      <motion.div
-        variants={{ hover: { opacity: 1 } }}
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(0deg, rgba(8,12,20,0.85) 0%, rgba(8,12,20,0.2) 50%, transparent 100%)',
-          zIndex: 1,
-        }}
+      <img
+        src={`/gallery/${photo.id}-sm.webp`}
+        alt={photo.alt}
+        width={photo.w}
+        height={photo.h}
+        loading="lazy"
+        decoding="async"
+        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
       />
-
-      {/* Demo label (remove with real photos) */}
-      <div style={{
-        position: 'absolute',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        fontSize: '0.6rem',
-        fontWeight: 500,
-        letterSpacing: '0.2em',
-        textTransform: 'uppercase',
-        color: 'rgba(255,255,255,0.12)',
-        whiteSpace: 'nowrap',
-        zIndex: 0,
-        userSelect: 'none',
-      }}>
-        Photo Placeholder
-      </div>
-
-      {/* Content */}
-      <motion.div
-        variants={{ hover: { y: 0, opacity: 1 } }}
-        initial={{ y: 10, opacity: 0.7 }}
-        transition={{ duration: 0.3 }}
-        style={{
-          position: 'absolute',
-          bottom: 0, left: 0, right: 0,
-          padding: '1.5rem 1.8rem',
-          zIndex: 2,
-        }}
-      >
-        <div className="label" style={{ marginBottom: '0.4rem', color: 'var(--gold)' }}>
-          {project.type}
-        </div>
-        <div style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: '1.1rem',
-          fontWeight: 600,
-          color: 'var(--white)',
-          marginBottom: '0.2rem',
-        }}>{project.title}</div>
-        <div style={{
-          fontSize: '0.72rem',
-          color: 'rgba(255,255,255,0.55)',
-          letterSpacing: '0.08em',
-        }}>{project.location}</div>
-      </motion.div>
-
-      {/* Arrow icon */}
-      <motion.div
-        variants={{ hover: { opacity: 1, scale: 1 } }}
-        initial={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 0.25 }}
-        style={{
-          position: 'absolute',
-          top: '1.2rem', right: '1.2rem',
-          width: '36px', height: '36px',
-          borderRadius: '50%',
-          border: '1px solid rgba(201,169,110,0.5)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 2,
-        }}
-      >
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M2 10L10 2M10 2H4M10 2v6" stroke="var(--gold)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </motion.div>
-    </motion.div>
+    </motion.a>
   )
 }
 
@@ -214,14 +104,10 @@ export default function Portfolio() {
           </motion.a>
         </div>
 
-        {/* Masonry-style grid */}
-        <div className="portfolio-grid" style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '8px',
-        }}>
-          {PROJECTS.map((p, i) => (
-            <ProjectCard key={i} project={p} delay={i * 0.08} />
+        {/* Featured photos */}
+        <div className="portfolio-grid">
+          {FEATURED.map((photo, i) => (
+            <ProjectCard key={photo.id} photo={photo} delay={i * 0.08} />
           ))}
         </div>
       </div>

@@ -326,7 +326,7 @@ button {
 /* ─── Mobile-first: base (mobile) class layouts ─────────────── */
 .desktop-nav       { display: none; }
 .mobile-menu-btn   { display: flex; flex-direction: column; gap: 5px; padding: 4px; }
-.portfolio-grid > div { grid-column: span 1 !important; aspect-ratio: 4/3 !important; }
+.portfolio-grid    { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .form-name-grid    { grid-template-columns: 1fr; }
 .contact-grid      { grid-template-columns: 1fr; }
 .contact-grid > * { min-width: 0; }
@@ -341,7 +341,7 @@ button {
 @media (min-width: 769px) {
   .desktop-nav    { display: flex; }
   .mobile-menu-btn { display: none; }
-  .portfolio-grid > div { grid-column: unset !important; aspect-ratio: unset !important; }
+  .portfolio-grid { grid-template-columns: repeat(3, 1fr); }
   .form-name-grid { grid-template-columns: 1fr 1fr; }
   .contact-grid   { grid-template-columns: 1fr 1fr; }
 }
