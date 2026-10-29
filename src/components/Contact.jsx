@@ -275,8 +275,8 @@ export default function Contact() {
               tabIndex={-1} autoComplete="off" aria-hidden="true"
               style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0 }} />
             <div className="form-name-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <FormField label="First Name" placeholder="Travis" name="first_name" value={form.first_name} onChange={set('first_name')} error={state.errors.first_name} autoComplete="given-name" />
-              <FormField label="Last Name" placeholder="Prine" name="last_name" value={form.last_name} onChange={set('last_name')} autoComplete="family-name" />
+              <FormField label="First Name" placeholder="First name" name="first_name" value={form.first_name} onChange={set('first_name')} error={state.errors.first_name} autoComplete="given-name" />
+              <FormField label="Last Name" placeholder="Last name" name="last_name" value={form.last_name} onChange={set('last_name')} autoComplete="family-name" />
             </div>
             <FormField label="Phone Number" placeholder="(541) 000-0000" type="tel" name="phone" value={form.phone} onChange={set('phone')} error={state.errors.phone || state.errors.contact} autoComplete="tel" />
             <FormField label="Email Address" placeholder="you@email.com" type="email" name="email" value={form.email} onChange={set('email')} error={state.errors.email} autoComplete="email" />
