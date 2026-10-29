@@ -8,6 +8,7 @@ import path from 'node:path'
 const dist = path.resolve('dist')
 const { render } = await import(pathToFileURL(path.resolve('dist-server/entry-server.js')).href)
 const { servicePages, SITE } = await import(pathToFileURL(path.resolve('src/content/servicePages.js')).href)
+const { galleryPage, galleryPhotos } = await import(pathToFileURL(path.resolve('src/content/gallery.js')).href)
 
 const template = readFileSync(path.join(dist, 'index.html'), 'utf8')
 
@@ -23,8 +24,8 @@ function injectRoot(html, body) {
   return setTag(html, /<div id="root"><\/div>/, `<div id="root">${body}</div>`)
 }
 
-function servicePageHtml(page) {
-  const url = SITE + withSlash(page.path)
+// Per-page <title>, description, canonical and social tags. The homepage keeps the template's own.
+function withPageHead(page, url) {
   let html = template
   html = setTag(html, /<title>[\s\S]*?<\/title>/, `<title>${attr(page.title)}</title>`)
   html = setTag(html, /<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${attr(page.description)}" />`)
@@ -35,7 +36,27 @@ function servicePageHtml(page) {
   html = setTag(html, /<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${attr(page.title)}" />`)
   html = setTag(html, /<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${attr(page.description)}" />`)
   // The homepage <noscript> summary is not needed: this page's content is already in the HTML.
-  html = html.replace(/<noscript>[\s\S]*?<\/noscript>/, '')
+  return html.replace(/<noscript>[\s\S]*?<\/noscript>/, '')
+}
+
+const breadcrumbLd = (url, names) =>
+  jsonLd({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE + '/' },
+      ...names.map((name, i) => ({
+        '@type': 'ListItem',
+        position: i + 2,
+        name,
+        ...(i === names.length - 1 ? { item: url } : {}),
+      })),
+    ],
+  })
+
+function servicePageHtml(page) {
+  const url = SITE + withSlash(page.path)
+  const html = withPageHead(page, url)
 
   const extra = [
     jsonLd({
@@ -48,27 +69,38 @@ function servicePageHtml(page) {
       areaServed: { '@type': 'City', name: page.city, containedInPlace: { '@type': 'State', name: 'Oregon' } },
       description: page.description,
     }),
-    jsonLd({
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: SITE + '/' },
-        ...page.breadcrumb.map((name, i) => ({
-          '@type': 'ListItem',
-          position: i + 2,
-          name,
-          ...(i === page.breadcrumb.length - 1 ? { item: url } : {}),
-        })),
-      ],
-    }),
+    breadcrumbLd(url, page.breadcrumb),
     jsonLd({
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
       mainEntity: page.faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
     }),
   ].join('\n    ')
-  html = setTag(html, /<\/head>/, `    ${extra}\n  </head>`)
-  return injectRoot(html, render(page.path))
+  return injectRoot(setTag(html, /<\/head>/, `    ${extra}\n  </head>`), render(page.path))
+}
+
+function galleryPageHtml() {
+  const url = SITE + withSlash(galleryPage.path)
+  const extra = [
+    jsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'ImageGallery',
+      name: galleryPage.h1,
+      url,
+      description: galleryPage.description,
+      publisher: { '@id': `${SITE}/#business` },
+      image: galleryPhotos.map((p) => ({
+        '@type': 'ImageObject',
+        contentUrl: `${SITE}/gallery/${p.id}-lg.webp`,
+        thumbnailUrl: `${SITE}/gallery/${p.id}-sm.webp`,
+        description: p.alt,
+        width: p.lw,
+        height: p.lh,
+      })),
+    }),
+    breadcrumbLd(url, galleryPage.breadcrumb),
+  ].join('\n    ')
+  return injectRoot(setTag(withPageHead(galleryPage, url), /<\/head>/, `    ${extra}\n  </head>`), render(galleryPage.path))
 }
 
 function write(routePath, html) {
@@ -82,9 +114,10 @@ function write(routePath, html) {
 // index.html is only a fallback for the unrendered template, so drop it from the prerendered output.
 write('/', injectRoot(template.replace(/<noscript>[\s\S]*?<\/noscript>/, ''), render('/')))
 for (const page of servicePages) write(page.path, servicePageHtml(page))
+write(galleryPage.path, galleryPageHtml())
 
 const today = new Date().toISOString().slice(0, 10)
-const urls = ['/', ...servicePages.map((p) => withSlash(p.path))]
+const urls = ['/', ...servicePages.map((p) => withSlash(p.path)), withSlash(galleryPage.path)]
 const sitemap =
   '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   urls

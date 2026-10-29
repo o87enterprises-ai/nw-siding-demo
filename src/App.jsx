@@ -9,6 +9,8 @@ import Contact from './components/Contact'
 import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 import ServicePage from './pages/ServicePage'
+import GalleryPage from './pages/GalleryPage'
+import { galleryPage } from './content/gallery'
 import { servicePages } from './content/servicePages'
 import { O87Watermark } from './components/O87'
 
@@ -35,6 +37,7 @@ export function AppRoutes() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path={galleryPage.path} element={<GalleryPage />} />
         {servicePages.map((page) => (
           <Route key={page.path} path={page.path} element={<ServicePage page={page} />} />
         ))}
