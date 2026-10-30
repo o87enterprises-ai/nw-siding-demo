@@ -232,8 +232,9 @@ export default function Contact() {
                 </svg>
               </div>
               <div>
-                <div style={{ fontSize: '0.65rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Office</div>
-                <div style={{ fontWeight: 500, color: 'var(--text)', fontSize: '0.88rem' }}>608 Startouch Dr, Eugene, OR 97405</div>
+                <div style={{ fontSize: '0.65rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Based In</div>
+                <div style={{ fontWeight: 500, color: 'var(--text)', fontSize: '0.88rem' }}>Eugene, Oregon</div>
+                <div style={{ fontWeight: 400, color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: '0.15rem' }}>Also serving from Junction City &amp; Cottage Grove, OR</div>
               </div>
             </div>
           </motion.div>
@@ -343,9 +344,23 @@ export default function Contact() {
               }}>
                 Request a Free Estimate
               </div>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6 }}>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1.25rem', lineHeight: 1.6 }}>
                 We respond within one business day. Usually faster.
               </p>
+
+              <div style={{
+                background: 'var(--gold-dim)',
+                border: '1px solid var(--gold-line)',
+                borderRadius: '3px',
+                padding: '0.7rem 1rem',
+                marginBottom: '2rem',
+                fontSize: '0.78rem',
+                color: 'var(--gold)',
+                letterSpacing: '0.02em',
+                lineHeight: 1.5,
+              }}>
+                <strong>Fall–Winter Special:</strong> 10% off all projects booked October through January.
+              </div>
 
               {status === 'error' && errorMessage && (
                 <div style={{
@@ -453,8 +468,14 @@ export default function Contact() {
                     <option value="Cedar / Wood Siding">Cedar / Wood Siding</option>
                     <option value="Replacement Windows">Replacement Windows (Milgard®)</option>
                     <option value="Seamless Gutters">Seamless Gutters</option>
-                    <option value="Painting & Trim">Painting & Trim</option>
-                    <option value="Multiple Services">Multiple Services / Complete Exterior</option>
+                    <option value="Roofing">Roofing</option>
+                    <option value="Decks">Decks</option>
+                    <option value="Additions">Additions</option>
+                    <option value="Fencing">Fencing</option>
+                    <option value="Gates">Gates</option>
+                    <option value="Interior Painting">Interior Painting</option>
+                    <option value="Exterior Painting">Exterior Painting</option>
+                    <option value="Multiple Services">Multiple Services / Complete Project</option>
                   </select>
                 </div>
 
