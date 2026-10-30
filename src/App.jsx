@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -13,6 +14,10 @@ import GalleryPage from './pages/GalleryPage'
 import { galleryPage } from './content/gallery'
 import { servicePages } from './content/servicePages'
 import { O87Watermark } from './components/O87'
+
+// Payment pages load Stripe, so they are split out of the main bundle. They are not prerendered.
+const PayPage = lazy(() => import('./pages/PayPage'))
+const PosPage = lazy(() => import('./pages/PosPage'))
 
 function HomePage() {
   return (
@@ -38,6 +43,8 @@ export function AppRoutes() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path={galleryPage.path} element={<GalleryPage />} />
+        <Route path="/pay" element={<Suspense fallback={null}><PayPage /></Suspense>} />
+        <Route path="/pos" element={<Suspense fallback={null}><PosPage /></Suspense>} />
         {servicePages.map((page) => (
           <Route key={page.path} path={page.path} element={<ServicePage page={page} />} />
         ))}
