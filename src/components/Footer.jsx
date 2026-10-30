@@ -75,7 +75,7 @@ export default function Footer() {
             { label: 'About Us', href: '#' },
             { label: 'Portfolio', href: '#portfolio' },
             { label: '10% Seasonal Discount', href: '#contact' },
-            { label: 'Incentive Programs', href: '#' },
+            { label: 'Pay an Invoice', href: '/pay' },
             { label: 'Contact', href: '#contact' },
           ]} />
         </div>
