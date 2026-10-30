@@ -54,23 +54,27 @@ export default function Footer() {
             { label: 'Cedar Siding', href: '#' },
             { label: 'Replacement Windows', href: '#' },
             { label: 'Seamless Gutters', href: '#' },
-            { label: 'Painting & Trim', href: '#' },
+            { label: 'Roofing', href: '#' },
+            { label: 'Decks & Additions', href: '#' },
+            { label: 'Fencing & Gates', href: '#' },
+            { label: 'Interior & Exterior Painting', href: '#' },
           ]} />
 
           {/* Areas */}
           <FooterCol title="Service Areas" links={[
             { label: 'Eugene', href: '#' },
+            { label: 'Junction City', href: '#' },
+            { label: 'Cottage Grove', href: '#' },
             { label: 'Springfield', href: '#' },
             { label: 'Albany', href: '#' },
             { label: 'Creswell', href: '#' },
-            { label: 'Roseburg', href: '#' },
           ]} />
 
           {/* Company */}
           <FooterCol title="Company" links={[
             { label: 'About Us', href: '#' },
             { label: 'Portfolio', href: '#portfolio' },
-            { label: 'Financing', href: '#' },
+            { label: '10% Seasonal Discount', href: '#contact' },
             { label: 'Incentive Programs', href: '#' },
             { label: 'Contact', href: '#contact' },
           ]} />
