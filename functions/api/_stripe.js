@@ -126,7 +126,7 @@ export async function refundPayment(env, paymentId, amount) {
 
 // ── Webhook signature verification (Web Crypto HMAC-SHA256) ────────────────────
 
-function timingSafeEqual(a, b) {
+export function timingSafeEqual(a, b) {
   if (a.length !== b.length) return false
   let diff = 0
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i)

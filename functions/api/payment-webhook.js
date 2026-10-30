@@ -78,13 +78,16 @@ async function notifySuccess(env, pi) {
 
   // Email summary via Resend (reuses the contact form's config)
   if (env.RESEND_API_KEY && env.CONTACT_EMAIL_TO) {
-    const stars = payload.rating ? '★'.repeat(Number(payload.rating)) + '☆'.repeat(Math.max(0, 5 - Number(payload.rating))) : '—'
+    // Metadata comes from the customer's browser — escape before putting it in HTML.
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
+    const rating = Math.min(5, Math.max(0, Math.round(Number(payload.rating)) || 0))
+    const stars = rating ? '★'.repeat(rating) + '☆'.repeat(5 - rating) : '—'
     const html = `
       <h2>💳 Payment Received — ${amount}</h2>
-      <p><strong>Type:</strong> ${payload.type}${payload.invoice ? ` &middot; <strong>Invoice:</strong> ${payload.invoice}` : ''}</p>
-      ${payload.customerName ? `<p><strong>Customer:</strong> ${payload.customerName}</p>` : ''}
-      ${payload.review ? `<p><strong>Rating:</strong> ${stars} (${payload.rating}/5)</p><blockquote>${payload.review}</blockquote>` : ''}
-      <p style="color:#888;font-size:12px;">Stripe PaymentIntent: ${pi.id}</p>
+      <p><strong>Type:</strong> ${esc(payload.type)}${payload.invoice ? ` &middot; <strong>Invoice:</strong> ${esc(payload.invoice)}` : ''}</p>
+      ${payload.customerName ? `<p><strong>Customer:</strong> ${esc(payload.customerName)}</p>` : ''}
+      ${payload.review ? `<p><strong>Rating:</strong> ${stars} (${rating}/5)</p><blockquote>${esc(payload.review)}</blockquote>` : ''}
+      <p style="color:#888;font-size:12px;">Stripe PaymentIntent: ${esc(pi.id)}</p>
     `
     try {
       await fetch('https://api.resend.com/emails', {
