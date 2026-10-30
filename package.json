@@ -10,6 +10,8 @@
     "deploy": "vite build && npx --yes wrangler@3 pages deploy dist --project-name nw-siding-demo --branch main"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^2.9.0",
+    "@stripe/stripe-js": "^4.10.0",
     "framer-motion": "^11.3.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",

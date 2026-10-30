@@ -345,10 +345,12 @@ button {
 .contact-grid      { grid-template-columns: 1fr; }
 .contact-grid > * { min-width: 0; }
 .footer-grid       { grid-template-columns: 1fr; }
+.pay-row           { grid-template-columns: 1fr; }
 
 /* ─── 561px+: footer 2-col ───────────────────────────────────── */
 @media (min-width: 561px) {
   .footer-grid { grid-template-columns: 1fr 1fr; }
+  .pay-row     { grid-template-columns: 1fr 1fr; }
   .hero-buttons { flex-direction: row; flex-wrap: wrap; justify-content: center; max-width: none; width: auto; }
 }
 

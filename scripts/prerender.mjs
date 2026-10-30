@@ -116,6 +116,13 @@ write('/', injectRoot(template.replace(/<noscript>[\s\S]*?<\/noscript>/, ''), re
 for (const page of servicePages) write(page.path, servicePageHtml(page))
 write(galleryPage.path, galleryPageHtml())
 
+// Payment pages render in the browser only (they read query params and load Stripe). Give them an
+// empty root so main.jsx renders instead of hydrating the homepage markup, and keep them out of search.
+for (const [p, title] of [['/pay', 'Make a Payment | Northwest Siding'], ['/pos', 'Take a Payment | Northwest Siding']]) {
+  const html = withPageHead({ title, description: 'Secure payment for Northwest Siding customers.' }, SITE + withSlash(p))
+  write(p, setTag(html, /<\/head>/, '    <meta name="robots" content="noindex, nofollow" />\n  </head>'))
+}
+
 const today = new Date().toISOString().slice(0, 10)
 const urls = ['/', ...servicePages.map((p) => withSlash(p.path)), withSlash(galleryPage.path)]
 const sitemap =

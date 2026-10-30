@@ -4,6 +4,8 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /pay
+Disallow: /pos
 
 # AI search and assistant crawlers (explicitly allowed so answers can cite the site)
 User-agent: OAI-SearchBot
