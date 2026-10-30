@@ -327,6 +327,7 @@ button {
 .form-name-grid    { grid-template-columns: 1fr; }
 .contact-grid      { grid-template-columns: 1fr; }
 .footer-grid       { grid-template-columns: 1fr; }
+.pay-row           { grid-template-columns: 1fr; }
 
 /* ─── 561px+: footer 2-col ───────────────────────────────────── */
 @media (min-width: 561px) {
@@ -340,6 +341,7 @@ button {
   .portfolio-grid > div { grid-column: unset !important; aspect-ratio: unset !important; }
   .form-name-grid { grid-template-columns: 1fr 1fr; }
   .contact-grid   { grid-template-columns: 1fr 1fr; }
+  .pay-row        { grid-template-columns: 1fr 1fr; }
 }
 
 /* ─── 900px+: hero left-align, wide grids ────────────────────── */
