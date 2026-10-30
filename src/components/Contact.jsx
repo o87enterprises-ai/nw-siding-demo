@@ -220,7 +220,8 @@ export default function Contact() {
               </div>
               <div>
                 <div style={{ fontSize: '0.65rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Service Area</div>
-                <div style={{ fontWeight: 500, color: 'var(--text)', fontSize: '0.88rem' }}>Eugene, OR &amp; surrounding areas</div>
+                <div style={{ fontWeight: 500, color: 'var(--text)', fontSize: '0.88rem' }}>Eugene, Oregon</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: '0.15rem' }}>Also serving from Junction City &amp; Cottage Grove</div>
               </div>
             </div>
           </motion.div>
@@ -245,9 +246,16 @@ export default function Contact() {
             color: 'var(--text)',
             marginBottom: '0.4rem',
           }}>Book a Free Estimate</div>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.6 }}>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1.25rem', lineHeight: 1.6 }}>
             We respond within one business day. Usually faster.
           </p>
+          <div style={{
+            background: 'var(--gold-dim)', border: '1px solid var(--gold-line)', borderRadius: '3px',
+            padding: '0.7rem 1rem', marginBottom: '2rem',
+            fontSize: '0.78rem', color: 'var(--gold)', lineHeight: 1.5,
+          }}>
+            <strong>Fall–Winter Special:</strong> 10% off all projects booked October through January.
+          </div>
 
           {state.phase === 'preview' ? (
             <div role="status" style={{ padding: '2rem 0', textAlign: 'center' }}>
@@ -302,7 +310,13 @@ export default function Contact() {
                 <option>Cedar / Wood Siding</option>
                 <option>Replacement Windows</option>
                 <option>Seamless Gutters</option>
-                <option>Painting & Trim</option>
+                <option>Roofing</option>
+                <option>Decks</option>
+                <option>Additions</option>
+                <option>Fencing</option>
+                <option>Gates</option>
+                <option>Interior Painting</option>
+                <option>Exterior Painting</option>
                 <option>Multiple Services</option>
               </select>
             </div>

@@ -2,7 +2,7 @@
 const FAQS = [
   {
     q: 'What areas does Northwest Siding serve?',
-    a: 'We serve Eugene, Springfield, Albany, Roseburg and Creswell, Oregon.',
+    a: 'We are based in Eugene and also serve from Junction City and Cottage Grove. We work throughout Eugene, Springfield, Junction City, Cottage Grove, Albany, Roseburg and Creswell, Oregon.',
   },
   {
     q: 'Is Northwest Siding licensed, bonded and insured?',
@@ -13,8 +13,12 @@ const FAQS = [
     a: "Yes. We are James Hardie's Exclusive Preferred Remodeler for Eugene-Springfield. We install HardiePlank, HardieShingle and HardiePanel siding to factory specification, with the manufacturer warranty to match.",
   },
   {
-    q: 'What exterior services do you offer?',
-    a: 'Fiber cement siding, cedar and wood siding, replacement windows, seamless gutters, and painting and trim.',
+    q: 'What services do you offer?',
+    a: 'Fiber cement siding, cedar and wood siding, replacement windows, seamless gutters, roofing, decks, additions, fencing and gates, and interior and exterior painting.',
+  },
+  {
+    q: 'Do you offer financing or discounts?',
+    a: 'We do not offer financing. Projects booked October through January get 10% off.',
   },
   {
     q: 'What window brands do you install?',

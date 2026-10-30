@@ -14,7 +14,7 @@ const MARQUEE_ITEMS = [
   'Licensed · Bonded · Insured',
   'CCB #136733',
   'Certified Lead-Safe Renovators',
-  'Serving Eugene · Springfield · Albany · Roseburg · Creswell',
+  'Serving Eugene · Junction City · Cottage Grove · Springfield · Albany · Roseburg · Creswell',
   '3-Year Workmanship Warranty',
 ]
 
