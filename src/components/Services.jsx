@@ -38,6 +38,20 @@ const SERVICES = [
     desc: 'On-site custom fabrication of 5" K-Style and 6" fascia-style seamless steel gutters. Measured, cut, and installed in a single visit.',
     tags: ['5" K-Style', '6" Fascia', 'Custom Colors'],
   },
+  {
+    num: '05',
+    title: 'Roofing & Painting',
+    sub: 'Top to Bottom',
+    desc: 'Roof replacement and repair, plus interior and exterior painting with full surface prep, so the whole house is finished to the same standard.',
+    tags: ['Roofing', 'Interior Painting', 'Exterior Painting'],
+  },
+  {
+    num: '06',
+    title: 'Decks, Additions & Fencing',
+    sub: 'Outdoor & Living Space',
+    desc: 'Custom decks, home additions, and fences and gates, built by the same crew that handles your siding.',
+    tags: ['Decks', 'Additions', 'Fencing & Gates'],
+  },
 ]
 
 function ServiceCard({ service, delay }) {

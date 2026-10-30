@@ -5,7 +5,13 @@ export const SERVICES = [
   'Cedar / Wood Siding',
   'Replacement Windows',
   'Seamless Gutters',
-  'Painting & Trim',
+  'Roofing',
+  'Decks',
+  'Additions',
+  'Fencing',
+  'Gates',
+  'Interior Painting',
+  'Exterior Painting',
   'Multiple Services',
 ]
 
