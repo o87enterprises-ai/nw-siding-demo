@@ -67,24 +67,24 @@ export default function Footer() {
           {/* Services */}
           <FooterCol title="Services" links={[
             { label: 'Fiber Cement Siding', href: '/siding/fiber-cement-siding/' },
-            { label: 'Cedar Siding', href: '#' },
-            { label: 'Replacement Windows', href: '#' },
-            { label: 'Seamless Gutters', href: '#' },
-            { label: 'Roofing', href: '#' },
-            { label: 'Decks & Additions', href: '#' },
-            { label: 'Fencing & Gates', href: '#' },
-            { label: 'Interior & Exterior Painting', href: '#' },
+            { label: 'Cedar Siding', href: '/siding/cedar-wood-siding/' },
+            { label: 'Replacement Windows', href: '/replacement-windows/' },
+            { label: 'Seamless Gutters', href: '/seamless-gutters/' },
+            { label: 'Roofing', href: '/roofing-and-painting/' },
+            { label: 'Decks & Additions', href: '/decks-additions-fencing/' },
+            { label: 'Fencing & Gates', href: '/decks-additions-fencing/' },
+            { label: 'Interior & Exterior Painting', href: '/roofing-and-painting/' },
           ]} />
 
           {/* Areas */}
           <FooterCol title="Service Areas" links={[
-            { label: 'Eugene', href: '#' },
-            { label: 'Junction City', href: '#' },
-            { label: 'Cottage Grove', href: '#' },
-            { label: 'Springfield', href: '#' },
-            { label: 'Albany', href: '#' },
-            { label: 'Creswell', href: '#' },
-            { label: 'Roseburg', href: '#' },
+            { label: 'Eugene' },
+            { label: 'Junction City' },
+            { label: 'Cottage Grove' },
+            { label: 'Springfield' },
+            { label: 'Albany' },
+            { label: 'Creswell' },
+            { label: 'Roseburg' },
           ]} />
 
           {/* Company */}
@@ -92,7 +92,6 @@ export default function Footer() {
             { label: 'About Us', href: '/#about' },
             { label: 'Project Gallery', href: '/gallery/' },
             { label: '10% Fall–Winter Discount', href: '#contact' },
-            { label: 'Incentive Programs', href: '#' },
             { label: 'Contact', href: '#contact' },
           ]} />
         </div>
@@ -115,23 +114,8 @@ export default function Footer() {
           }}>
             © {year} Northwest Siding Contractors of Eugene, Inc. All rights reserved.
           </div>
-          <a href="#" aria-label="o87 Enterprises" style={{ display: 'block' }}>
+          <div role="img" aria-label="o87 Enterprises" style={{ display: 'block' }}>
             <O87Logo height={34} />
-          </a>
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
-            {['Privacy Policy', 'Terms of Use'].map(link => (
-              <a key={link} href="#" style={{
-                display: 'inline-block',
-                padding: '0.5rem 0',
-                fontSize: '0.72rem',
-                color: 'var(--text-muted)',
-                letterSpacing: '0.06em',
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={e => e.target.style.color = 'var(--text)'}
-              onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
-              >{link}</a>
-            ))}
           </div>
         </div>
       </div>
@@ -155,6 +139,9 @@ function FooterCol({ title, links }) {
       <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
         {links.map(({ label, href }) => (
           <li key={label}>
+            {!href ? (
+              <span style={{ display: 'inline-block', padding: '0.4rem 0', fontSize: '0.83rem', color: 'var(--text-muted)' }}>{label}</span>
+            ) : (
             <a
               href={href}
               style={{
@@ -169,6 +156,7 @@ function FooterCol({ title, links }) {
             >
               {label}
             </a>
+            )}
           </li>
         ))}
       </ul>

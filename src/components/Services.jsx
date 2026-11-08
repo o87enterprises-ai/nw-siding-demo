@@ -13,6 +13,7 @@ const SERVICES = [
   {
     num: '01',
     title: 'Fiber Cement Siding',
+    href: '/siding/fiber-cement-siding/',
     sub: 'James Hardie® Exclusive',
     desc: "As James Hardie®'s Exclusive Preferred Remodeler for Eugene-Springfield, we install James Hardie® fiber cement siding to factory specification — with the manufacturer warranty to match.",
     tags: ['HardiePlank®', 'HardieShingle®', 'HardiePanel®'],
@@ -20,6 +21,7 @@ const SERVICES = [
   {
     num: '02',
     title: 'Cedar & Wood Siding',
+    href: '/siding/cedar-wood-siding/',
     sub: 'Natural Materials',
     desc: 'Tight Knot, Clear Beveled Lap Cedar, Cedar Shingles, and Breckenridge Douglas Fir Panel. Natural beauty, installed with precision.',
     tags: ['Tight Knot Cedar', 'Clear Beveled Lap', 'Shingle & Panel'],
@@ -27,6 +29,7 @@ const SERVICES = [
   {
     num: '03',
     title: 'Replacement Windows',
+    href: '/replacement-windows/',
     sub: 'Milgard® Certified',
     desc: 'Milgard Tuscany®, Montecito®, and Style Line Series® windows installed by certified technicians. Energy efficiency meets lasting curb appeal.',
     tags: ['Tuscany®', 'Montecito®', 'Style Line®'],
@@ -34,6 +37,7 @@ const SERVICES = [
   {
     num: '04',
     title: 'Seamless Gutters',
+    href: '/seamless-gutters/',
     sub: 'Steel & Aluminum',
     desc: 'On-site custom fabrication of 5" K-Style and 6" fascia-style seamless steel gutters. Measured, cut, and installed in a single visit.',
     tags: ['5" K-Style', '6" Fascia', 'Custom Colors'],
@@ -41,6 +45,7 @@ const SERVICES = [
   {
     num: '05',
     title: 'Roofing & Painting',
+    href: '/roofing-and-painting/',
     sub: 'Top to Bottom',
     desc: 'Roof replacement and repair, plus interior and exterior painting with full surface prep, so the whole house is finished to the same standard.',
     tags: ['Roofing', 'Interior Painting', 'Exterior Painting'],
@@ -48,6 +53,7 @@ const SERVICES = [
   {
     num: '06',
     title: 'Decks, Additions & Fencing',
+    href: '/decks-additions-fencing/',
     sub: 'Outdoor & Living Space',
     desc: 'Custom decks, home additions, and fences and gates, built by the same crew that handles your siding.',
     tags: ['Decks', 'Additions', 'Fencing & Gates'],
@@ -141,7 +147,7 @@ function ServiceCard({ service, delay }) {
         ))}
       </div>
 
-      <div style={{
+      <a href={service.href} aria-label={`Learn more about ${service.title}`} style={{
         display: 'flex',
         alignItems: 'center',
         gap: '0.5rem',
@@ -151,12 +157,14 @@ function ServiceCard({ service, delay }) {
         letterSpacing: '0.12em',
         textTransform: 'uppercase',
         color: 'var(--gold)',
+        padding: '0.5rem 0',
+        alignSelf: 'flex-start',
       }}>
         Learn More
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
           <path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
-      </div>
+      </a>
     </motion.div>
   )
 }

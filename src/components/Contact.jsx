@@ -8,9 +8,8 @@ const CONTACT_IMAGES = [
   'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1920&q=80',
 ]
 
-// The lead backend (backend/functions) is switched off for the preview.
-// Build with VITE_LEAD_API=on to send submissions to /api/lead.
-const LEAD_API_ON = import.meta.env.VITE_LEAD_API === 'on'
+// Submissions go to /api/lead (functions/api/lead.js). Build with VITE_LEAD_API=off to get a no-send preview instead.
+const LEAD_API_ON = import.meta.env.VITE_LEAD_API !== 'off'
 
 const EMPTY = {
   first_name: '', last_name: '', phone: '', email: '', address: '', zip: '',
